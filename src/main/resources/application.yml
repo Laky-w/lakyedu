@@ -1,0 +1,23 @@
+server:
+  port: 80
+  context-path: /laky
+spring:
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+jdbc:
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/edu_laky?useUnicode=true&characterEncoding=utf8
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.jdbc.Driver
+mybatis:
+  config-location:  mybatis-config.xml
+  mapper-locations: mapper/**.xml
+  type-aliases-package: com.laky.edu.bean
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+
+
+

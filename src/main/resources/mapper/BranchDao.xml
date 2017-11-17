@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.laky.edu.dao.BranchDao">
+   <!-- <select id="queryLakyTest" resultType="LakyTest">
+        SELECT id, name,
+        sex, birthday
+        FROM laky_test
+    </select>
+    <select id="queryTestAllByContitions" resultType="LakyTest">
+        SELECT id, name,
+        sex, birthday
+        FROM laky_test
+        <where>
+            <if test="sex != null"> sex=#{sex}</if>
+        </where>
+    </select>-->
+
+    <select id="findBranchAll" resultType="com.laky.edu.bean.Branch">
+        SELECT * FROM laky_branch
+    </select>
+    <select id="queryBranchBySerialOrId" resultType="com.laky.edu.bean.Branch">
+        SELECT id,branch_name,serial,create_datetime,the_status,address,owner,logo,remarks,last_datetime,max_count,phone,signatory FROM laky_branch
+        <where>
+            <if test="id != null"> id=#{id}</if>
+            <if test="serial != null"> serial=#{serial}</if>
+        </where>
+    </select>
+
+
+
+    <insert id="insertBranch" useGeneratedKeys="true" keyProperty="id"
+            keyColumn="id">
+        INSERT INTO
+        laky_branch(branch_name,serial,
+        create_datetime,the_status,address,owner,logo,remarks,last_datetime,max_count,phone,signatory)
+        VALUES
+        (#{branchName},#{serial},#{createDatetime},
+        #{theStatus},#{address},#{owner},#{logo},#{remarks},#{lastDatetime},#{maxCount},#{phone},#{signatory})
+    </insert>
+
+    <update id="updateBranchById" parameterType="com.laky.edu.bean.Branch">
+        update laky_branch
+        <set>
+            <if test="branchName != null">branch_name=#{branchName},</if>
+            <if test="serial != null">serial=#{serial},</if>
+            <if test="logo != null">logo=#{logo},</if>
+            <if test="address != null">address=#{address},</if>
+            <if test="theStatus != null">the_status=#{theStatus},</if>
+            <if test="maxCount != null">max_count=#{maxCount},</if>
+            <if test="createDatetime != null">create_datetime=#{createDatetime},</if>
+            <if test="lastDatetime != null">last_datetime=#{lastDatetime},</if>
+            <if test="remarks != null">remarks=#{remarks},</if>
+            <if test="owner != null">owner=#{owner},</if>
+            <if test="phone != null">phone=#{phone},</if>
+            <if test="signatory != null">signatory=#{signatory},</if>
+        </set>
+        where id=#{id,jdbcType=INTEGER}
+    </update>
+   <!--
+
+    private String id;
+    private String branchName;
+    private String serial;
+    private String logo;
+    private String address;
+    private Integer theStatus;// 校区状态（1正常，2 封停，0 删除）
+    private Integer maxCount;
+    private Date createDatetime;//create_datatime
+    private Date lastDatetime;
+    private String remarks;
+    private String owner;
+    private String phone;
+    private String signatory;//签约人
+    <update id="updateArea" parameterType="com.imooc.o2o.entity.Area">
+        update tb_area
+        <set>
+            <if test="areaName != null">area_name=#{areaName},</if>
+            <if test="areaDesc != null">area_desc=#{areaDesc},</if>
+            <if test="priority != null">priority=#{priority},</if>
+            <if test="lastEditTime != null">last_edit_time=#{lastEditTime}</if>
+        </set>
+        where area_id=#{areaId}
+    </update>
+    <delete id="deleteArea">
+        DELETE FROM
+        tb_area
+        WHERE
+        area_id =
+        #{areaId}
+    </delete>
+    <delete id="batchDeleteArea" parameterType="long">
+        DELETE FROM
+        tb_area
+        WHERE area_id IN
+        <foreach collection="list" item="areaId" open="(" separator=","
+                 close=")">
+            #{areaId}
+        </foreach>
+    </delete>-->
+</mapper>
