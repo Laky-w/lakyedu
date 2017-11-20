@@ -12,7 +12,7 @@ import java.beans.PropertyVetoException;
  * Created by 95 on 2017/11/14.
  */
 @Configuration
-@MapperScan("com.laky.edu.dao")
+@MapperScan("com.laky.edu.*.dao")
 public class DataSourceConfiguration {
     @Value("${jdbc.datasource.driver-class-name}")
     private String driverClassName;

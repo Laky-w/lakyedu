@@ -79,7 +79,7 @@
         <appender-ref ref="infoAppender"/>
         <appender-ref ref="errorAppender"/>
     </logger>
-    <root level="info">
+    <root level="error">
         <appender-ref ref="consoleAppender"/>
         <appender-ref ref="debugAppender"/>
         <appender-ref ref="infoAppender"/>

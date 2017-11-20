@@ -1,7 +1,8 @@
-package com.laky.edu.web;
+package com.laky.edu.organization.web;
 
-import com.laky.edu.bean.LakyTest;
-import com.laky.edu.service.LakyTestService;
+import com.laky.edu.organization.bean.LakyTest;
+import com.laky.edu.core.BaseController;
+import com.laky.edu.organization.service.LakyTestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,9 +13,9 @@ import java.util.Map;
  * Created by 95 on 2017/11/14.
  */
 @RestController
-public class LakyTestController extends BaseController{
+public class LakyTestController extends BaseController {
     @Autowired
-    private LakyTestService lakyTestService;
+    private LakyTestService lakyTestService;//成员变量
 
     @GetMapping(value = "getLakyTestAll/{sex1}")
     public Map findLakyTestAll(@PathVariable(value = "sex1",required = false) Integer sex ){

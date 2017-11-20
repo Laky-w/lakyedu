@@ -1,6 +1,6 @@
-package com.laky.edu.dao;
+package com.laky.edu.organization.dao;
 
-import com.laky.edu.bean.LakyTest;
+import com.laky.edu.organization.bean.LakyTest;
 import org.springframework.stereotype.Component;
 
 import java.util.LinkedHashMap;

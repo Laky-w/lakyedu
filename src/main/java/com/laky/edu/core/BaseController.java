@@ -1,4 +1,4 @@
-package com.laky.edu.web;
+package com.laky.edu.core;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,7 +11,7 @@ import java.util.Map;
  */
 public class BaseController {
     private static Logger logger = LoggerFactory.getLogger(BaseController.class);
-    Map doWrappingData(Object object){
+    public Map doWrappingData(Object object){
         Map map = new LinkedHashMap<>();
         map.put("code",200);
         map.put("message","成功");
@@ -19,7 +19,7 @@ public class BaseController {
         return map;
     }
 
-    Map doWrappingErrorData(Exception e){
+    public Map doWrappingErrorData(Exception e){
         logger.error("出错了",e);
         Map map = new LinkedHashMap<>();
         map.put("code",500);

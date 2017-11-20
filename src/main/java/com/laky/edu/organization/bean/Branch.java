@@ -1,6 +1,4 @@
-package com.laky.edu.bean;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
+package com.laky.edu.organization.bean;
 
 import java.util.Date;
 

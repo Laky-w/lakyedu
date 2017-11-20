@@ -1,8 +1,6 @@
-package com.laky.edu.service;
+package com.laky.edu.organization.service;
 
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
-import com.laky.edu.bean.Branch;
+import com.laky.edu.organization.bean.Branch;
 import com.laky.edu.core.PageBean;
 
 import java.util.LinkedHashMap;

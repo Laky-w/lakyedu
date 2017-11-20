@@ -1,7 +1,8 @@
-package com.laky.edu.web;
+package com.laky.edu.organization.web;
 
-import com.laky.edu.bean.Branch;
-import com.laky.edu.service.OrganizationService;
+import com.laky.edu.organization.bean.Branch;
+import com.laky.edu.organization.service.OrganizationService;
+import com.laky.edu.core.BaseController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,7 +12,8 @@ import java.util.Map;
  * Created by 95 on 2017/11/14.
  */
 @RestController
-public class OrganizationController extends BaseController{
+@RequestMapping("/organization")
+public class OrganizationController extends BaseController {
 
     @Autowired
     private OrganizationService organizationService;
@@ -34,7 +36,7 @@ public class OrganizationController extends BaseController{
     @GetMapping(value = "getBranchBySerial/{serial}")
     public Map findBranchBySerial(@PathVariable String serial){
         try {
-           Branch branch= organizationService.findBranchBySerial(serial);
+            Branch branch= organizationService.findBranchBySerial(serial);
             return super.doWrappingData(branch);
         } catch (Exception e){
             return  super.doWrappingErrorData(e);

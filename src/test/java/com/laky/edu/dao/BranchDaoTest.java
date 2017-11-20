@@ -1,6 +1,7 @@
 package com.laky.edu.dao;
 
-import com.laky.edu.bean.Branch;
+import com.laky.edu.organization.bean.Branch;
+import com.laky.edu.organization.dao.BranchDao;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

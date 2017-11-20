@@ -1,8 +1,8 @@
-package com.laky.edu.service.impl;
+package com.laky.edu.organization.service.impl;
 
-import com.laky.edu.bean.LakyTest;
-import com.laky.edu.dao.LakyTestDao;
-import com.laky.edu.service.LakyTestService;
+import com.laky.edu.organization.bean.LakyTest;
+import com.laky.edu.organization.dao.LakyTestDao;
+import com.laky.edu.organization.service.LakyTestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.laky.edu.dao.BranchDao">
+<mapper namespace="com.laky.edu.organization.dao.BranchDao">
    <!-- <select id="queryLakyTest" resultType="LakyTest">
         SELECT id, name,
         sex, birthday
@@ -17,10 +17,10 @@
         </where>
     </select>-->
 
-    <select id="findBranchAll" resultType="com.laky.edu.bean.Branch">
+    <select id="findBranchAll" resultType="com.laky.edu.organization.bean.Branch">
         SELECT * FROM laky_branch
     </select>
-    <select id="queryBranchBySerialOrId" resultType="com.laky.edu.bean.Branch">
+    <select id="queryBranchBySerialOrId" resultType="com.laky.edu.organization.bean.Branch">
         SELECT id,branch_name,serial,create_datetime,the_status,address,owner,logo,remarks,last_datetime,max_count,phone,signatory FROM laky_branch
         <where>
             <if test="id != null"> id=#{id}</if>
@@ -32,6 +32,7 @@
 
     <insert id="insertBranch" useGeneratedKeys="true" keyProperty="id"
             keyColumn="id">
+
         INSERT INTO
         laky_branch(branch_name,serial,
         create_datetime,the_status,address,owner,logo,remarks,last_datetime,max_count,phone,signatory)
@@ -40,7 +41,7 @@
         #{theStatus},#{address},#{owner},#{logo},#{remarks},#{lastDatetime},#{maxCount},#{phone},#{signatory})
     </insert>
 
-    <update id="updateBranchById" parameterType="com.laky.edu.bean.Branch">
+    <update id="updateBranchById" parameterType="com.laky.edu.organization.bean.Branch">
         update laky_branch
         <set>
             <if test="branchName != null">branch_name=#{branchName},</if>
@@ -60,19 +61,6 @@
     </update>
    <!--
 
-    private String id;
-    private String branchName;
-    private String serial;
-    private String logo;
-    private String address;
-    private Integer theStatus;// 校区状态（1正常，2 封停，0 删除）
-    private Integer maxCount;
-    private Date createDatetime;//create_datatime
-    private Date lastDatetime;
-    private String remarks;
-    private String owner;
-    private String phone;
-    private String signatory;//签约人
     <update id="updateArea" parameterType="com.imooc.o2o.entity.Area">
         update tb_area
         <set>

@@ -1,7 +1,5 @@
 package com.laky.edu.web;
 
-import com.laky.edu.core.PageBean;
-import com.laky.edu.service.OrganizationService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -34,6 +32,25 @@ public class OrganizationControllerTest {
     @Before // 在测试开始前初始化工作
     public void setup() {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+    }
+
+
+    @Test
+    public void testCreateNewBranch(){
+        try {
+
+            MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/organization/createNewBranch")
+                    .param("branchName","蜜汁教育").param("serial","002").param("lastDatetime","2020-01-01 00:00:00")
+                    .param("address","中南海")
+                    .param("phone","135301800595").param("signatory","猴哥").param("owner","猴哥").param("maxCount","60"))
+                    .andExpect(status().isOk())// 模拟向testRest发送get请求
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))// 预期返回值的媒体类型text/plain;charset=UTF-8
+                    .andReturn();// 返回执行请求的结果
+
+            System.out.println(result.getResponse().getContentAsString());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Test

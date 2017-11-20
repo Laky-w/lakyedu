@@ -1,6 +1,6 @@
-package com.laky.edu.service;
+package com.laky.edu.organization.service;
 
-import com.laky.edu.bean.LakyTest;
+import com.laky.edu.organization.bean.LakyTest;
 
 import java.util.List;
 

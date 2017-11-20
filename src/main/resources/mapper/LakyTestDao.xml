@@ -2,13 +2,13 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.laky.edu.dao.LakyTestDao">
-    <select id="queryLakyTest" resultType="com.laky.edu.bean.LakyTest">
+<mapper namespace="com.laky.edu.organization.dao.LakyTestDao">
+    <select id="queryLakyTest" resultType="com.laky.edu.organization.bean.LakyTest">
         SELECT id, name,
         sex, birthday
         FROM laky_test
     </select>
-    <select id="queryTestAllByContitions" resultType="com.laky.edu.bean.LakyTest">
+    <select id="queryTestAllByContitions" resultType="com.laky.edu.organization.bean.LakyTest">
         SELECT id, name,
         sex, birthday
         FROM laky_test

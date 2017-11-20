@@ -15,8 +15,6 @@ mybatis:
   config-location:  mybatis-config.xml
   mapper-locations: mapper/**.xml
   type-aliases-package: com.laky.edu.bean
-  configuration:
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
 
 

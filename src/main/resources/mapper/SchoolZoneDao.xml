@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.laky.edu.organization.dao.SchoolZoneDao">
+    <insert id="insertSchoolZoneDao" useGeneratedKeys="true" keyProperty="id" keyColumn="id"
+            parameterType="com.laky.edu.organization.bean.SchoolZone">
+        INSERT  INTO laky_school_zone(`name`,the_status,the_type,create_datetime,serial,address,phone,father_id,branch_id)
+        VALUES (#{name},#{theStatus},#{theType},#{createDatetime},#{serial},#{address},#{phone},#{fatherId},#{branch.id})
+    </insert>
+    <!--resultType 返回值类型  参数类型 -->
+    <select id="querySchoolZoneAllByBranchId" resultType="com.laky.edu.organization.bean.SchoolZone" parameterType="Integer">
+        SELECT * from laky_school_zone where branch_id =#{branchId,jdbcType=INTEGER};
+    </select>
+    <select id="querySchoolZoneDaoById" resultType="com.laky.edu.organization.bean.SchoolZone" parameterType="Integer">
+        SELECT  * FROM  laky_school_zone where id =#{branchId,jdbcType=INTEGER}
+    </select>
+    <update id="updateSchoolZone" parameterType="com.laky.edu.organization.bean.SchoolZone">
+        UPDATE laky_school_zone
+        <set>
+            `name` = #{name},
+            <if test="theStatus!=null">the_status=#{theStatus},</if>
+            <if test="theType!=null">the_type=#{theType},</if>
+            <if test="serial!=null">serial=#{serial},</if>
+            <if test="address!=null">address=#{address},</if>
+            <if test="phone!=null">phone=#{phone}</if>
+        </set>
+        where id=#{id,jdbcType=INTEGER}
+    </update>
+</mapper>

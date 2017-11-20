@@ -1,8 +1,7 @@
-package com.laky.edu.dao;
+package com.laky.edu.organization.dao;
 
-import com.laky.edu.bean.Branch;
+import com.laky.edu.organization.bean.Branch;
 import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Component;
 
 import java.util.LinkedHashMap;

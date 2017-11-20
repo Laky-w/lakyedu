@@ -1,12 +1,14 @@
-package com.laky.edu.service.impl;
+package com.laky.edu.organization.service.impl;
 
 import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
-import com.laky.edu.bean.Branch;
+import com.laky.edu.organization.OrganizationConst;
+import com.laky.edu.organization.bean.Branch;
+import com.laky.edu.organization.bean.SchoolZone;
 import com.laky.edu.core.PageBean;
-import com.laky.edu.dao.BranchDao;
-import com.laky.edu.dao.LakyTestDao;
-import com.laky.edu.service.OrganizationService;
+import com.laky.edu.organization.dao.BranchDao;
+import com.laky.edu.organization.dao.LakyTestDao;
+import com.laky.edu.organization.dao.SchoolZoneDao;
+import com.laky.edu.organization.service.OrganizationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +27,8 @@ public class OrganizationServiceImpl implements OrganizationService {
     private static Logger logger = LoggerFactory.getLogger(OrganizationServiceImpl.class);
     @Autowired
     private BranchDao branchDao;
+    @Autowired
+    private SchoolZoneDao schoolZoneDao;
 
     @Autowired
     private LakyTestDao lakyTestDao;
@@ -49,11 +53,21 @@ public class OrganizationServiceImpl implements OrganizationService {
         branch.setLogo("logo");
         // branch.setLastDatetime(new Date());
         branch.setMaxCount(10); // 默认10个校区
-        branch.setTheStatus(1); // 校区状态（1正常，2 封停，0 删除）
+        branch.setTheStatus(OrganizationConst.BRANCH_STATUS_NORMAL); // 校区状态（1正常，2 封停，0 删除）
         //插入机构
         int rowCount= branchDao.insertBranch(branch);
         //处理签约人业务（提成，发短信。。）
         //初始化机构总部校区和超级管理员
+        SchoolZone schoolZone = new SchoolZone();
+        schoolZone.setName("总部");
+        schoolZone.setTheType(OrganizationConst.SCHOOL_ZONE_TYPE_HQ);//1 总部，2 分校，3 部门
+        schoolZone.setTheStatus(OrganizationConst.SCHOOL_ZONE_STATUS_NORMAL);
+        schoolZone.setSerial("001");
+        schoolZone.setBranch(branch);
+        schoolZone.setCreateDatetime(new Date());
+        schoolZone.setAddress(branch.getAddress());
+        schoolZone.setPhone(branch.getPhone());
+        schoolZoneDao.insertSchoolZoneDao(schoolZone);
         return rowCount;
     }
 
