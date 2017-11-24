@@ -3,20 +3,28 @@ package com.laky.edu.core;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * Created by 95 on 2017/11/14.
  */
 public class BaseController {
     private static Logger logger = LoggerFactory.getLogger(BaseController.class);
+    public static Map userSession = new HashMap<>();
     public Map doWrappingData(Object object){
         Map map = new LinkedHashMap<>();
         map.put("code",200);
         map.put("message","成功");
         map.put("data",object);
         return map;
+    }
+
+    public String createToken(){
+        String token = UUID.randomUUID ().toString ().replace ("-", "");
+        return token;
     }
 
     public Map doWrappingErrorData(Exception e){

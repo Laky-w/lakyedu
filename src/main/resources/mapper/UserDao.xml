@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.laky.edu.organization.dao.UserDao">
+
+
+    <insert id="insertUser" keyColumn="id" keyProperty="id" useGeneratedKeys="true" parameterType="com.laky.edu.organization.bean.User">
+      INSERT  INTO  laky_organization_user(user_name,nick_name,`name`,`password`,head_logo,the_status,branch_id,school_zone_id,
+      create_datetime,phone,email,sex,birthday,is_super)
+      VALUES (#{userName},#{nickName},#{name},#{password},#{headLogo},
+      #{theStatus},#{branch.id},#{schoolZone.id},#{createDatetime},#{phone},
+      #{email},#{sex},#{birthday},#{isSuper})
+    </insert>
+    <select id="queryUserByUserName"   resultType="com.laky.edu.organization.bean.User">
+      SELECT  u.* FROM laky_organization_user u LEFT JOIN  laky_organization_branch b on u.branch_id = b.id
+      WHERE (u.user_name = #{userName} or u.email = #{userName} or u.phone = #{userName}) and u.the_status != 0 and b.serial = #{serial} and b.the_status =1
+
+    </select>
+    <!--<resultMap type="com.laky.edu.organization.bean.User" id="userResultMap">
+
+        <association property="branch" javaType="com.laky.edu.organization.bean.Branch">
+            <id column="branch_id" property="id"/>
+            <result column="username" property="username"/>
+            <result column="sex" property="sex"/>
+            <result column="address" property="address"/>
+        </association>
+
+        property表示返回类型Clazz的属性students
+            column表示将id作为参数进行之后的查询
+            fetchtype表示懒加载
+            javaType表示属性对应的类型
+            ofType表示集合当中的类型
+
+        <collection property="branch.id" column="branch_id" fetchType="lazy"
+                    javaType="com.laky.edu.organization.bean.Branch"
+                    select="com.laky.edu.organization.dao.BranchDao.queryBranchBySerialOrId">
+            <id property="id" column="id"/>
+            <result property="name" column="name"/>
+            <result property="sex" column="sex"/>
+            <result property="age" column="age"/>
+        </collection>
+    </resultMap>-->
+</mapper>

@@ -21,7 +21,7 @@
         SELECT * FROM laky_branch
     </select>
     <select id="queryBranchBySerialOrId" resultType="com.laky.edu.organization.bean.Branch">
-        SELECT id,branch_name,serial,create_datetime,the_status,address,owner,logo,remarks,last_datetime,max_count,phone,signatory FROM laky_branch
+        SELECT id,branch_name,serial,create_datetime,the_status,address,owner,logo,remarks,last_datetime,max_count,phone,signatory FROM laky_organization_branch
         <where>
             <if test="id != null"> id=#{id}</if>
             <if test="serial != null"> serial=#{serial}</if>
@@ -34,7 +34,7 @@
             keyColumn="id">
 
         INSERT INTO
-        laky_branch(branch_name,serial,
+        laky_organization_branch(branch_name,serial,
         create_datetime,the_status,address,owner,logo,remarks,last_datetime,max_count,phone,signatory)
         VALUES
         (#{branchName},#{serial},#{createDatetime},
@@ -42,7 +42,7 @@
     </insert>
 
     <update id="updateBranchById" parameterType="com.laky.edu.organization.bean.Branch">
-        update laky_branch
+        update laky_organization_branch
         <set>
             <if test="branchName != null">branch_name=#{branchName},</if>
             <if test="serial != null">serial=#{serial},</if>

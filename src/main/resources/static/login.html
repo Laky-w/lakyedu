@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>湖之教育</title>
+    <link href="css/login.css" type="text/css" rel="stylesheet">
+    <script src="js/jquery.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        $(function () {
+            $.ajaxSetup({
+                beforeSend:function (xtr) {
+                    xtr.setRequestHeader("token",sessionStorage.getItem("token"));
+                }
+            });
+            $("#msg").ajaxSend(function(evt, request, settings){
+                $(this).append("<li>开始请求: " + settings.url + "</li>");
+            });
+            $("#loginForm").submit(function (e) {
+                //alert("==");
+                var parameterData = $("#loginForm").serialize();
+                $.post("organization/login",parameterData,function (data) {
+                    if(data.code==200) { //登录成功
+                        sessionStorage.setItem("token",data.data["token"]);
+                        sessionStorage.setItem("userInfo",data.data);
+                     /*   $.get("organization/findSchoolZoneAllByBranchId/1",function (data) {
+                            console.log(data);
+                        },"json");*/
+                        window.location.href="index.html";
+                    } else {
+                        $("#error").html(data.data);
+                    }
+                },"json")
+                e.preventDefault();
+            })
+        })
+    </script>
+</head>
+<body style="background: url('images/logoBg.jpg') no-repeat ;background-size:100%;">
+
+    <div class="login">
+        <div class="message">湖之教育</div>
+        <div id="darkbannerwrap"></div>
+
+        <form id="loginForm" method="post">
+            <div class="input_outer">
+                <span class="ub_user"></span>
+                <input name="serial" class="text" placeholder="机构代码"  required="" value="" style="" type="text">
+            </div>
+            <div class="input_outer">
+                <span class="u_user"></span>
+                <input name="userName" class="text" placeholder="用户名/邮箱/电话"  required="" value="" style="" type="text">
+            </div>
+            <div class="input_outer">
+                <span class="us_user"></span>
+                <input name="pwd" class="text" placeholder="您的密码" value=""  required="" style="" type="password">
+            </div>
+
+
+           <!-- <input name="action" value="login" type="hidden">
+            <input name="username" placeholder="机构代码" required="" type="text">
+            <hr class="hr15">
+            <input name="username" placeholder="用户名" required="" type="text">
+            <hr class="hr15">
+            <input name="password" placeholder="密码" required="" type="password">
+            <hr class="hr15">-->
+            <input value="登录" id="subLogin" style="width:100%;" type="submit">
+            <p id="error" class="hr20" style="color: #ff0000;"></p>
+        <!-- 帮助 <a onClick="alert('请联系管理员')">忘记密码</a> -->
+        </form>
+
+
+    </div>
+
+    <!--<h3>登录</h3>
+    <form action="" >
+        <p>机构 <input type="text"/></p>
+        <p>用户名：<input type="text"/></p>
+        <p>密码：<input type="password"/></p>
+        <p><button type="submit" >登录</button></p>
+    </form>-->
+</body>
+</html>

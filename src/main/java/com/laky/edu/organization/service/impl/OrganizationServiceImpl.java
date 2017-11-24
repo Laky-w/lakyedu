@@ -5,10 +5,13 @@ import com.laky.edu.organization.OrganizationConst;
 import com.laky.edu.organization.bean.Branch;
 import com.laky.edu.organization.bean.SchoolZone;
 import com.laky.edu.core.PageBean;
+import com.laky.edu.organization.bean.User;
 import com.laky.edu.organization.dao.BranchDao;
 import com.laky.edu.organization.dao.LakyTestDao;
 import com.laky.edu.organization.dao.SchoolZoneDao;
+import com.laky.edu.organization.dao.UserDao;
 import com.laky.edu.organization.service.OrganizationService;
+import com.laky.edu.util.MD5;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,9 +32,8 @@ public class OrganizationServiceImpl implements OrganizationService {
     private BranchDao branchDao;
     @Autowired
     private SchoolZoneDao schoolZoneDao;
-
     @Autowired
-    private LakyTestDao lakyTestDao;
+    private UserDao userDao;
 
     @Override
     public Branch findBranchBySerial(String serial) {
@@ -57,7 +59,7 @@ public class OrganizationServiceImpl implements OrganizationService {
         //插入机构
         int rowCount= branchDao.insertBranch(branch);
         //处理签约人业务（提成，发短信。。）
-        //初始化机构总部校区和超级管理员
+        //初始化机构总部校区
         SchoolZone schoolZone = new SchoolZone();
         schoolZone.setName("总部");
         schoolZone.setTheType(OrganizationConst.SCHOOL_ZONE_TYPE_HQ);//1 总部，2 分校，3 部门
@@ -68,6 +70,20 @@ public class OrganizationServiceImpl implements OrganizationService {
         schoolZone.setAddress(branch.getAddress());
         schoolZone.setPhone(branch.getPhone());
         schoolZoneDao.insertSchoolZoneDao(schoolZone);
+        //初始化总部管理员
+        User user = new User();
+        user.setUserName("admin");
+        user.setNickName("管理员");
+        user.setName(branch.getOwner());
+        user.setPassword(MD5.getMd5("123456"));
+        user.setTheStatus(OrganizationConst.USER_STATUS_NORMAL);
+        user.setBranch(branch);
+        user.setSchoolZone(schoolZone);
+        user.setCreateDatetime(new Date());
+        user.setPhone(schoolZone.getPhone());
+        user.setSex(1);
+        user.setIsSuper(OrganizationConst.USER_SUPER_YES);
+        userDao.insertUser(user);
         return rowCount;
     }
 
@@ -75,7 +91,7 @@ public class OrganizationServiceImpl implements OrganizationService {
     @Transactional
     public int updateBranchById(Branch branch) throws Exception{
         int rowCount = branchDao.updateBranchById(branch);
-        lakyTestDao.queryLakyTest();
+      //  lakyTestDao.queryLakyTest();
         if(1==1){
             logger.error("更新机构，事务执行失败！");
             throw new NullPointerException("事务执行失败");
