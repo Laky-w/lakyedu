@@ -2,6 +2,8 @@ package com.laky.edu.organization.web;
 
 import com.laky.edu.config.web.WebSecurityConfig;
 import com.laky.edu.core.BaseController;
+import com.laky.edu.log.bean.LoginLog;
+import com.laky.edu.log.service.LoginLogService;
 import com.laky.edu.organization.bean.Menu;
 import com.laky.edu.organization.bean.User;
 import com.laky.edu.organization.service.OrganizationService;
@@ -11,10 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by 湖之教育工作室·laky on 2017/11/21.
@@ -26,11 +25,14 @@ public class UserController extends BaseController{
     private UserService userService;
 
     @Autowired
+    private LoginLogService loginLogService;
+
+    @Autowired
     private OrganizationService organizationService;
 
 
     @PostMapping(value = "login")
-    public Map login(@RequestParam String userName,@RequestParam String pwd,@RequestParam String serial, HttpSession session){
+    public Map login(@RequestParam String userName,@RequestParam String pwd,@RequestParam String serial, HttpServletRequest request){
         try {
             User user=userService.loginUser(userName,pwd,serial);
             user.setPassword("");
@@ -40,6 +42,7 @@ public class UserController extends BaseController{
             map.put("userInfo",user);
             map.put("branch",organizationService.findBranchBySerialOrId(null,user.getBranchId()));
             userSession.put(token,user);
+            loginLogService.insert(user,1,super.getRemortIP(request));
            // session.setAttribute(WebSecurityConfig.SESSION_KEY,map);
             //token里面
             return super.doWrappingData(map);
@@ -52,6 +55,7 @@ public class UserController extends BaseController{
     public Map loginout(HttpServletRequest request) {
         try {
             String token=request.getHeader("token");
+            loginLogService.insert((User) userSession.get(token),2,super.getRemortIP(request));
             BaseController.userSession.remove(token);
             // 移除session
             return super.doWrappingData("success");

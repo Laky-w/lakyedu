@@ -15,6 +15,7 @@ public class User {
     private Integer theStatus;//状态
     private Integer branchId;
     private Branch branch;//机构
+    private Integer schoolZoneId;
     private SchoolZone schoolZone;//校区
     private Date createDatetime;//创建时间
     private String phone;//联系方式
@@ -94,6 +95,14 @@ public class User {
 
     public void setBranch(Branch branch) {
         this.branch = branch;
+    }
+
+    public Integer getSchoolZoneId() {
+        return schoolZoneId;
+    }
+
+    public void setSchoolZoneId(Integer schoolZoneId) {
+        this.schoolZoneId = schoolZoneId;
     }
 
     public SchoolZone getSchoolZone() {

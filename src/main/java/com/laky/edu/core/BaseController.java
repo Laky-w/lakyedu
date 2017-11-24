@@ -3,6 +3,7 @@ package com.laky.edu.core;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -34,5 +35,17 @@ public class BaseController {
         map.put("message","失败");
         map.put("data",e.getMessage());
         return map;
+    }
+
+    public String getRemortIP(HttpServletRequest request) {
+
+        if (request.getHeader("x-forwarded-for") == null) {
+
+            return request.getRemoteAddr();
+
+        }
+
+        return request.getHeader("x-forwarded-for");
+
     }
 }
