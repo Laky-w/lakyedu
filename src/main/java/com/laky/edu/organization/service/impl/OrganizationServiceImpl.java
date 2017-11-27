@@ -105,6 +105,7 @@ public class OrganizationServiceImpl implements OrganizationService {
         PageHelper.startPage(pageNum, pageSize);
         List<Branch> dataList= branchDao.findBranchAll();
      //   new PageInfo<>(dataList);
+
         return new PageBean<>(dataList);
     }
 

@@ -10,6 +10,7 @@ import com.laky.edu.util.MD5;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -45,6 +46,40 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<Menu> findMenuAll() throws Exception {
         //递归处理菜单
-        return menuDao.findMenuAll();
+        List<Menu> menuList =menuDao.findMenuAll();
+        List<Menu> newMenuList = new ArrayList<>();
+        menuList.forEach(item->{
+            if(item.getParentId() == 0){
+                item.setSubs(getSubs(item.getId(),menuList));
+                newMenuList.add(item);
+            }
+        });
+       /* for (Menu menu: menuList){
+            if (menu.getParentId() == 0) { //父级菜单
+                menu.setSubs(getSubs(menu.getId(),menuList));
+                newMenuList.add(menu);
+            }
+        }*/
+        newMenuList.sort((a,b) -> a.getSort().compareTo(b.getSort()));
+        return newMenuList;
+    }
+
+    /**
+     * 查找孩子节点
+     * @param id
+     * @param menuList
+     * @return
+     */
+    private List<Menu> getSubs(Integer id,List<Menu> menuList){
+        List<Menu> newMenuList = new ArrayList<>();
+        menuList.forEach(item->{
+            if(item.getParentId() == id){
+                item.setSubs(getSubs(item.getId(),menuList));
+                newMenuList.add(item);
+            }
+        });
+        if (newMenuList.size() == 0) return  null;
+        newMenuList.sort((a,b) -> a.getSort().compareTo(b.getSort()));
+        return newMenuList;
     }
 }

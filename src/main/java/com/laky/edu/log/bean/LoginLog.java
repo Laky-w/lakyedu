@@ -1,12 +1,19 @@
 package com.laky.edu.log.bean;
 
+import com.laky.edu.organization.bean.SchoolZone;
+import com.laky.edu.organization.bean.User;
+
 import java.io.Serializable;
 import java.util.Date;
 
 public class LoginLog implements Serializable {
     private Integer id;
 
+    private User user;
+
     private Integer userId;
+
+    private SchoolZone schoolZone;
 
     private Integer schoolZoneId;
 
@@ -28,12 +35,28 @@ public class LoginLog implements Serializable {
         this.id = id;
     }
 
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
     public Integer getUserId() {
         return userId;
     }
 
     public void setUserId(Integer userId) {
         this.userId = userId;
+    }
+
+    public SchoolZone getSchoolZone() {
+        return schoolZone;
+    }
+
+    public void setSchoolZone(SchoolZone schoolZone) {
+        this.schoolZone = schoolZone;
     }
 
     public Integer getSchoolZoneId() {

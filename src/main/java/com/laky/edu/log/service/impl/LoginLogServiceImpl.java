@@ -1,5 +1,7 @@
 package com.laky.edu.log.service.impl;
 
+import com.github.pagehelper.PageHelper;
+import com.laky.edu.core.PageBean;
 import com.laky.edu.log.bean.LoginLog;
 import com.laky.edu.log.dao.LoginLogDao;
 import com.laky.edu.log.service.LoginLogService;
@@ -8,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.List;
 
 @Service
 public class LoginLogServiceImpl implements LoginLogService{
@@ -39,6 +43,14 @@ public class LoginLogServiceImpl implements LoginLogService{
     @Override
     public LoginLog selectByPrimaryKey(Integer id) {
         return null;
+    }
+
+    @Override
+    public PageBean selectByParameter(LinkedHashMap parameterMap) throws Exception {
+        int pageNum = (int)parameterMap.get("pageNum");
+        int pageSize = (int)parameterMap.get("pageSize");
+        PageHelper.startPage(pageNum, pageSize);
+        return new PageBean(loginLogDao.selectByParameter(parameterMap));
     }
 
     @Override

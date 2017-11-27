@@ -1,5 +1,7 @@
 package com.laky.edu.organization.bean;
 
+import java.util.List;
+
 /**
  * Created by 湖之教育工作室·laky on 2017/11/24.
  */
@@ -11,6 +13,7 @@ public class Menu {
     private Integer parentId;
     private String url;
     private Integer sort;
+    private List<Menu> subs;
 
     public Integer getId() {
         return id;
@@ -67,5 +70,13 @@ public class Menu {
 
     public void setSort(Integer sort) {
         this.sort = sort;
+    }
+
+    public List<Menu> getSubs() {
+        return subs;
+    }
+
+    public void setSubs(List<Menu> subs) {
+        this.subs = subs;
     }
 }

@@ -18,7 +18,7 @@
     </select>-->
 
     <select id="findBranchAll" resultType="com.laky.edu.organization.bean.Branch">
-        SELECT * FROM laky_branch
+        SELECT * FROM laky_organization_branch
     </select>
     <select id="queryBranchBySerialOrId" resultType="com.laky.edu.organization.bean.Branch">
         SELECT id,branch_name,serial,create_datetime,the_status,address,owner,logo,remarks,last_datetime,max_count,phone,signatory FROM laky_organization_branch

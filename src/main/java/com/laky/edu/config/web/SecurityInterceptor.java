@@ -22,16 +22,21 @@ public class SecurityInterceptor extends HandlerInterceptorAdapter {
 //        String uri =  request.getRequestURI();
         //第一步获取token
         System.out.println(request.getMethod());
-        if( "OPTIONS" ==  request.getMethod()) { //跨域检测方法
+        if( "OPTIONS".equals(request.getMethod())) { //跨域检测方法
             return true;
         }
         String token =  request.getHeader("token");
         if (BaseController.userSession.get(token) != null) { //登录
             return true;
         }
+        String res ="{\"code\":420,\"message\":\"登录过期\",\"data\":\"登录过期，请重新登录！\"}";
         // 跳转登录
-        String url = request.getContextPath()+"/login.html";
-        response.sendRedirect(url);
+//        String url = request.getContextPath()+"/login.html";
+//        response.sendRedirect(url); .AppendHeader("Access-Control-Allow-Origin", "*");
+        response.setHeader("Access-Control-Allow-Origin","*");
+        response.setCharacterEncoding("UTF-8");
+        response.setStatus(420);
+        response.getWriter().print(res);
         return false;
     }
 }
