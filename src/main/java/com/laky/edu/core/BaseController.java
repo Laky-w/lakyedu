@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
@@ -63,6 +64,13 @@ public class BaseController {
         }
         return request.getHeader("x-forwarded-for");
     }
+
+    /**
+     * 封装表单数据
+     * @param request
+     * @param parameter
+     * @return
+     */
     public LinkedHashMap doWrappingFormParameter(HttpServletRequest request,LinkedHashMap parameter){
         Enumeration pNames=request.getParameterNames();
         while(pNames.hasMoreElements()){
@@ -73,5 +81,14 @@ public class BaseController {
             }
         }
         return parameter;
+    }
+
+    /**
+     * 获取当前登录用户
+     * @param request
+     * @return
+     */
+    public User getCurrentUser(HttpServletRequest request){
+       return this.userSession.get(request.getHeader("token"));
     }
 }
