@@ -3,6 +3,7 @@ package com.laky.edu.organization.bean;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by 95 on 2017/11/20.
@@ -18,6 +19,9 @@ public class SchoolZone {
     private String phone;
     private Integer fatherId;
     private Branch branch;
+    private String remarks;
+    private String owner;
+    private List<SchoolZone> childrenList;
 
     public Integer getId() {
         return id;
@@ -98,5 +102,29 @@ public class SchoolZone {
 
     public void setBranch(Branch branch) {
         this.branch = branch;
+    }
+
+    public String getRemarks() {
+        return remarks;
+    }
+
+    public void setRemarks(String remarks) {
+        this.remarks = remarks;
+    }
+
+    public String getOwner() {
+        return owner;
+    }
+
+    public void setOwner(String owner) {
+        this.owner = owner;
+    }
+
+    public List<SchoolZone> getChildrenList() {
+        return childrenList;
+    }
+
+    public void setChildrenList(List<SchoolZone> childrenList) {
+        this.childrenList = childrenList;
     }
 }

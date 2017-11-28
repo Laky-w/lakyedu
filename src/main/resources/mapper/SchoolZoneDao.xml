@@ -5,15 +5,15 @@
 <mapper namespace="com.laky.edu.organization.dao.SchoolZoneDao">
     <insert id="insertSchoolZoneDao" useGeneratedKeys="true" keyProperty="id" keyColumn="id"
             parameterType="com.laky.edu.organization.bean.SchoolZone">
-        INSERT  INTO laky_school_zone(`name`,the_status,the_type,create_datetime,serial,address,phone,father_id,branch_id)
-        VALUES (#{name},#{theStatus},#{theType},#{createDatetime},#{serial},#{address},#{phone},#{fatherId},#{branch.id})
+        INSERT  INTO laky_organization_school_zone(`name`,the_status,the_type,create_datetime,serial,address,phone,father_id,branch_id,remarks,owner)
+        VALUES (#{name},#{theStatus},#{theType},#{createDatetime},#{serial},#{address},#{phone},#{fatherId},#{branch.id},#{remarks},#{owner})
     </insert>
     <!--resultType 返回值类型  参数类型 -->
     <select id="querySchoolZoneAllByBranchId" resultType="com.laky.edu.organization.bean.SchoolZone" parameterType="Integer">
         SELECT * from laky_organization_school_zone where branch_id =#{branchId,jdbcType=INTEGER};
     </select>
     <select id="querySchoolZoneDaoById" resultType="com.laky.edu.organization.bean.SchoolZone" parameterType="Integer">
-        SELECT  * FROM  laky_organization_school_zone where id =#{branchId,jdbcType=INTEGER}
+        SELECT  * FROM  laky_organization_school_zone where id =#{branchId,jdbcType=INTEGER} AND  theStatus != 0
     </select>
     <update id="updateSchoolZone" parameterType="com.laky.edu.organization.bean.SchoolZone">
         UPDATE laky_organization_school_zone

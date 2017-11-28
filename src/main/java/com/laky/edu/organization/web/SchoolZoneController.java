@@ -1,11 +1,14 @@
 package com.laky.edu.organization.web;
 
+import com.laky.edu.organization.bean.Branch;
 import com.laky.edu.organization.bean.SchoolZone;
+import com.laky.edu.organization.bean.User;
 import com.laky.edu.organization.service.SchoolZoneService;
 import com.laky.edu.core.BaseController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
 
@@ -19,8 +22,11 @@ public class SchoolZoneController extends BaseController {
     private SchoolZoneService schoolZoneService;
 
     @PostMapping(value = "/createSchoolZone")
-    public Map createSchoolZone(SchoolZone schoolZone) {
+    public Map createSchoolZone(SchoolZone schoolZone,HttpServletRequest request) {
         try {
+            Branch branch = new Branch();
+            branch.setId(super.getCurrentUser(request).getBranchId());
+            schoolZone.setBranch(branch);
             int rowIndex = schoolZoneService.insertSchoolZoneDao(schoolZone);
             if(rowIndex>0){
                 return super.doWrappingData(schoolZone);
@@ -32,11 +38,12 @@ public class SchoolZoneController extends BaseController {
         }
     }
 
-    @GetMapping(value = "/findSchoolZoneAllByBranchId/{branchId}")
-    public Map findSchoolZoneAllByBranchId(@PathVariable Integer branchId) {
+    @GetMapping(value = "/findSchoolZoneAll")
+    public Map findSchoolZoneAllByBranchId(HttpServletRequest request) {
         try {
-            List<SchoolZone> dataList = schoolZoneService.querySchoolZoneAllByBranchId(branchId);
-            return  super.doWrappingData(dataList);
+            User user =super.getCurrentUser(request);
+            SchoolZone schoolZone = schoolZoneService.querySchoolZoneAllBySchoolZoneId(user.getBranchId(),user.getSchoolZoneId());
+            return  super.doWrappingData(schoolZone);
         } catch (Exception e){
             return  super.doWrappingErrorData(e);
         }

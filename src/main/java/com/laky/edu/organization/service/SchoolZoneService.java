@@ -23,6 +23,15 @@ public interface SchoolZoneService {
     List<SchoolZone> querySchoolZoneAllByBranchId(Integer branchId) throws Exception;
 
     /**
+     * 查询校区下的全部校区
+     * @param branchId
+     * @param schoolZoneId
+     * @return
+     * @throws Exception
+     */
+    SchoolZone querySchoolZoneAllBySchoolZoneId(Integer branchId,Integer schoolZoneId) throws Exception;
+
+    /**
      * 查询某个校区根据ID
      * @param id
      * @return
