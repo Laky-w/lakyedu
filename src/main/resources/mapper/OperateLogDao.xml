@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.laky.edu.log.dao.OperateLogDao" >
+  <resultMap id="BaseResultMap" type="com.laky.edu.log.bean.OperateLog" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="operate_person" property="operatePerson" jdbcType="VARCHAR" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="the_type" property="theType" jdbcType="TINYINT" />
+    <result column="branch_id" property="branchId" jdbcType="INTEGER" />
+    <result column="account_id" property="accountId" jdbcType="INTEGER" />
+    <result column="school_zone_id" property="schoolZoneId" jdbcType="INTEGER" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.laky.edu.log.bean.OperateLog" extends="BaseResultMap" >
+    <result column="content" property="content" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, create_time, operate_person, title, the_type, branch_id, account_id, school_zone_id
+  </sql>
+  <sql id="Blob_Column_List" >
+    content
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from laky_core_operate_log
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <select id="queryOperateLogAll" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from laky_core_operate_log
+    where school_zone_id = #{schoolZoneId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from laky_core_operate_log
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.laky.edu.log.bean.OperateLog" >
+    insert into laky_core_operate_log (id, create_time, operate_person, 
+      title, the_type, branch_id, 
+      account_id, school_zone_id, content
+      )
+    values (#{id,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{operatePerson,jdbcType=VARCHAR}, 
+      #{title,jdbcType=VARCHAR}, #{theType,jdbcType=TINYINT}, #{branchId,jdbcType=INTEGER}, 
+      #{accountId,jdbcType=INTEGER}, #{schoolZoneId,jdbcType=INTEGER}, #{content,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.laky.edu.log.bean.OperateLog" >
+    insert into laky_core_operate_log
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="operatePerson != null" >
+        operate_person,
+      </if>
+      <if test="title != null" >
+        title,
+      </if>
+      <if test="theType != null" >
+        the_type,
+      </if>
+      <if test="branchId != null" >
+        branch_id,
+      </if>
+      <if test="accountId != null" >
+        account_id,
+      </if>
+      <if test="schoolZoneId != null" >
+        school_zone_id,
+      </if>
+      <if test="content != null" >
+        content,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="operatePerson != null" >
+        #{operatePerson,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null" >
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="theType != null" >
+        #{theType,jdbcType=TINYINT},
+      </if>
+      <if test="branchId != null" >
+        #{branchId,jdbcType=INTEGER},
+      </if>
+      <if test="accountId != null" >
+        #{accountId,jdbcType=INTEGER},
+      </if>
+      <if test="schoolZoneId != null" >
+        #{schoolZoneId,jdbcType=INTEGER},
+      </if>
+      <if test="content != null" >
+        #{content,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.laky.edu.log.bean.OperateLog" >
+    update laky_core_operate_log
+    <set >
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="operatePerson != null" >
+        operate_person = #{operatePerson,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null" >
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="theType != null" >
+        the_type = #{theType,jdbcType=TINYINT},
+      </if>
+      <if test="branchId != null" >
+        branch_id = #{branchId,jdbcType=INTEGER},
+      </if>
+      <if test="accountId != null" >
+        account_id = #{accountId,jdbcType=INTEGER},
+      </if>
+      <if test="schoolZoneId != null" >
+        school_zone_id = #{schoolZoneId,jdbcType=INTEGER},
+      </if>
+      <if test="content != null" >
+        content = #{content,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.laky.edu.log.bean.OperateLog" >
+    update laky_core_operate_log
+    set create_time = #{createTime,jdbcType=TIMESTAMP},
+      operate_person = #{operatePerson,jdbcType=VARCHAR},
+      title = #{title,jdbcType=VARCHAR},
+      the_type = #{theType,jdbcType=TINYINT},
+      branch_id = #{branchId,jdbcType=INTEGER},
+      account_id = #{accountId,jdbcType=INTEGER},
+      school_zone_id = #{schoolZoneId,jdbcType=INTEGER},
+      content = #{content,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.laky.edu.log.bean.OperateLog" >
+    update laky_core_operate_log
+    set create_time = #{createTime,jdbcType=TIMESTAMP},
+      operate_person = #{operatePerson,jdbcType=VARCHAR},
+      title = #{title,jdbcType=VARCHAR},
+      the_type = #{theType,jdbcType=TINYINT},
+      branch_id = #{branchId,jdbcType=INTEGER},
+      account_id = #{accountId,jdbcType=INTEGER},
+      school_zone_id = #{schoolZoneId,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

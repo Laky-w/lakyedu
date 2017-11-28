@@ -38,4 +38,8 @@ public class OrganizationConst {
     public static int USER_SUPER_NO = 2;//普通用户
 
 
+    public static int NOTICE_BRANCH = 1 ;//机构公告
+    public static int NOTICE_SCHOOL = 2;//校区公告
+    public static int NOTICE_TOTAL = 3;//全站公告
+
 }
