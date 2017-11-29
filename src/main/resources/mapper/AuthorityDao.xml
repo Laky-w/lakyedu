@@ -11,78 +11,19 @@
   <sql id="Base_Column_List" >
     id, name, the_type, the_status, menu_id
   </sql>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+  <select id="queryAuthorityById" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
     from laky_organization_authority
     where id = #{id,jdbcType=INTEGER}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
-    delete from laky_organization_authority
-    where id = #{id,jdbcType=INTEGER}
-  </delete>
-  <insert id="insert" parameterType="com.laky.edu.organization.bean.Authority" >
+  <insert id="insertAuthority" parameterType="com.laky.edu.organization.bean.Authority" >
     insert into laky_organization_authority (id, name, the_type, 
       the_status, menu_id)
     values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{theType,jdbcType=TINYINT}, 
       #{theStatus,jdbcType=TINYINT}, #{menuId,jdbcType=INTEGER})
   </insert>
-  <insert id="insertSelective" parameterType="com.laky.edu.organization.bean.Authority" >
-    insert into laky_organization_authority
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        id,
-      </if>
-      <if test="name != null" >
-        name,
-      </if>
-      <if test="theType != null" >
-        the_type,
-      </if>
-      <if test="theStatus != null" >
-        the_status,
-      </if>
-      <if test="menuId != null" >
-        menu_id,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        #{id,jdbcType=INTEGER},
-      </if>
-      <if test="name != null" >
-        #{name,jdbcType=VARCHAR},
-      </if>
-      <if test="theType != null" >
-        #{theType,jdbcType=TINYINT},
-      </if>
-      <if test="theStatus != null" >
-        #{theStatus,jdbcType=TINYINT},
-      </if>
-      <if test="menuId != null" >
-        #{menuId,jdbcType=INTEGER},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.laky.edu.organization.bean.Authority" >
-    update laky_organization_authority
-    <set >
-      <if test="name != null" >
-        name = #{name,jdbcType=VARCHAR},
-      </if>
-      <if test="theType != null" >
-        the_type = #{theType,jdbcType=TINYINT},
-      </if>
-      <if test="theStatus != null" >
-        the_status = #{theStatus,jdbcType=TINYINT},
-      </if>
-      <if test="menuId != null" >
-        menu_id = #{menuId,jdbcType=INTEGER},
-      </if>
-    </set>
-    where id = #{id,jdbcType=INTEGER}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.laky.edu.organization.bean.Authority" >
+  <update id="updateAuthority" parameterType="com.laky.edu.organization.bean.Authority" >
     update laky_organization_authority
     set name = #{name,jdbcType=VARCHAR},
       the_type = #{theType,jdbcType=TINYINT},

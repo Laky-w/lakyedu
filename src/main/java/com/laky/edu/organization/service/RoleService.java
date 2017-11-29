@@ -1,17 +1,19 @@
-package com.laky.edu.organization.dao;
+package com.laky.edu.organization.service;
+
 import com.laky.edu.organization.bean.Authority;
 import com.laky.edu.organization.bean.Role;
 import com.laky.edu.organization.bean.RoleAuthority;
+
 import java.util.LinkedHashMap;
 import java.util.List;
 
-public interface RoleDao {
+public interface RoleService {
 
-    int insertRole(Role role);
+    int createRole(Role role);
 
-    Authority queryRoleById(Integer id);
+    Authority findRoleById(Integer id);
 
-    List<RoleAuthority> queryRoleByParameter(Integer id);
+    List<RoleAuthority> findRoleByParameter(LinkedHashMap parameterMap);
 
     int updateRole(Role role);
 }

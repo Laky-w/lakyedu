@@ -1,17 +1,19 @@
 package com.laky.edu.organization.dao;
 
+import com.laky.edu.organization.bean.Authority;
+import com.laky.edu.organization.bean.RoleAuthority;
 import com.laky.edu.organization.bean.UserParameter;
+import org.springframework.stereotype.Component;
 
+import java.util.LinkedHashMap;
+import java.util.List;
+@Component
 public interface UserParameterDao {
-    int deleteByPrimaryKey(Integer id);
+    int insertUserParameter(UserParameter userParameter);
 
-    int insert(UserParameter record);
+    Authority queryUserParameterById(Integer id);
 
-    int insertSelective(UserParameter record);
+    List<RoleAuthority> queryUserParameterByParameter(Integer id);
 
-    UserParameter selectByPrimaryKey(Integer id);
-
-    int updateByPrimaryKeySelective(UserParameter record);
-
-    int updateByPrimaryKey(UserParameter record);
+    int updateUserParameter(UserParameter userParameter);
 }

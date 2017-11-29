@@ -3,17 +3,18 @@ package com.laky.edu.organization.dao;
 import com.laky.edu.organization.bean.Authority;
 import org.springframework.stereotype.Component;
 
+import java.util.LinkedHashMap;
+import java.util.List;
+
 @Component
 public interface AuthorityDao {
 
 
     int insertAuthority(Authority authority);
 
-
-
     Authority queryAuthorityById(Integer id);
 
-    int updateByPrimaryKeySelective(Authority authority);
+    List<Authority> queryAuthorityByParameter(Integer id);
 
-    int updateByPrimaryKey(Authority authority);
+    int updateAuthority(Authority authority);
 }
