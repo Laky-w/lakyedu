@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.laky.edu.organization.dao.BranchParameterValueDao" >
+  <resultMap id="BaseResultMap" type="com.laky.edu.organization.bean.BranchParameterValue" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="parameter_id" property="parameterId" jdbcType="INTEGER" />
+    <result column="branch_id" property="branchId" jdbcType="INTEGER" />
+    <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
+    <result column="the_status" property="theStatus" jdbcType="TINYINT" />
+    <result column="sort" property="sort" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, name, parameter_id, branch_id, create_user_id, the_status, sort
+  </sql>
+  <select id="queryBranchParameterValueByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from laky_organization_parameter_value
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <select id="queryBranchParameterValueByBranchId" resultMap="BaseResultMap"  >
+    select
+    <include refid="Base_Column_List" />
+    from laky_organization_parameter_value
+    where branch_id = #{branchId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from laky_organization_parameter_value
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.laky.edu.organization.bean.BranchParameterValue" >
+    insert into laky_organization_parameter_value (id, name, parameter_id, 
+      branch_id, create_user_id, the_status, 
+      sort)
+    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{parameterId,jdbcType=INTEGER}, 
+      #{branchId,jdbcType=INTEGER}, #{createUserId,jdbcType=INTEGER}, #{theStatus,jdbcType=TINYINT}, 
+      #{sort,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.laky.edu.organization.bean.BranchParameterValue" >
+    insert into laky_organization_parameter_value
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="parameterId != null" >
+        parameter_id,
+      </if>
+      <if test="branchId != null" >
+        branch_id,
+      </if>
+      <if test="createUserId != null" >
+        create_user_id,
+      </if>
+      <if test="theStatus != null" >
+        the_status,
+      </if>
+      <if test="sort != null" >
+        sort,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="parameterId != null" >
+        #{parameterId,jdbcType=INTEGER},
+      </if>
+      <if test="branchId != null" >
+        #{branchId,jdbcType=INTEGER},
+      </if>
+      <if test="createUserId != null" >
+        #{createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="theStatus != null" >
+        #{theStatus,jdbcType=TINYINT},
+      </if>
+      <if test="sort != null" >
+        #{sort,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.laky.edu.organization.bean.BranchParameterValue" >
+    update laky_organization_parameter_value
+    <set >
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="parameterId != null" >
+        parameter_id = #{parameterId,jdbcType=INTEGER},
+      </if>
+      <if test="branchId != null" >
+        branch_id = #{branchId,jdbcType=INTEGER},
+      </if>
+      <if test="createUserId != null" >
+        create_user_id = #{createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="theStatus != null" >
+        the_status = #{theStatus,jdbcType=TINYINT},
+      </if>
+      <if test="sort != null" >
+        sort = #{sort,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.laky.edu.organization.bean.BranchParameterValue" >
+    update laky_organization_parameter_value
+    set name = #{name,jdbcType=VARCHAR},
+      parameter_id = #{parameterId,jdbcType=INTEGER},
+      branch_id = #{branchId,jdbcType=INTEGER},
+      create_user_id = #{createUserId,jdbcType=INTEGER},
+      the_status = #{theStatus,jdbcType=TINYINT},
+      sort = #{sort,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
