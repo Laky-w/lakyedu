@@ -12,11 +12,13 @@ public class Notice implements Serializable {
 
     private Integer theType;
 
+    private Integer theStatus;
+
     private Date lastDatetime;
 
     private Integer branchId;
 
-    private Integer schoolId;
+    private Integer schoolZoneId;
 
     private String content;
 
@@ -82,12 +84,20 @@ public class Notice implements Serializable {
         this.branchId = branchId;
     }
 
-    public Integer getSchoolId() {
-        return schoolId;
+    public Integer getSchoolZoneId() {
+        return schoolZoneId;
     }
 
-    public void setSchoolId(Integer schoolId) {
-        this.schoolId = schoolId;
+    public void setSchoolZoneId(Integer schoolId) {
+        this.schoolZoneId = schoolId;
+    }
+
+    public Integer getTheStatus() {
+        return theStatus;
+    }
+
+    public void setTheStatus(Integer theStatus) {
+        this.theStatus = theStatus;
     }
 
     @Override
@@ -102,9 +112,10 @@ public class Notice implements Serializable {
         sb.append(", theType=").append(theType);
         sb.append(", lastDatetime=").append(lastDatetime);
         sb.append(", branchId=").append(branchId);
-        sb.append(", schoolId=").append(schoolId);
+        sb.append(", schoolId=").append(schoolZoneId);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append(",content=").append(content);
+        sb.append("theStatus=").append(theStatus);
         sb.append("]");
         return sb.toString();
     }

@@ -1,5 +1,7 @@
 package com.laky.edu.organization.service.impl;
 
+import com.github.pagehelper.PageHelper;
+import com.laky.edu.core.PageBean;
 import com.laky.edu.organization.OrganizationConst;
 import com.laky.edu.organization.bean.Notice;
 import com.laky.edu.organization.dao.NoticeDao;
@@ -18,38 +20,35 @@ public class NoticeServiceImpl implements NoticeService{
 
 
     @Override
-    public int deleteByLastDatetime(Date lastDatetime) throws Exception {
-        return noticeDao.deleteByLastDatetime(lastDatetime);
+    public int createNotice(Notice notice) throws Exception {
+        return noticeDao.insertNotice(notice);
     }
 
     @Override
-    public int add(Notice record) throws Exception {
-        return noticeDao.insert(record);
+    public PageBean findNoticeByBranchOrSchool(LinkedHashMap parameterMap) throws Exception {
+        int pageNum = (int) parameterMap.get("pageNum");
+        int pageSize = (int) parameterMap.get("pageSize");
+        PageHelper.startPage(pageNum,pageSize);
+        return new PageBean(noticeDao.queryNoticeByBranchOrSchool(parameterMap));
     }
 
     @Override
-    public int addSelective(Notice record) throws Exception {
-        return noticeDao.insertSelective(record);
+    public Notice findNoticeById(Integer id) throws Exception {
+        return noticeDao.queryNoticeById(id);
     }
 
     @Override
-    public List<Notice> findByTheType(Integer theType) throws Exception {
-
-        return noticeDao.queryByTheType(theType);
+    public int updateNoticeByPrimaryKeySelective(Notice notice) throws Exception {
+        return noticeDao.updateNoticeByPrimaryKeySelective(notice);
     }
 
     @Override
-    public List<Notice> findByBranchOrSchool(LinkedHashMap parameterMap) throws Exception {
-        return noticeDao.queryByBranchOrSchool(parameterMap);
+    public int updateNoticeByPrimaryKey(Notice notice) throws Exception {
+        return noticeDao.updateNoticeByPrimaryKey(notice);
     }
 
     @Override
-    public int updateByPrimaryKeySelective(Notice record)  throws Exception{
-        return noticeDao.updateByPrimaryKeySelective(record);
-    }
-
-    @Override
-    public int updateByPrimaryKey(Notice record) throws Exception {
-        return noticeDao.updateByPrimaryKey(record);
+    public int deleteNoticeByLastDatetime(Date lastDatetime) throws Exception {
+        return noticeDao.deleteNoticeByLastDatetime(lastDatetime);
     }
 }

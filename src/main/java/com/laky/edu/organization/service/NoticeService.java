@@ -1,5 +1,6 @@
 package com.laky.edu.organization.service;
 
+import com.laky.edu.core.PageBean;
 import com.laky.edu.organization.bean.Notice;
 
 import java.util.Date;
@@ -9,23 +10,44 @@ import java.util.List;
 
 public interface NoticeService {
 
-    int deleteByLastDatetime(Date lastDatetime) throws Exception;
-
-    int add(Notice record) throws Exception;
-
-    int addSelective(Notice record) throws Exception;
-
-    List<Notice> findByTheType(Integer theType) throws Exception;
+    /**
+     * 插入一条数据
+     * @param notice
+     * @return
+     */
+    int createNotice(Notice notice )throws Exception;
 
     /**
      * 查找通知通过系统,学校,机构
      * @param parameterMap
      * @return
      */
-    List<Notice> findByBranchOrSchool(LinkedHashMap parameterMap)throws Exception;
+    PageBean findNoticeByBranchOrSchool(LinkedHashMap parameterMap)throws Exception;
 
+    /**
+     * 查询通过id
+     * @param id
+     * @return
+     */
+    Notice findNoticeById(Integer id)throws Exception;
+    /**
+     * 更新通过主键细选
+     * @param notice
+     * @return
+     */
+    int updateNoticeByPrimaryKeySelective(Notice notice)throws Exception;
 
-    int updateByPrimaryKeySelective(Notice record) throws Exception;
+    /**
+     * 更新通过主键
+     * @param notice
+     * @return
+     */
+    int updateNoticeByPrimaryKey(Notice notice)throws Exception;
 
-    int updateByPrimaryKey(Notice record) throws Exception;
+    /**
+     * 删除通过最后时间
+     * @param lastDatetime
+     * @return
+     */
+    int deleteNoticeByLastDatetime(Date lastDatetime)throws Exception;
 }

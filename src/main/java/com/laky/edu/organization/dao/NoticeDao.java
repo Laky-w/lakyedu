@@ -9,22 +9,44 @@ import java.util.List;
 
 @Component
 public interface NoticeDao {
-    int deleteByLastDatetime(Date lastDatetime);
-
-    int insert(Notice record);
-
-    int insertSelective(Notice record);
-
-    List<Notice> queryByTheType(Integer theType);
+    /**
+     * 插入一条数据
+     * @param notice
+     * @return
+     */
+    int insertNotice(Notice notice );
 
     /**
      * 查找通知通过系统,学校,机构
      * @param parameterMap
      * @return
      */
-    List<Notice> queryByBranchOrSchool(LinkedHashMap parameterMap);
+    List<Notice> queryNoticeByBranchOrSchool(LinkedHashMap parameterMap);
 
-    int updateByPrimaryKeySelective(Notice record);
+    /**
+     * 查询通过id
+     * @param id
+     * @return
+     */
+    Notice queryNoticeById(Integer id);
+    /**
+     * 更新通过主键细选
+     * @param notice
+     * @return
+     */
+    int updateNoticeByPrimaryKeySelective(Notice notice);
 
-    int updateByPrimaryKey(Notice record);
+    /**
+     * 更新通过主键
+     * @param notice
+     * @return
+     */
+    int updateNoticeByPrimaryKey(Notice notice);
+
+    /**
+     * 删除通过最后时间
+     * @param lastDatetime
+     * @return
+     */
+    int deleteNoticeByLastDatetime(Date lastDatetime);
 }

@@ -32,7 +32,7 @@
         </javaTypeResolver>
 
         <!-- generate Model -->
-        <javaModelGenerator targetPackage="com.laky.edu.log.bean"
+        <javaModelGenerator targetPackage="com.laky.edu.organization.bean"
                             targetProject="${project.build.directory}/../src/main/java">
            <!-- <property name="enableSubPackages" value="true"/>
             <property name="trimStrings" value="true"/>
@@ -49,7 +49,7 @@
         </sqlMapGenerator>
 
         <!-- generate Mapper -->
-        <javaClientGenerator type="XMLMAPPER" targetPackage="com.laky.edu.log.dao"
+        <javaClientGenerator type="XMLMAPPER" targetPackage="com.laky.edu.organization.dao"
                              targetProject="${project.build.directory}/../src/main/java">
             <property name="enableSubPackages" value="true"/>
         </javaClientGenerator>
@@ -76,7 +76,7 @@
           delimitAllColumns CDATA #IMPLIED
          -->
 
-        <table schema="edu_laky" tableName="laky_core_operate_log" domainObjectName="OperateLog" modelType="flat"
+        <table schema="edu_laky" tableName="laky_organization_user_parameter" domainObjectName="UserParameter" modelType="flat"
                enableCountByExample="false" enableUpdateByExample="false" enableUpdateByPrimaryKey="true"
                enableDeleteByExample="false" enableSelectByExample="false"
                selectByExampleQueryId="false">
