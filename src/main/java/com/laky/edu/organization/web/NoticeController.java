@@ -24,6 +24,22 @@ public class NoticeController extends BaseController {
     private NoticeService noticeService;
 
 
+    @GetMapping(value = "/findNewNoticeAll")
+    public Map findNewNoticeAll(HttpServletRequest request){
+        try {
+            // 系统给的通知,当前校区给的通知,当前机构给的通知
+            User user = getCurrentUser(request);
+            LinkedHashMap parameterMap = new LinkedHashMap();
+            parameterMap.put("branchId",user.getBranchId());
+            parameterMap.put("schoolZoneId",user.getSchoolZoneId());
+            parameterMap = super.doWrappingFormParameter(request,parameterMap);
+            return super.doWrappingData(noticeService.findNewNotice(parameterMap));
+        } catch (Exception e){
+            return  super.doWrappingErrorData(e);
+        }
+
+    }
+
     @GetMapping(value = "/findNoticeAll/{pageNum}/{pageSize}")
     public Map findNoticeAll(HttpServletRequest request,@PathVariable int pageNum,@PathVariable int pageSize){
         try {

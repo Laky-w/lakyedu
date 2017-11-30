@@ -29,17 +29,15 @@ public class OperateLogController extends BaseController{
     public Map findOperateLogAll(HttpServletRequest request,
                                  @PathVariable int pageNum, @PathVariable int pageSize){
         try {
-            User user = userSession.get(request.getHeader("token"));
             LinkedHashMap parameterMap = new LinkedHashMap();
-            parameterMap.put("schoolZoneId",user.getSchoolZoneId());
+            parameterMap.put("branchId",getCurrentUser(request).getBranchId());
             parameterMap.put("pageNum",pageNum);
             parameterMap.put("pageSize",pageSize);
             parameterMap = super.doWrappingFormParameter(request,parameterMap);
-            return super.doWrappingData(operateLogService.findOperateLogAll(parameterMap));
+            return super.doWrappingData(operateLogService.findLogAllByBranchId(parameterMap));
         }catch ( Exception e ){
             return  super.doWrappingErrorData(e);
         }
-
     }
 
     @PostMapping(value = "/addOperateLog")

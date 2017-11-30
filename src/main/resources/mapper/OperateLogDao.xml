@@ -10,9 +10,19 @@
     <result column="branch_id" property="branchId" jdbcType="INTEGER" />
     <result column="account_id" property="accountId" jdbcType="INTEGER" />
     <result column="school_zone_id" property="schoolZoneId" jdbcType="INTEGER" />
+    <association property="schoolZone" column="school_zone_id" javaType="com.laky.edu.organization.bean.SchoolZone" resultMap="SchoolZoneMap" />
+    <association property="user" column="account_id" javaType="com.laky.edu.organization.bean.User" resultMap="UserMap" />
   </resultMap>
   <resultMap id="ResultMapWithBLOBs" type="com.laky.edu.log.bean.OperateLog" extends="BaseResultMap" >
     <result column="content" property="content" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <resultMap id="SchoolZoneMap" type="com.laky.edu.organization.bean.SchoolZone">
+    <id property="id" column="id" />
+    <result property="name" column="sz_name" />
+  </resultMap>
+  <resultMap id="UserMap" type="com.laky.edu.organization.bean.User">
+    <id property="id" column="id" />
+    <result property="name" column="u_name" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, create_time, operate_person, title, the_type, branch_id, account_id, school_zone_id
@@ -20,22 +30,26 @@
   <sql id="Blob_Column_List" >
     content
   </sql>
-  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
-    select 
-    <include refid="Base_Column_List" />
-    ,
-    <include refid="Blob_Column_List" />
-    from laky_core_operate_log
-    where id = #{id,jdbcType=INTEGER}
-  </select>
 
-  <select id="queryOperateLogAll" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
-    select
-    <include refid="Base_Column_List" />
-    ,
-    <include refid="Blob_Column_List" />
-    from laky_core_operate_log
-    where school_zone_id = #{schoolZoneId,jdbcType=INTEGER}
+  <select id="queryOperateLogAll" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    SELECT s.*,u.`name` as u_name,sz.`name` as sz_name from  laky_core_operate_log s RIGHT JOIN laky_organization_user u on s.account_id = u.id and u.the_status !=0
+     <if test="userName != null">
+       AND u.`name` LIKE CONCAT('%',#{userName,jdbcType=VARCHAR},'%')
+     </if>
+    LEFT JOIN laky_organization_school_zone sz on s.school_zone_id = sz.id and sz.the_status !=0
+    <where>
+      s.branch_id = #{branchId,jdbcType=INTEGER}
+      <if test="theType != null">
+        AND s.the_type = #{theType,jdbcType=TINYINT}
+      </if>
+      <if test="theDate1 != null">
+        AND s.create_time &gt;= #{theDate1,jdbcType=TIMESTAMP}
+      </if>
+      <if test="theDate2 != null">
+        AND s.create_time &lt;= #{theDate2,jdbcType=TIMESTAMP}
+      </if>
+    </where>
+    ORDER BY s.create_time DESC
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from laky_core_operate_log

@@ -22,6 +22,14 @@
        OR user_id=#{userId,jdbcType=INTEGER}
   </select>
 
+  <select id="queryNewNoticeByBranchOrSchool" resultMap="NoticeResultMap">
+    SELECT *
+    FROM laky_organization_notice
+    WHERE (school_zone_id = #{schoolZoneId,jdbcType=INTEGER} and the_type = 2)
+    OR (branch_id=#{branchId,jdbcType=INTEGER} and the_type = 1)
+    or the_type = 3 and last_datetime > now()
+  </select>
+
   <delete id="deleteNoticeByLastDatetime" parameterType="java.lang.Integer" >
     delete from laky_organization_notice
     where id = #{id,jdbcType=INTEGER}

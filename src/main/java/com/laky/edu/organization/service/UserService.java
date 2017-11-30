@@ -1,8 +1,10 @@
 package com.laky.edu.organization.service;
 
+import com.laky.edu.core.PageBean;
 import com.laky.edu.organization.bean.Menu;
 import com.laky.edu.organization.bean.User;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 
 /**
@@ -25,4 +27,12 @@ public interface UserService {
      * @throws Exception
      */
     List<Menu> findMenuAll() throws Exception;
+
+    /**
+     * 查询校区用户
+     * @param parameterMap
+     * @return
+     * @throws Exception
+     */
+    PageBean findUserBySchoolId(LinkedHashMap parameterMap)throws Exception;
 }

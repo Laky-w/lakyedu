@@ -1,11 +1,14 @@
 package com.laky.edu.organization.dao;
 
 import com.laky.edu.organization.bean.BranchParameterValue;
+import org.springframework.stereotype.Component;
 
 import java.util.LinkedHashMap;
 import java.util.List;
 
+@Component
 public interface BranchParameterValueDao {
+
     int deleteByPrimaryKey(Integer id);
 
     int insert(BranchParameterValue record);

@@ -17,6 +17,14 @@
       WHERE (u.user_name = #{userName} or u.email = #{userName} or u.phone = #{userName}) and u.the_status != 0 and b.serial = #{serial} and b.the_status =1
 
     </select>
+    <select id="queryUserBySchoolId"   resultType="com.laky.edu.organization.bean.User">
+       SELECT s.*,sz.`name`  from laky_organization_user s
+       LEFT JOIN laky_organization_school_zone sz on sz.id =s.school_zone_id and sz.the_status !=0 where s.the_status !=0 and s.school_zone_id in
+        <foreach collection="schoolIds" item="schoolId" index="index"
+                 open="(" close=")" separator=",">
+            #{schoolId}
+        </foreach>
+    </select>
     <!--<resultMap type="com.laky.edu.organization.bean.User" id="userResultMap">
 
         <association property="branch" javaType="com.laky.edu.organization.bean.Branch">

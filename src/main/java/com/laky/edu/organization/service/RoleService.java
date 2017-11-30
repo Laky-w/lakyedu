@@ -1,5 +1,6 @@
 package com.laky.edu.organization.service;
 
+import com.laky.edu.core.PageBean;
 import com.laky.edu.organization.bean.Authority;
 import com.laky.edu.organization.bean.Role;
 import com.laky.edu.organization.bean.RoleAuthority;
@@ -16,4 +17,12 @@ public interface RoleService {
     List<RoleAuthority> findRoleByParameter(LinkedHashMap parameterMap);
 
     int updateRole(Role role);
+
+    /**
+     * 查询校区角色
+     * @param parameterMap
+     * @return
+     * @throws Exception
+     */
+    PageBean findRoleBySchool(LinkedHashMap parameterMap) throws  Exception;
 }

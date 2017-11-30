@@ -1,8 +1,12 @@
 package com.laky.edu.core;
 
+import com.laky.edu.organization.OrganizationConst;
+import com.laky.edu.organization.bean.SchoolZone;
 import com.laky.edu.organization.bean.User;
+import com.laky.edu.organization.service.SchoolZoneService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServlet;
@@ -14,6 +18,8 @@ import java.util.*;
  */
 public class BaseController {
     private static Logger logger = LoggerFactory.getLogger(BaseController.class);
+    @Autowired
+    private SchoolZoneService schoolZoneService;
     public static Map<String,User> userSession = new HashMap<>();
 
     /**
@@ -27,8 +33,8 @@ public class BaseController {
         map.put("message","成功");
         map.put("data",object);
 
-  return map;
-}
+      return map;
+    }
     /**
      * 创建token
      * @return
@@ -90,5 +96,29 @@ public class BaseController {
      */
     public User getCurrentUser(HttpServletRequest request){
        return this.userSession.get(request.getHeader("token"));
+    }
+
+    /**
+     * 获取当前用户所在校区的id和下级校区的数组
+     * @param request
+     * @return
+     * @throws Exception
+     */
+    public Integer [] getSchoolIds(HttpServletRequest request) throws Exception{
+        User user=this.getCurrentUser(request);
+        user.getSchoolZoneId();
+        SchoolZone schoolZone = schoolZoneService.querySchoolZoneAllBySchoolZoneId(user.getBranchId(),user.getSchoolZoneId());
+        Integer [] ids ;
+        if(schoolZone.getChildrenList() != null && schoolZone.getChildrenList().size()>0) {
+            ids = new Integer[schoolZone.getChildrenList().size()+1];
+            ids[0] = schoolZone.getId();
+            for (int i=0;i<schoolZone.getChildrenList().size();i++){
+                SchoolZone tempSchoolZone = schoolZone.getChildrenList().get(i);
+                ids[i+1]=tempSchoolZone.getId();
+            }
+        } else {
+            ids = new Integer[]{schoolZone.getId()};
+        }
+        return  ids;
     }
 }

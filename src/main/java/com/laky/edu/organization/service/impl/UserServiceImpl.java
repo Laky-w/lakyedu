@@ -1,5 +1,7 @@
 package com.laky.edu.organization.service.impl;
 
+import com.github.pagehelper.PageHelper;
+import com.laky.edu.core.PageBean;
 import com.laky.edu.organization.OrganizationConst;
 import com.laky.edu.organization.bean.Menu;
 import com.laky.edu.organization.bean.User;
@@ -82,4 +84,11 @@ public class UserServiceImpl implements UserService {
         newMenuList.sort((a,b) -> a.getSort().compareTo(b.getSort()));
         return newMenuList;
     }
+
+    @Override
+    public PageBean findUserBySchoolId(LinkedHashMap parameterMap) throws Exception {
+        PageHelper.startPage((int)parameterMap.get("pageNum"),(int)parameterMap.get("pageSize"));
+        return new PageBean<>(userDao.queryUserBySchoolId(parameterMap));
+    }
 }
+

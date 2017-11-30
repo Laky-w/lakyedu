@@ -2,11 +2,14 @@ package com.laky.edu.organization.web;
 
 import com.laky.edu.config.web.WebSecurityConfig;
 import com.laky.edu.core.BaseController;
+import com.laky.edu.core.PageBean;
 import com.laky.edu.log.bean.LoginLog;
 import com.laky.edu.log.service.LoginLogService;
 import com.laky.edu.organization.bean.Menu;
 import com.laky.edu.organization.bean.User;
 import com.laky.edu.organization.service.OrganizationService;
+import com.laky.edu.organization.service.RoleService;
+import com.laky.edu.organization.service.SchoolZoneService;
 import com.laky.edu.organization.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -29,6 +32,10 @@ public class UserController extends BaseController{
 
     @Autowired
     private OrganizationService organizationService;
+
+    @Autowired
+    private RoleService roleService;
+
 
 
     @PostMapping(value = "login")
@@ -65,6 +72,7 @@ public class UserController extends BaseController{
 
     }
 
+
     @GetMapping("/getMenu")
     public Map getMenu(HttpServletRequest request) {
         try {
@@ -79,6 +87,33 @@ public class UserController extends BaseController{
             menuList.add(menuMap);*/
             List<Menu> menuList =userService.findMenuAll();
             return super.doWrappingData(menuList);
+        } catch (Exception e) {
+            return  super.doWrappingErrorData(e);
+        }
+    }
+
+    @PostMapping("/getUserList/{pageNum}/{pageSize}")
+    public Map getUserList(HttpServletRequest request,@PathVariable int pageNum, @PathVariable int pageSize){
+        try {
+            LinkedHashMap parameterMap = new LinkedHashMap();
+            parameterMap.put("schoolIds",super.getSchoolIds(request));//获取当前用户所在校区的id和下级校区的数组
+            parameterMap.put("pageNum",pageNum);
+            parameterMap.put("pageSize",pageSize);
+            return super.doWrappingData(userService.findUserBySchoolId(parameterMap));
+        } catch (Exception e) {
+            return  super.doWrappingErrorData(e);
+        }
+    }
+
+    @PostMapping("/getRoleList/{pageNum}/{pageSize}")
+    public Map getRoleList(HttpServletRequest request,@PathVariable int pageNum, @PathVariable int pageSize){
+        try {
+            LinkedHashMap parameterMap = new LinkedHashMap();
+            parameterMap.put("schoolIds",super.getSchoolIds(request));//获取当前用户所在校区的id和下级校区的数组
+            parameterMap.put("pageNum",pageNum);
+            parameterMap.put("pageSize",pageSize);
+            parameterMap.put("branchId",getCurrentUser(request).getBranchId());
+            return super.doWrappingData(roleService.findRoleBySchool(parameterMap));
         } catch (Exception e) {
             return  super.doWrappingErrorData(e);
         }

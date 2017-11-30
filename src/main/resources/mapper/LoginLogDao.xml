@@ -61,6 +61,7 @@
         AND s.the_datetime &lt;= #{theDate2,jdbcType=TIMESTAMP}
       </if>
     </where>
+    ORDER BY s.the_datetime DESC
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from laky_core_login_log

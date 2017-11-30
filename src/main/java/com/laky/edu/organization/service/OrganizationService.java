@@ -2,6 +2,8 @@ package com.laky.edu.organization.service;
 
 import com.laky.edu.organization.bean.Branch;
 import com.laky.edu.core.PageBean;
+import com.laky.edu.organization.bean.BranchParameter;
+import com.laky.edu.organization.bean.BranchParameterValue;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -55,4 +57,19 @@ public interface OrganizationService {
      * @return
      */
     List<Branch> findBranchAll(LinkedHashMap parameterMap) throws Exception;
+
+    /**
+     * 查询机构参数
+     * @return
+     * @throws Exception
+     */
+    List<BranchParameter> findBranchParameterAll() throws Exception;
+
+    /**
+     * 查询机构参数值
+     * @param parameterMap
+     * @return
+     * @throws Exception
+     */
+    List<BranchParameterValue> findBranchParameterValueAll(LinkedHashMap parameterMap) throws Exception;
 }

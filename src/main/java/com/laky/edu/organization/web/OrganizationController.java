@@ -1,11 +1,15 @@
 package com.laky.edu.organization.web;
 
 import com.laky.edu.organization.bean.Branch;
+import com.laky.edu.organization.bean.BranchParameter;
 import com.laky.edu.organization.service.OrganizationService;
 import com.laky.edu.core.BaseController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -78,6 +82,26 @@ public class OrganizationController extends BaseController {
             return  super.doWrappingErrorData(e);
         }
 
+    }
+
+    @GetMapping(value = "findBranchParameterAll")
+    public Map findBranchParameterAll() {
+        try {
+            return super.doWrappingData(organizationService.findBranchParameterAll());
+        } catch (Exception e){
+            return  super.doWrappingErrorData(e);
+        }
+    }
+    @GetMapping(value = "findBranchParameterValueAll/{parameterId}")
+    public Map findBranchParameterValueAll(@PathVariable  Integer parameterId,HttpServletRequest request) {
+        try {
+            LinkedHashMap parameterMap = new LinkedHashMap();
+            parameterMap.put("parameterId",parameterId);
+            parameterMap.put("branchId",super.getCurrentUser(request).getBranchId());
+            return super.doWrappingData(organizationService.findBranchParameterValueAll(parameterMap));
+        } catch (Exception e){
+            return  super.doWrappingErrorData(e);
+        }
     }
 
 }

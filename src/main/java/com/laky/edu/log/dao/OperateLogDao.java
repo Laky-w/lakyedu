@@ -26,32 +26,10 @@ public interface OperateLogDao {
     List<OperateLog> queryOperateLogAll(LinkedHashMap parameterMap);
 
     /**
-     * 查询操作时间段日志通过create_time
-     * @param createTime
-     * @return
-     */
-    OperateLog queryOperateLogByCreateTime(Date createTime);
-
-
-    /**
      * 删除过期日志通过时间
      * @param createTime
      * @return
      */
     int deleteExpireLogByCreatetime(Date createTime);
 
-
-    int deleteByPrimaryKey(Integer id);
-
-    int insert(OperateLog record);
-
-    int insertSelective(OperateLog record);
-
-    List<OperateLog> selectByPrimaryKey(LinkedHashMap parameterMap);
-
-    int updateByPrimaryKeySelective(OperateLog record);
-
-    int updateByPrimaryKeyWithBLOBs(OperateLog record);
-
-    int updateByPrimaryKey(OperateLog record);
 }

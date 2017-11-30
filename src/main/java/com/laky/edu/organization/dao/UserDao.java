@@ -4,6 +4,7 @@ import com.laky.edu.organization.bean.User;
 import org.springframework.stereotype.Component;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 
 /**
  * Created by 湖之教育工作室·laky on 2017/11/21.
@@ -23,4 +24,11 @@ public interface UserDao {
      * @return
      */
     User queryUserByUserName(LinkedHashMap parameter);
+
+    /**
+     * 根据校区查询
+     * @param parameter 参数
+     * @return
+     */
+    List<User> queryUserBySchoolId(LinkedHashMap parameter);
 }

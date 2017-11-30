@@ -20,6 +20,14 @@
     from laky_organization_role
     where id = #{id,jdbcType=INTEGER}
   </select>
+  <select id="queryRoleByParameter" resultMap="BaseResultMap" >
+    SELECT * from laky_organization_role where the_status !=0 and school_id in
+    <foreach collection="schoolIds" item="schoolId" index="index"
+             open="(" close=")" separator=",">
+      #{schoolId}
+    </foreach>
+     and branch_id = #{branchId}
+  </select>
   <insert id="insertRole" parameterType="com.laky.edu.organization.bean.Role" >
     insert into laky_organization_role (id, name, the_status, 
       create_time, create_user_id, school_id, 

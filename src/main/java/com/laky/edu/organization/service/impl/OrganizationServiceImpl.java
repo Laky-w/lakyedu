@@ -2,14 +2,9 @@ package com.laky.edu.organization.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.laky.edu.organization.OrganizationConst;
-import com.laky.edu.organization.bean.Branch;
-import com.laky.edu.organization.bean.SchoolZone;
+import com.laky.edu.organization.bean.*;
 import com.laky.edu.core.PageBean;
-import com.laky.edu.organization.bean.User;
-import com.laky.edu.organization.dao.BranchDao;
-import com.laky.edu.organization.dao.LakyTestDao;
-import com.laky.edu.organization.dao.SchoolZoneDao;
-import com.laky.edu.organization.dao.UserDao;
+import com.laky.edu.organization.dao.*;
 import com.laky.edu.organization.service.OrganizationService;
 import com.laky.edu.util.MD5;
 import org.slf4j.Logger;
@@ -34,6 +29,10 @@ public class OrganizationServiceImpl implements OrganizationService {
     private SchoolZoneDao schoolZoneDao;
     @Autowired
     private UserDao userDao;
+    @Autowired
+    private BranchParameterDao branchParameterDao;
+    @Autowired
+    private BranchParameterValueDao branchParameterValueDao;
 
     @Override
     public Branch findBranchBySerial(String serial) {
@@ -113,5 +112,15 @@ public class OrganizationServiceImpl implements OrganizationService {
     public List<Branch> findBranchAll(LinkedHashMap parameterMap) throws Exception {
         List<Branch> dataList= branchDao.findBranchAll();
         return dataList;
+    }
+
+    @Override
+    public List<BranchParameter> findBranchParameterAll() throws Exception {
+        return branchParameterDao.queryBranchParameterAll();
+    }
+
+    @Override
+    public List<BranchParameterValue> findBranchParameterValueAll(LinkedHashMap parameterMap) throws Exception {
+        return branchParameterValueDao.queryBranchParameterValueByBranchId(parameterMap);
     }
 }

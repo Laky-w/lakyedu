@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.laky.edu.organization.dao.BranchParameterDao" >
+
+  <sql id="Base_Column_List" >
+    id, branch_id, name, key_name, data_value
+  </sql>
+  <select id="queryUserParameterById" resultType="com.laky.edu.organization.bean.BranchParameter" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from laky_organization_parameter
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="queryBranchParameterAll" resultType="com.laky.edu.organization.bean.BranchParameter" >
+    select * from laky_organization_parameter ORDER BY sort
+  </select>
+</mapper>

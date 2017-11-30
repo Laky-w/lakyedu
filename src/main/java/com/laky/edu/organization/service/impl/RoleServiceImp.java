@@ -1,5 +1,7 @@
 package com.laky.edu.organization.service.impl;
 
+import com.github.pagehelper.PageHelper;
+import com.laky.edu.core.PageBean;
 import com.laky.edu.organization.bean.Authority;
 import com.laky.edu.organization.bean.Role;
 import com.laky.edu.organization.bean.RoleAuthority;
@@ -37,5 +39,9 @@ public class RoleServiceImp implements RoleService{
         return 0;
     }
 
-
+    @Override
+    public PageBean findRoleBySchool(LinkedHashMap parameterMap) throws Exception {
+        PageHelper.startPage((int)parameterMap.get("pageNum"),(int)parameterMap.get("pageSize"));
+        return new PageBean(roleDao.queryRoleByParameter(parameterMap));
+    }
 }

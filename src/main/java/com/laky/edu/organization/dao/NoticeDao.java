@@ -24,6 +24,14 @@ public interface NoticeDao {
     List<Notice> queryNoticeByBranchOrSchool(LinkedHashMap parameterMap);
 
     /**
+     * 查询最新公告
+     * @param parameterMap
+     * @return
+     */
+    List<Notice> queryNewNoticeByBranchOrSchool(LinkedHashMap parameterMap);
+
+
+    /**
      * 查询通过id
      * @param id
      * @return

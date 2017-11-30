@@ -33,6 +33,11 @@ public class NoticeServiceImpl implements NoticeService{
     }
 
     @Override
+    public List<Notice> findNewNotice(LinkedHashMap parameterMap) throws Exception {
+        return noticeDao.queryNewNoticeByBranchOrSchool(parameterMap);
+    }
+
+    @Override
     public Notice findNoticeById(Integer id) throws Exception {
         return noticeDao.queryNoticeById(id);
     }

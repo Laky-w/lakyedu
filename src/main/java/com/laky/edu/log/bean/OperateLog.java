@@ -1,5 +1,8 @@
 package com.laky.edu.log.bean;
 
+import com.laky.edu.organization.bean.SchoolZone;
+import com.laky.edu.organization.bean.User;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -18,7 +21,10 @@ public class OperateLog implements Serializable {
 
     private Integer accountId;
 
+    private User user;
+
     private Integer schoolZoneId;
+    private SchoolZone schoolZone;
 
     private String content;
 
@@ -94,6 +100,23 @@ public class OperateLog implements Serializable {
 
     public void setContent(String content) {
         this.content = content == null ? null : content.trim();
+    }
+
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public SchoolZone getSchoolZone() {
+        return schoolZone;
+    }
+
+    public void setSchoolZone(SchoolZone schoolZone) {
+        this.schoolZone = schoolZone;
     }
 
     @Override

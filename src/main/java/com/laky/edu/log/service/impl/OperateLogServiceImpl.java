@@ -36,37 +36,15 @@ public class OperateLogServiceImpl implements OperateLogService{
         return operateLogDao.insertOperateLog(operatelog);
     }
 
-    /**
-     * 查询所有的操作日志根据机构id
-     * @param parameterMap
-     * @return
-     */
-    @Override
-    public PageBean findOperateLogAll(LinkedHashMap parameterMap) throws Exception {
-        int pageNum = (int)parameterMap.get("pageNum");
-        int pageSize = (int)parameterMap.get("pageSize");
-        PageHelper.startPage(pageNum, pageSize);
-        return  new PageBean(operateLogDao.queryOperateLogAll(parameterMap));
-    }
-
-    /**
-     * 查询操作时间段日志通过create_time
-     * @param createTime
-     * @return
-     */
-    @Override
-    public OperateLog findOperateLogByCreateTime(Date createTime) throws Exception {
-        return operateLogDao.queryOperateLogByCreateTime(createTime);
-    }
 
     @Override
-    public PageBean findLogAllByBranchId(LinkedHashMap paramterMap) throws Exception {
+    public PageBean findLogAllByBranchId(LinkedHashMap parameterMap) throws Exception {
         // PageHelper pageHelper = new PageHelper();
-        int pageNum = (int) paramterMap.get("pageNum");
-        int pageSize = (int) paramterMap.get("pageSize");
+        int pageNum = (int) parameterMap.get("pageNum");
+        int pageSize = (int) parameterMap.get("pageSize");
         PageHelper.startPage(pageNum, pageSize);
 
-        return new PageBean(operateLogDao.selectByPrimaryKey(paramterMap));
+        return new PageBean(operateLogDao.queryOperateLogAll(parameterMap));
     }
 
     @Override

@@ -24,7 +24,7 @@
     select
     <include refid="Base_Column_List" />
     from laky_organization_parameter_value
-    where branch_id = #{branchId,jdbcType=INTEGER}
+    where branch_id = #{branchId,jdbcType=INTEGER} AND the_status !=0 AND  parameter_id =#{parameterId} ORDER BY sort
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from laky_organization_parameter_value
