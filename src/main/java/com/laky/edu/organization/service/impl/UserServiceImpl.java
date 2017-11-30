@@ -11,8 +11,10 @@ import com.laky.edu.organization.service.UserService;
 import com.laky.edu.util.MD5;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -89,6 +91,18 @@ public class UserServiceImpl implements UserService {
     public PageBean findUserBySchoolId(LinkedHashMap parameterMap) throws Exception {
         PageHelper.startPage((int)parameterMap.get("pageNum"),(int)parameterMap.get("pageSize"));
         return new PageBean<>(userDao.queryUserBySchoolId(parameterMap));
+    }
+
+    @Transactional
+    @Override
+    public User createUser(User user) throws Exception {
+        user.setTheStatus(1);
+        user.setCreateDatetime(new Date());
+        //010
+        user.setIsSuper(2);
+        user.setPassword(MD5.getMd5("123456"));
+        int row= userDao.insertUser(user);
+        return row>0 ?user: null;
     }
 }
 

@@ -4,21 +4,43 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.laky.edu.organization.dao.UserDao">
 
-
+    <resultMap id="BaseResultMap" type="com.laky.edu.organization.bean.User">
+        <id column="id" jdbcType="INTEGER" property="id" />
+        <result column="user_name" jdbcType="INTEGER" property="userName" />
+        <result column="nickname" jdbcType="INTEGER" property="nickName" />
+        <result column="name" jdbcType="INTEGER" property="name" />
+        <result column="password" jdbcType="VARCHAR" property="password" />
+        <result column="head_logo" jdbcType="TINYINT" property="headLogo" />
+        <result column="phone" jdbcType="VARCHAR" property="phone" />
+        <result column="email" jdbcType="VARCHAR" property="email" />
+        <result column="id_card" jdbcType="VARCHAR" property="idCard" />
+        <result column="the_status" jdbcType="TIMESTAMP" property="theStatus" />
+        <result column="branch_id" jdbcType="INTEGER" property="branchId" />
+        <result column="school_zone_id" jdbcType="INTEGER" property="schoolZoneId" />
+        <result column="sex" jdbcType="INTEGER" property="sex" />
+        <result column="birthday" jdbcType="INTEGER" property="birthday" />
+        <result column="birthday" jdbcType="TIMESTAMP" property="birthday" />
+        <result column="create_datetime" jdbcType="TIMESTAMP" property="createDatetime" />
+        <association property="schoolZone" column="school_zone_id" javaType="com.laky.edu.organization.bean.SchoolZone" resultMap="SchoolZoneMap" />
+    </resultMap>
+    <resultMap id="SchoolZoneMap" type="com.laky.edu.organization.bean.SchoolZone">
+        <id property="id" column="id" />
+        <result property="name" column="sz_name" />
+    </resultMap>
     <insert id="insertUser" keyColumn="id" keyProperty="id" useGeneratedKeys="true" parameterType="com.laky.edu.organization.bean.User">
       INSERT  INTO  laky_organization_user(user_name,nick_name,`name`,`password`,head_logo,the_status,branch_id,school_zone_id,
-      create_datetime,phone,email,sex,birthday,is_super)
+      create_datetime,phone,email,sex,birthday,is_super,id_card)
       VALUES (#{userName},#{nickName},#{name},#{password},#{headLogo},
-      #{theStatus},#{branch.id},#{schoolZone.id},#{createDatetime},#{phone},
-      #{email},#{sex},#{birthday},#{isSuper})
+      #{theStatus},#{branchId},#{schoolZoneId},#{createDatetime},#{phone},
+      #{email},#{sex},#{birthday},#{isSuper},#{idCard})
     </insert>
     <select id="queryUserByUserName"   resultType="com.laky.edu.organization.bean.User">
       SELECT  u.* FROM laky_organization_user u LEFT JOIN  laky_organization_branch b on u.branch_id = b.id
       WHERE (u.user_name = #{userName} or u.email = #{userName} or u.phone = #{userName}) and u.the_status != 0 and b.serial = #{serial} and b.the_status =1
 
     </select>
-    <select id="queryUserBySchoolId"   resultType="com.laky.edu.organization.bean.User">
-       SELECT s.*,sz.`name`  from laky_organization_user s
+    <select id="queryUserBySchoolId"   resultType="com.laky.edu.organization.bean.User" resultMap="BaseResultMap">
+       SELECT s.*,sz.`name` as sz_name  from laky_organization_user s
        LEFT JOIN laky_organization_school_zone sz on sz.id =s.school_zone_id and sz.the_status !=0 where s.the_status !=0 and s.school_zone_id in
         <foreach collection="schoolIds" item="schoolId" index="index"
                  open="(" close=")" separator=",">

@@ -72,6 +72,7 @@ public class SchoolZoneServiceImpl implements SchoolZoneService{
             }
         });
         if (newSchoolZoneList.size() == 0) return  null;
+        newSchoolZoneList.sort((a,b) -> b.getTheType().compareTo(a.getTheType()));
         return newSchoolZoneList;
     }
 

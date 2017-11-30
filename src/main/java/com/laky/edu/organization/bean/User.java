@@ -23,6 +23,7 @@ public class User {
     private Integer sex;//性别
     private Date birthday;//生日
     private Integer isSuper;//是否超级管理员 1是 2 否
+    private String idCard; //身份证
 
     public Integer getId() {
         return id;
@@ -159,5 +160,13 @@ public class User {
 
     public void setIsSuper(Integer isSuper) {
         this.isSuper = isSuper;
+    }
+
+    public String getIdCard() {
+        return idCard;
+    }
+
+    public void setIdCard(String idCard) {
+        this.idCard = idCard;
     }
 }

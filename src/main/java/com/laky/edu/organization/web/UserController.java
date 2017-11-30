@@ -5,7 +5,9 @@ import com.laky.edu.core.BaseController;
 import com.laky.edu.core.PageBean;
 import com.laky.edu.log.bean.LoginLog;
 import com.laky.edu.log.service.LoginLogService;
+import com.laky.edu.organization.bean.Branch;
 import com.laky.edu.organization.bean.Menu;
+import com.laky.edu.organization.bean.SchoolZone;
 import com.laky.edu.organization.bean.User;
 import com.laky.edu.organization.service.OrganizationService;
 import com.laky.edu.organization.service.RoleService;
@@ -114,6 +116,17 @@ public class UserController extends BaseController{
             parameterMap.put("pageSize",pageSize);
             parameterMap.put("branchId",getCurrentUser(request).getBranchId());
             return super.doWrappingData(roleService.findRoleBySchool(parameterMap));
+        } catch (Exception e) {
+            return  super.doWrappingErrorData(e);
+        }
+    }
+
+
+    @PostMapping("/createUser")
+    public Map createUser(HttpServletRequest request,User user){
+        try {
+            user.setBranchId(getCurrentUser(request).getBranchId());
+            return super.doWrappingData(userService.createUser(user));
         } catch (Exception e) {
             return  super.doWrappingErrorData(e);
         }
