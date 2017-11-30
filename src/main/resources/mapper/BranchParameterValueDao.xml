@@ -9,9 +9,15 @@
     <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
     <result column="the_status" property="theStatus" jdbcType="TINYINT" />
     <result column="sort" property="sort" jdbcType="INTEGER" />
+    <association property="createUser" column="create_user_id" javaType="com.laky.edu.organization.bean.User" resultMap="UserMap" />
+  </resultMap>
+
+  <resultMap id="UserMap" type="com.laky.edu.organization.bean.User">
+    <id property="id" column="id" />
+    <result property="name" column="u_name" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, name, parameter_id, branch_id, create_user_id, the_status, sort
+    id, `name`, parameter_id, branch_id, create_user_id, the_status, sort
   </sql>
   <select id="queryBranchParameterValueByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -22,9 +28,10 @@
 
   <select id="queryBranchParameterValueByBranchId" resultMap="BaseResultMap"  >
     select
-    <include refid="Base_Column_List" />
-    from laky_organization_parameter_value
-    where branch_id = #{branchId,jdbcType=INTEGER} AND the_status !=0 AND  parameter_id =#{parameterId} ORDER BY sort
+    s.* ,u.`name` as u_name
+    from laky_organization_parameter_value  s LEFT JOIN laky_organization_user u ON s.create_user_id = u.id and u.the_status!=0
+
+    where s.branch_id = #{branchId} AND s.the_status !=0 AND  s.parameter_id =#{parameterId} ORDER BY sort
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from laky_organization_parameter_value

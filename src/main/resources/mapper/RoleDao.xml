@@ -10,6 +10,16 @@
     <result column="school_id" property="schoolId" jdbcType="INTEGER" />
     <result column="branch_id" property="branchId" jdbcType="INTEGER" />
     <result column="the_type" property="theType" jdbcType="TINYINT" />
+    <association property="schoolZone" column="school_zone_id" javaType="com.laky.edu.organization.bean.SchoolZone" resultMap="SchoolZoneMap" />
+    <association property="createUser" column="create_user_id" javaType="com.laky.edu.organization.bean.User" resultMap="UserMap" />
+  </resultMap>
+  <resultMap id="SchoolZoneMap" type="com.laky.edu.organization.bean.SchoolZone">
+    <id property="id" column="id" />
+    <result property="name" column="sz_name" />
+  </resultMap>
+  <resultMap id="UserMap" type="com.laky.edu.organization.bean.User">
+    <id property="id" column="id" />
+    <result property="name" column="u_name" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, name, the_status, create_time, create_user_id, school_id, branch_id, the_type
@@ -21,12 +31,18 @@
     where id = #{id,jdbcType=INTEGER}
   </select>
   <select id="queryRoleByParameter" resultMap="BaseResultMap" >
-    SELECT * from laky_organization_role where the_status !=0 and school_id in
+    SELECT s.*,u.`name` as u_name,sz.`name` as sz_name from laky_organization_role s
+    RIGHT JOIN laky_organization_user u on s.create_user_id = u.id and u.the_status !=0
+    <if test="userName != null">
+      AND u.`name` LIKE CONCAT('%',#{userName,jdbcType=VARCHAR},'%')
+    </if>
+    LEFT JOIN laky_organization_school_zone sz on s.school_id = sz.id and sz.the_status !=0
+    where s.the_status !=0 and s.school_id in
     <foreach collection="schoolIds" item="schoolId" index="index"
              open="(" close=")" separator=",">
       #{schoolId}
     </foreach>
-     and branch_id = #{branchId}
+     and s.branch_id = #{branchId}
   </select>
   <insert id="insertRole" parameterType="com.laky.edu.organization.bean.Role" >
     insert into laky_organization_role (id, name, the_status, 

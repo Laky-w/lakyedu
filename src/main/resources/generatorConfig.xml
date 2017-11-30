@@ -76,7 +76,7 @@
           delimitAllColumns CDATA #IMPLIED
          -->
 
-        <table schema="edu_laky" tableName="laky_organization_user_parameter" domainObjectName="UserParameter" modelType="flat"
+        <table schema="edu_laky" tableName="laky_organization_parameter_value" domainObjectName="BranchParameterValue" modelType="flat"
                enableCountByExample="false" enableUpdateByExample="false" enableUpdateByPrimaryKey="true"
                enableDeleteByExample="false" enableSelectByExample="false"
                selectByExampleQueryId="false">

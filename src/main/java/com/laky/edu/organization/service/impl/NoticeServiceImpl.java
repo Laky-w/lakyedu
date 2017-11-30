@@ -38,6 +38,11 @@ public class NoticeServiceImpl implements NoticeService{
     }
 
     @Override
+    public List<Notice> findNoticeAll(LinkedHashMap parameterMap) throws Exception {
+        return noticeDao.queryNoticeAll(parameterMap);
+    }
+
+    @Override
     public Notice findNoticeById(Integer id) throws Exception {
         return noticeDao.queryNoticeById(id);
     }

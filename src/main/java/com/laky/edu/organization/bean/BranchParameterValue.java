@@ -13,11 +13,21 @@ public class BranchParameterValue implements Serializable {
 
     private Integer createUserId;
 
+    private User createUser;
+
     private Integer theStatus;
 
     private Integer sort;
 
     private static final long serialVersionUID = 1L;
+
+    public User getCreateUser() {
+        return createUser;
+    }
+
+    public void setCreateUser(User createUser) {
+        this.createUser = createUser;
+    }
 
     public Integer getId() {
         return id;

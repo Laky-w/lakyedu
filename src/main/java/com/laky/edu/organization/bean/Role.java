@@ -14,6 +14,10 @@ public class Role implements Serializable {
 
     private Integer createUserId;
 
+    private SchoolZone schoolZone;
+
+    private User createUser;
+
     private Integer schoolId;
 
     private Integer branchId;
@@ -84,6 +88,22 @@ public class Role implements Serializable {
 
     public void setTheType(Integer theType) {
         this.theType = theType;
+    }
+
+    public SchoolZone getSchoolZone() {
+        return schoolZone;
+    }
+
+    public void setSchoolZone(SchoolZone schoolZone) {
+        this.schoolZone = schoolZone;
+    }
+
+    public User getCreateUser() {
+        return createUser;
+    }
+
+    public void setCreateUser(User createUser) {
+        this.createUser = createUser;
     }
 
     @Override

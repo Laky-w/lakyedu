@@ -33,14 +33,18 @@
 
   <select id="queryOperateLogAll" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     SELECT s.*,u.`name` as u_name,sz.`name` as sz_name from  laky_core_operate_log s RIGHT JOIN laky_organization_user u on s.account_id = u.id and u.the_status !=0
-     <if test="userName != null">
-       AND u.`name` LIKE CONCAT('%',#{userName,jdbcType=VARCHAR},'%')
-     </if>
+
     LEFT JOIN laky_organization_school_zone sz on s.school_zone_id = sz.id and sz.the_status !=0
     <where>
       s.branch_id = #{branchId,jdbcType=INTEGER}
+      <if test="userName != null">
+        AND u.`name` LIKE CONCAT('%',#{userName,jdbcType=VARCHAR},'%')
+      </if>
       <if test="theType != null">
         AND s.the_type = #{theType,jdbcType=TINYINT}
+      </if>
+      <if test="schoolZoneId != null">
+        AND s.school_zone_id = #{schoolZoneId,jdbcType=INTEGER}
       </if>
       <if test="theDate1 != null">
         AND s.create_time &gt;= #{theDate1,jdbcType=TIMESTAMP}

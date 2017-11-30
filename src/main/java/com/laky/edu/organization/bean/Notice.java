@@ -8,6 +8,24 @@ public class Notice implements Serializable {
 
     private Integer userId;
 
+    private User user;
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public SchoolZone getSchoolZone() {
+        return schoolZone;
+    }
+
+    public void setSchoolZone(SchoolZone schoolZone) {
+        this.schoolZone = schoolZone;
+    }
+
     private Date createDatetime;
 
     private Integer theType;
@@ -19,6 +37,8 @@ public class Notice implements Serializable {
     private Integer branchId;
 
     private Integer schoolZoneId;
+
+    private SchoolZone schoolZone;
 
     private String content;
 
@@ -108,11 +128,13 @@ public class Notice implements Serializable {
         sb.append("Hash = ").append(hashCode());
         sb.append(", id=").append(id);
         sb.append(", userId=").append(userId);
+        sb.append(",user=").append(user);
         sb.append(", createDatetime=").append(createDatetime);
         sb.append(", theType=").append(theType);
         sb.append(", lastDatetime=").append(lastDatetime);
         sb.append(", branchId=").append(branchId);
         sb.append(", schoolId=").append(schoolZoneId);
+        sb.append(",schoolZone=").append(schoolZone);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append(",content=").append(content);
         sb.append("theStatus=").append(theStatus);

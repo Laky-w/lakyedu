@@ -32,6 +32,12 @@ public interface NoticeService {
     List<Notice> findNewNotice(LinkedHashMap parameterMap)throws Exception;
 
     /**
+     * 查询新公告
+     * @param parameterMap
+     * @return
+     */
+    List<Notice> findNoticeAll(LinkedHashMap parameterMap)throws Exception;
+    /**
      * 查询通过id
      * @param id
      * @return

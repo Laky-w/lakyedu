@@ -24,6 +24,7 @@ public class OperateLog implements Serializable {
     private User user;
 
     private Integer schoolZoneId;
+
     private SchoolZone schoolZone;
 
     private String content;

@@ -10,19 +10,63 @@
     <result column="branch_id" property="branchId" jdbcType="INTEGER" />
     <result column="school_zone_id" property="schoolZoneId" jdbcType="INTEGER" />
     <result column="the_status" property="theStatus" jdbcType="INTEGER"/>
+    <association property="schoolZone" column="school_zone_id" javaType="com.laky.edu.organization.bean.SchoolZone" resultMap="SchoolZoneMap" />
+    <association property="user" column="user_id" javaType="com.laky.edu.organization.bean.User" resultMap="UserMap" />
+  </resultMap>
+  <resultMap id="SchoolZoneMap" type="com.laky.edu.organization.bean.SchoolZone">
+    <id property="id" column="id" />
+    <result property="name" column="sz_name" />
+  </resultMap>
+  <resultMap id="UserMap" type="com.laky.edu.organization.bean.User">
+    <id property="id" column="id" />
+    <result property="name" column="u_name" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, user_id, create_datetime, the_type, last_datetime, branch_id, school_zone_id,content,the_status
   </sql>
-  <select id="queryNoticeByBranchOrSchool" resultMap="NoticeResultMap">
-      SELECT *
-      FROM laky_organization_notice
-      WHERE school_zone_id = #{schoolZoneId,jdbcType=INTEGER}
-       OR branch_id=#{branchId,jdbcType=INTEGER}
-       OR user_id=#{userId,jdbcType=INTEGER}
+  <select id="queryNoticeByBranchOrSchool" resultType="com.laky.edu.organization.bean.Notice">
+
+    SELECT s.*,u.`name` as u_name,sz.`name` as sz_name from  laky_organization_notice s RIGHT JOIN laky_organization_user u on s.user_id = u.id and u.the_status !=0
+    <if test="userName != null">
+      AND u.`name` LIKE CONCAT('%',#{userName,jdbcType=VARCHAR},'%')
+    </if>
+    LEFT JOIN laky_organization_school_zone sz on s.school_zone_id = sz.id and sz.the_status !=0
+    <where>
+      1=1
+      <if test="userId != null">
+        AND s.user_id = #{userId,jdbcType=INTEGER}
+      </if>
+      <if test="userName != null">
+        AND u.`name` LIKE CONCAT('%',#{userName,jdbcType=VARCHAR},'%')
+      </if>
+      <if test="schoolZoneId != null">
+        AND s.school_zone_id = #{schoolZoneId,jdbcType=INTEGER}
+      </if>
+      <if test="branchId != null">
+        AND s.branch_id = #{branchId,jdbcType=INTEGER}
+      </if>
+      <if test="theType != null">
+        AND s.the_type = #{theType,jdbcType=TINYINT}
+      </if>
+      <if test="lastDatetime != null">
+        AND s.last_datetime &gt;= #{lastDatetime,jdbcType=TIMESTAMP}
+      </if>
+      <if test="createDatetime != null">
+        AND s.create_datetime &lt;= #{createDatetime,jdbcType=TIMESTAMP}
+      </if>
+    </where>
+    ORDER BY s.create_datetime DESC
   </select>
 
   <select id="queryNewNoticeByBranchOrSchool" resultMap="NoticeResultMap">
+    SELECT *
+    FROM laky_organization_notice
+    WHERE (school_zone_id = #{schoolZoneId,jdbcType=INTEGER} and the_type = 2)
+    OR (branch_id=#{branchId,jdbcType=INTEGER} and the_type = 1)
+    or the_type = 3 and last_datetime > now()
+  </select>
+
+  <select id="queryNoticeAll" resultMap="NoticeResultMap">
     SELECT *
     FROM laky_organization_notice
     WHERE (school_zone_id = #{schoolZoneId,jdbcType=INTEGER} and the_type = 2)

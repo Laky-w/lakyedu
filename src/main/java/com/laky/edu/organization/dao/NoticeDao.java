@@ -23,6 +23,7 @@ public interface NoticeDao {
      */
     List<Notice> queryNoticeByBranchOrSchool(LinkedHashMap parameterMap);
 
+    List<Notice> queryNoticeAll(LinkedHashMap parameter);
     /**
      * 查询最新公告
      * @param parameterMap
