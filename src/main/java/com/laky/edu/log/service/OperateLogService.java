@@ -18,28 +18,14 @@ public interface OperateLogService {
      */
     int addOperateLog(OperateLog operatelog) throws Exception;
 
-    /**
-     * 查询所有的操作日志根据机构id
-     * @param parameterMap
-     * @return
-     */
-    PageBean findOperateLogAll(LinkedHashMap parameterMap)throws Exception;
-
-    /**
-     * 查询操作时间段日志通过create_time
-     * @param createTime
-     * @return
-     */
-    OperateLog findOperateLogByCreateTime(Date createTime) throws Exception;
-
 
     /**
      * 查询全部日志
-     * @param paramterMap
+     * @param parameterMap
      * @return
      * @throws Exception
      */
-    PageBean findLogAllByBranchId(LinkedHashMap paramterMap) throws Exception;
+    PageBean findLogAllByBranchId(LinkedHashMap parameterMap) throws Exception;
 
 
     /**
