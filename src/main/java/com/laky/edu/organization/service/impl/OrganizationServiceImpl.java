@@ -123,4 +123,11 @@ public class OrganizationServiceImpl implements OrganizationService {
     public List<BranchParameterValue> findBranchParameterValueAll(LinkedHashMap parameterMap) throws Exception {
         return branchParameterValueDao.queryBranchParameterValueByBranchId(parameterMap);
     }
+
+    @Override
+    public BranchParameterValue createBranchParameterValue(BranchParameterValue branchParameterValue) throws Exception {
+        branchParameterValue.setTheStatus(1);
+        int row = branchParameterValueDao.insertBranchParameterValue(branchParameterValue);
+        return row>0 ? branchParameterValue:null;
+    }
 }

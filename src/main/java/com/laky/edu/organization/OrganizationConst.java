@@ -42,4 +42,12 @@ public class OrganizationConst {
     public static int NOTICE_SCHOOL = 2;//校区公告
     public static int NOTICE_TOTAL = 3;//全站公告
 
+
+    /*
+     * 操作类型
+     */
+    public static int OPERATE_ADD = 1 ;//增加
+    public static int OPERATE_DELETE = 2;//删除
+    public static int OPERATE_UPDATE = 3;//修改
+
 }

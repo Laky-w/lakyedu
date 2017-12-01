@@ -1,7 +1,10 @@
 package com.laky.edu.organization.web;
 
+import com.laky.edu.organization.OrganizationConst;
 import com.laky.edu.organization.bean.Branch;
 import com.laky.edu.organization.bean.BranchParameter;
+import com.laky.edu.organization.bean.BranchParameterValue;
+import com.laky.edu.organization.dao.BranchDao;
 import com.laky.edu.organization.service.OrganizationService;
 import com.laky.edu.core.BaseController;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +25,8 @@ public class OrganizationController extends BaseController {
     @Autowired
     private OrganizationService organizationService;
 
+
+
     @PostMapping(value = "createNewBranch")
     public Map createNewBranch(Branch branch){
         try {
@@ -32,6 +37,19 @@ public class OrganizationController extends BaseController {
             } else {
                 throw new Exception("创建机构失败！");
             }
+        } catch (Exception e){
+            return  super.doWrappingErrorData(e);
+        }
+
+    }
+
+    @PostMapping(value = "createBranchParameterValue")
+    public Map createBranchParameterValue(HttpServletRequest request,  BranchParameterValue branchParameterValue){
+        try {
+            branchParameterValue.setBranchId(getCurrentUser(request).getBranchId());
+            branchParameterValue.setCreateUserId(getCurrentUser(request).getId());
+            super.handleOperate("增加机构参数", OrganizationConst.OPERATE_ADD,"增加机构参数值["+branchParameterValue.getName()+"]",request);
+            return super.doWrappingData(organizationService.createBranchParameterValue(branchParameterValue));
         } catch (Exception e){
             return  super.doWrappingErrorData(e);
         }

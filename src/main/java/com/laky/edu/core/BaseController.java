@@ -1,5 +1,7 @@
 package com.laky.edu.core;
 
+import com.laky.edu.log.bean.OperateLog;
+import com.laky.edu.log.service.OperateLogService;
 import com.laky.edu.organization.OrganizationConst;
 import com.laky.edu.organization.bean.SchoolZone;
 import com.laky.edu.organization.bean.User;
@@ -20,6 +22,10 @@ public class BaseController {
     private static Logger logger = LoggerFactory.getLogger(BaseController.class);
     @Autowired
     private SchoolZoneService schoolZoneService;
+    @Autowired
+    private OperateLogService operateLogService;
+
+
     public static Map<String,User> userSession = new HashMap<>();
 
     /**
@@ -120,5 +126,31 @@ public class BaseController {
             ids = new Integer[]{schoolZone.getId()};
         }
         return  ids;
+    }
+
+
+    /**
+     * 监听用户操作
+     * @param title
+     * @param type
+     * @param content
+     */
+    public void handleOperate(String title,int type,String content,HttpServletRequest request){
+        OperateLog operatelog = new OperateLog();
+        operatelog.setContent(content);
+        operatelog.setCreateTime(new Date());
+        operatelog.setAccountId(getCurrentUser(request).getId());
+        operatelog.setOperatePerson(getCurrentUser(request).getName());
+        operatelog.setTheType(type);
+        operatelog.setTitle(title);
+        operatelog.setSchoolZoneId(getCurrentUser(request).getSchoolZoneId());
+        operatelog.setBranchId(getCurrentUser(request).getBranchId());
+        try {
+            operateLogService.addOperateLog(operatelog);
+        }  catch ( Exception e ){
+            e.printStackTrace();
+            logger.error(e.getMessage());
+        }
+
     }
 }

@@ -72,4 +72,13 @@ public interface OrganizationService {
      * @throws Exception
      */
     List<BranchParameterValue> findBranchParameterValueAll(LinkedHashMap parameterMap) throws Exception;
+
+
+    /**
+     * 创建机构参数
+     * @param branchParameterValue
+     * @return
+     * @throws Exception
+     */
+   BranchParameterValue createBranchParameterValue(BranchParameterValue branchParameterValue)throws Exception;
 }

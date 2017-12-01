@@ -26,13 +26,13 @@ public class OperateLogServiceImpl implements OperateLogService{
     @Transactional
     @Override
     public int addOperateLog(OperateLog operatelog) throws Exception {
-        operatelog.setContent("日志");
-        operatelog.setCreateTime(new Date());
-        operatelog.setAccountId(operatelog.getAccountId());
-        operatelog.setOperatePerson(operatelog.getOperatePerson());
-        operatelog.setTheType(1);
-        operatelog.setTitle("addUser");
-        operatelog.setSchoolZoneId(operatelog.getSchoolZoneId());
+//        operatelog.setContent("日志");
+//        operatelog.setCreateTime(new Date());
+//        operatelog.setAccountId(operatelog.getAccountId());
+//        operatelog.setOperatePerson(operatelog.getOperatePerson());
+//        operatelog.setTheType(1);
+//        operatelog.setTitle("addUser");
+//        operatelog.setSchoolZoneId(operatelog.getSchoolZoneId());
         return operateLogDao.insertOperateLog(operatelog);
     }
 

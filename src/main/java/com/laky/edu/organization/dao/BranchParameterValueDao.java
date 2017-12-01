@@ -11,7 +11,7 @@ public interface BranchParameterValueDao {
 
     int deleteByPrimaryKey(Integer id);
 
-    int insert(BranchParameterValue record);
+    int insertBranchParameterValue(BranchParameterValue branchParameterValue);
 
     int insertSelective(BranchParameterValue record);
 

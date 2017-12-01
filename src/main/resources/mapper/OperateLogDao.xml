@@ -6,6 +6,7 @@
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="operate_person" property="operatePerson" jdbcType="VARCHAR" />
     <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="content" property="content" jdbcType="LONGVARCHAR" />
     <result column="the_type" property="theType" jdbcType="TINYINT" />
     <result column="branch_id" property="branchId" jdbcType="INTEGER" />
     <result column="account_id" property="accountId" jdbcType="INTEGER" />
@@ -59,12 +60,12 @@
     delete from laky_core_operate_log
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.laky.edu.log.bean.OperateLog" >
-    insert into laky_core_operate_log (id, create_time, operate_person, 
+  <insert id="insertOperateLog" parameterType="com.laky.edu.log.bean.OperateLog" >
+    insert into laky_core_operate_log ( create_time, operate_person,
       title, the_type, branch_id, 
       account_id, school_zone_id, content
       )
-    values (#{id,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{operatePerson,jdbcType=VARCHAR}, 
+    values ( #{createTime,jdbcType=TIMESTAMP}, #{operatePerson,jdbcType=VARCHAR},
       #{title,jdbcType=VARCHAR}, #{theType,jdbcType=TINYINT}, #{branchId,jdbcType=INTEGER}, 
       #{accountId,jdbcType=INTEGER}, #{schoolZoneId,jdbcType=INTEGER}, #{content,jdbcType=LONGVARCHAR}
       )
