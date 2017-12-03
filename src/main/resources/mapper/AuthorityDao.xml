@@ -17,6 +17,12 @@
     from laky_organization_authority
     where id = #{id,jdbcType=INTEGER}
   </select>
+  <select id="queryAuthorityByParameter" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
+    from laky_organization_authority
+    where the_status !=0
+  </select>
   <insert id="insertAuthority" parameterType="com.laky.edu.organization.bean.Authority" >
     insert into laky_organization_authority (id, name, the_type, 
       the_status, menu_id)

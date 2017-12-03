@@ -3,8 +3,10 @@ package com.laky.edu.organization.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.laky.edu.core.PageBean;
 import com.laky.edu.organization.OrganizationConst;
+import com.laky.edu.organization.bean.Authority;
 import com.laky.edu.organization.bean.Menu;
 import com.laky.edu.organization.bean.User;
+import com.laky.edu.organization.dao.AuthorityDao;
 import com.laky.edu.organization.dao.MenuDao;
 import com.laky.edu.organization.dao.UserDao;
 import com.laky.edu.organization.service.UserService;
@@ -30,6 +32,9 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private MenuDao menuDao;
 
+    @Autowired
+    private AuthorityDao authorityDao;
+
     @Override
     public User loginUser(String userName, String pwd,String serial) throws Exception{
         LinkedHashMap parameterMap = new LinkedHashMap();
@@ -52,9 +57,15 @@ public class UserServiceImpl implements UserService {
         //递归处理菜单
         List<Menu> menuList =menuDao.findMenuAll();
         List<Menu> newMenuList = new ArrayList<>();
+        List<Authority> authorities = authorityDao.queryAuthorityByParameter(null);
         menuList.forEach(item->{
             if(item.getParentId() == 0){
-                item.setSubs(getSubs(item.getId(),menuList));
+
+                List<Menu> subs=getSubs(item.getId(),menuList,authorities);
+                item.setSubs(subs);
+                if(null==subs){
+                    item.setAuthorities(this.getAuthorities(item.getId(),authorities));
+                }
                 newMenuList.add(item);
             }
         });
@@ -68,17 +79,33 @@ public class UserServiceImpl implements UserService {
         return newMenuList;
     }
 
+
+    private List<Authority> getAuthorities(Integer menuId,List<Authority> authorities){
+        List<Authority> temAuthorities = new ArrayList<Authority>();
+        authorities.forEach(authority -> {
+            if(authority.getMenuId()==menuId) {
+                temAuthorities.add(authority);
+            }
+        });
+        return temAuthorities.size()==0?null:temAuthorities;
+    }
+
+
     /**
-     * 查找孩子节点
+     * 查找孩子节点并给权限
      * @param id
      * @param menuList
      * @return
      */
-    private List<Menu> getSubs(Integer id,List<Menu> menuList){
+    private List<Menu> getSubs(Integer id,List<Menu> menuList,List<Authority> authorities){
         List<Menu> newMenuList = new ArrayList<>();
         menuList.forEach(item->{
             if(item.getParentId() == id){
-                item.setSubs(getSubs(item.getId(),menuList));
+                List<Menu> subs=getSubs(item.getId(),menuList,authorities);
+                item.setSubs(subs);
+                if(null==subs){
+                    item.setAuthorities(this.getAuthorities(item.getId(),authorities));
+                }
                 newMenuList.add(item);
             }
         });

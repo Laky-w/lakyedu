@@ -13,7 +13,8 @@ public class Menu {
     private Integer parentId;
     private String url;
     private Integer sort;
-    private List<Menu> subs;
+    private List<Menu> subs; //下级菜单
+    private List<Authority> authorities; //菜单权限
 
     public Integer getId() {
         return id;
@@ -78,5 +79,13 @@ public class Menu {
 
     public void setSubs(List<Menu> subs) {
         this.subs = subs;
+    }
+
+    public List<Authority> getAuthorities() {
+        return authorities;
+    }
+
+    public void setAuthorities(List<Authority> authorities) {
+        this.authorities = authorities;
     }
 }

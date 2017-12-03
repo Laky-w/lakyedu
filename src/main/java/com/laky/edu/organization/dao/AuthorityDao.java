@@ -14,7 +14,7 @@ public interface AuthorityDao {
 
     Authority queryAuthorityById(Integer id);
 
-    List<Authority> queryAuthorityByParameter(Integer id);
+    List<Authority> queryAuthorityByParameter(LinkedHashMap parameterMap);
 
     int updateAuthority(Authority authority);
 }

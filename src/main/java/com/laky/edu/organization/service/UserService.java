@@ -22,7 +22,7 @@ public interface UserService {
     User loginUser(String userName,String pwd,String serial) throws Exception;
 
     /**
-     * 查询全部菜单
+     * 查询全部菜单和权限
      * @return
      * @throws Exception
      */
