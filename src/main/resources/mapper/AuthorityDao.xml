@@ -23,7 +23,8 @@
     from laky_organization_authority
     where the_status !=0
   </select>
-  <insert id="insertAuthority" parameterType="com.laky.edu.organization.bean.Authority" >
+  <insert id="insertAuthority" parameterType="com.laky.edu.organization.bean.Authority" useGeneratedKeys="true" keyProperty="id"
+          keyColumn="id">
     insert into laky_organization_authority (id, name, the_type, 
       the_status, menu_id)
     values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{theType,jdbcType=TINYINT}, 

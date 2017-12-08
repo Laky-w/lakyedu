@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.laky.edu.organization.dao.UserRoleDao" >
+
+  <insert id="insertUserRoleBatch" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id"
+          keyColumn="id">
+    insert into laky_organization_user_role (role_id,user_id)
+    values
+    <foreach collection="list" item="item" index="index" separator="," >
+      (#{item.roleId,jdbcType=INTEGER}, #{item.userId,jdbcType=INTEGER})
+    </foreach>
+  </insert>
+</mapper>

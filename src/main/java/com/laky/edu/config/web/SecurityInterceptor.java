@@ -18,6 +18,7 @@ public class SecurityInterceptor extends HandlerInterceptorAdapter {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
             throws Exception {
+//        if(1==1) return  true;
 //        HttpSession session = request.getSession();
 //        String uri =  request.getRequestURI();
         //第一步获取token

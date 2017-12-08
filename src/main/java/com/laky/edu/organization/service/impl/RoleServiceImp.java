@@ -5,11 +5,16 @@ import com.laky.edu.core.PageBean;
 import com.laky.edu.organization.bean.Authority;
 import com.laky.edu.organization.bean.Role;
 import com.laky.edu.organization.bean.RoleAuthority;
+import com.laky.edu.organization.dao.RoleAuthorityDao;
 import com.laky.edu.organization.dao.RoleDao;
 import com.laky.edu.organization.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -18,10 +23,27 @@ public class RoleServiceImp implements RoleService{
 
     @Autowired
     private RoleDao roleDao;
+    @Autowired
+    private RoleAuthorityDao roleAuthorityDao;
 
+    @Transactional
     @Override
-    public int createRole(Role role) {
-        return 0;
+    public Role createRole( Role role ,Integer [] authorities) throws Exception {
+        role.setTheType(1);//岗位类型
+        role.setTheStatus(1);
+        role.setCreateTime(new Date());
+        int rows=roleDao.insertRole(role);
+        if(rows==0) throw new Exception("权限创建失败");
+        List<RoleAuthority> dataList = new ArrayList<>();
+        for(Integer authority:authorities){
+            RoleAuthority roleAuthority = new RoleAuthority();
+            roleAuthority.setAuthorityId(authority);
+            roleAuthority.setRole(role);
+            dataList.add(roleAuthority);
+        }
+        roleAuthorityDao.insertRoleAuthorityBatch(dataList);
+        role.setRoleAuthorities(dataList);
+        return role;
     }
 
     @Override
@@ -40,8 +62,14 @@ public class RoleServiceImp implements RoleService{
     }
 
     @Override
-    public PageBean findRoleBySchool(LinkedHashMap parameterMap) throws Exception {
-        PageHelper.startPage((int)parameterMap.get("pageNum"),(int)parameterMap.get("pageSize"));
-        return new PageBean(roleDao.queryRoleByParameter(parameterMap));
+    public Object findRoleBySchool(LinkedHashMap parameterMap) throws Exception {
+        Object pageNum= parameterMap.get("pageNum");
+        Object pageSize= parameterMap.get("pageSize");
+        if( null != pageNum && null != pageSize){
+            PageHelper.startPage((int)pageNum,(int)pageSize);
+            return new PageBean(roleDao.queryRoleByParameter(parameterMap));
+        } else {
+            return roleDao.queryRoleByParameter(parameterMap);
+        }
     }
 }

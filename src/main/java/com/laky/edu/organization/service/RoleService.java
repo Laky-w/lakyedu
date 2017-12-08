@@ -4,13 +4,21 @@ import com.laky.edu.core.PageBean;
 import com.laky.edu.organization.bean.Authority;
 import com.laky.edu.organization.bean.Role;
 import com.laky.edu.organization.bean.RoleAuthority;
+import org.springframework.stereotype.Service;
 
 import java.util.LinkedHashMap;
 import java.util.List;
 
+@Service
 public interface RoleService {
 
-    int createRole(Role role);
+    /**
+     * 创建角色
+     * @param role
+     * @param authorities
+     * @return
+     */
+    Role createRole(Role role ,Integer [] authorities) throws Exception;
 
     Authority findRoleById(Integer id);
 
@@ -24,5 +32,5 @@ public interface RoleService {
      * @return
      * @throws Exception
      */
-    PageBean findRoleBySchool(LinkedHashMap parameterMap) throws  Exception;
+    Object findRoleBySchool(LinkedHashMap parameterMap) throws  Exception;
 }

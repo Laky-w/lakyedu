@@ -2,6 +2,7 @@ package com.laky.edu.organization.bean;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 public class Role implements Serializable {
     private Integer id;
@@ -23,6 +24,8 @@ public class Role implements Serializable {
     private Integer branchId;
 
     private Integer theType;
+
+    private List<RoleAuthority> roleAuthorities;
 
     private static final long serialVersionUID = 1L;
 
@@ -104,6 +107,14 @@ public class Role implements Serializable {
 
     public void setCreateUser(User createUser) {
         this.createUser = createUser;
+    }
+
+    public List<RoleAuthority> getRoleAuthorities() {
+        return roleAuthorities;
+    }
+
+    public void setRoleAuthorities(List<RoleAuthority> roleAuthorities) {
+        this.roleAuthorities = roleAuthorities;
     }
 
     @Override

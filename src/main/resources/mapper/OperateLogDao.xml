@@ -45,22 +45,33 @@
         AND s.the_type = #{theType,jdbcType=TINYINT}
       </if>
       <if test="schoolZoneId != null">
-        AND s.school_zone_id = #{schoolZoneId,jdbcType=INTEGER}
+        AND s.school_zone_id IN
+        <foreach collection="schoolZoneId" item="schoolId" index="index"
+                 open="(" close=")" separator=",">
+          #{schoolId}
+        </foreach>
       </if>
-      <if test="theDate1 != null">
-        AND s.create_time &gt;= #{theDate1,jdbcType=TIMESTAMP}
+      <if test="schoolZoneId2 != null">
+        <if test="schoolZoneId2 instanceof String">
+          AND s.school_zone_id = #{schoolZoneId2,jdbcType=INTEGER}
+        </if>
+        <if test="!(schoolZoneId2 instanceof String)">
+          AND s.school_zone_id IN
+          <foreach collection="schoolZoneId2" item="schoolId" index="index"
+                   open="(" close=")" separator=",">
+            #{schoolId}
+          </foreach>
+        </if>
       </if>
-      <if test="theDate2 != null">
-        AND s.create_time &lt;= #{theDate2,jdbcType=TIMESTAMP}
+      <if test="theDate != null">
+        AND s.create_time &gt;= #{theDate[0],jdbcType=TIMESTAMP}
+        AND s.create_time &lt;= #{theDate[1],jdbcType=TIMESTAMP}
       </if>
     </where>
     ORDER BY s.create_time DESC
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
-    delete from laky_core_operate_log
-    where id = #{id,jdbcType=INTEGER}
-  </delete>
-  <insert id="insertOperateLog" parameterType="com.laky.edu.log.bean.OperateLog" >
+  <insert id="insertOperateLog" parameterType="com.laky.edu.log.bean.OperateLog" useGeneratedKeys="true" keyProperty="id"
+          keyColumn="id">
     insert into laky_core_operate_log ( create_time, operate_person,
       title, the_type, branch_id, 
       account_id, school_zone_id, content
@@ -70,118 +81,4 @@
       #{accountId,jdbcType=INTEGER}, #{schoolZoneId,jdbcType=INTEGER}, #{content,jdbcType=LONGVARCHAR}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.laky.edu.log.bean.OperateLog" >
-    insert into laky_core_operate_log
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        id,
-      </if>
-      <if test="createTime != null" >
-        create_time,
-      </if>
-      <if test="operatePerson != null" >
-        operate_person,
-      </if>
-      <if test="title != null" >
-        title,
-      </if>
-      <if test="theType != null" >
-        the_type,
-      </if>
-      <if test="branchId != null" >
-        branch_id,
-      </if>
-      <if test="accountId != null" >
-        account_id,
-      </if>
-      <if test="schoolZoneId != null" >
-        school_zone_id,
-      </if>
-      <if test="content != null" >
-        content,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        #{id,jdbcType=INTEGER},
-      </if>
-      <if test="createTime != null" >
-        #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="operatePerson != null" >
-        #{operatePerson,jdbcType=VARCHAR},
-      </if>
-      <if test="title != null" >
-        #{title,jdbcType=VARCHAR},
-      </if>
-      <if test="theType != null" >
-        #{theType,jdbcType=TINYINT},
-      </if>
-      <if test="branchId != null" >
-        #{branchId,jdbcType=INTEGER},
-      </if>
-      <if test="accountId != null" >
-        #{accountId,jdbcType=INTEGER},
-      </if>
-      <if test="schoolZoneId != null" >
-        #{schoolZoneId,jdbcType=INTEGER},
-      </if>
-      <if test="content != null" >
-        #{content,jdbcType=LONGVARCHAR},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.laky.edu.log.bean.OperateLog" >
-    update laky_core_operate_log
-    <set >
-      <if test="createTime != null" >
-        create_time = #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="operatePerson != null" >
-        operate_person = #{operatePerson,jdbcType=VARCHAR},
-      </if>
-      <if test="title != null" >
-        title = #{title,jdbcType=VARCHAR},
-      </if>
-      <if test="theType != null" >
-        the_type = #{theType,jdbcType=TINYINT},
-      </if>
-      <if test="branchId != null" >
-        branch_id = #{branchId,jdbcType=INTEGER},
-      </if>
-      <if test="accountId != null" >
-        account_id = #{accountId,jdbcType=INTEGER},
-      </if>
-      <if test="schoolZoneId != null" >
-        school_zone_id = #{schoolZoneId,jdbcType=INTEGER},
-      </if>
-      <if test="content != null" >
-        content = #{content,jdbcType=LONGVARCHAR},
-      </if>
-    </set>
-    where id = #{id,jdbcType=INTEGER}
-  </update>
-  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.laky.edu.log.bean.OperateLog" >
-    update laky_core_operate_log
-    set create_time = #{createTime,jdbcType=TIMESTAMP},
-      operate_person = #{operatePerson,jdbcType=VARCHAR},
-      title = #{title,jdbcType=VARCHAR},
-      the_type = #{theType,jdbcType=TINYINT},
-      branch_id = #{branchId,jdbcType=INTEGER},
-      account_id = #{accountId,jdbcType=INTEGER},
-      school_zone_id = #{schoolZoneId,jdbcType=INTEGER},
-      content = #{content,jdbcType=LONGVARCHAR}
-    where id = #{id,jdbcType=INTEGER}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.laky.edu.log.bean.OperateLog" >
-    update laky_core_operate_log
-    set create_time = #{createTime,jdbcType=TIMESTAMP},
-      operate_person = #{operatePerson,jdbcType=VARCHAR},
-      title = #{title,jdbcType=VARCHAR},
-      the_type = #{theType,jdbcType=TINYINT},
-      branch_id = #{branchId,jdbcType=INTEGER},
-      account_id = #{accountId,jdbcType=INTEGER},
-      school_zone_id = #{schoolZoneId,jdbcType=INTEGER}
-    where id = #{id,jdbcType=INTEGER}
-  </update>
 </mapper>

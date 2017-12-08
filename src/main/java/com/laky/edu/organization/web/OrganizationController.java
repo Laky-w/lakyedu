@@ -2,17 +2,17 @@ package com.laky.edu.organization.web;
 
 import com.laky.edu.organization.OrganizationConst;
 import com.laky.edu.organization.bean.Branch;
-import com.laky.edu.organization.bean.BranchParameter;
 import com.laky.edu.organization.bean.BranchParameterValue;
-import com.laky.edu.organization.dao.BranchDao;
+import com.laky.edu.organization.bean.Role;
+import com.laky.edu.organization.bean.User;
 import com.laky.edu.organization.service.OrganizationService;
 import com.laky.edu.core.BaseController;
+import com.laky.edu.organization.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -24,8 +24,8 @@ public class OrganizationController extends BaseController {
 
     @Autowired
     private OrganizationService organizationService;
-
-
+    @Autowired
+    private RoleService roleService;
 
     @PostMapping(value = "createNewBranch")
     public Map createNewBranch(Branch branch){
@@ -43,18 +43,6 @@ public class OrganizationController extends BaseController {
 
     }
 
-    @PostMapping(value = "createBranchParameterValue")
-    public Map createBranchParameterValue(HttpServletRequest request,  BranchParameterValue branchParameterValue){
-        try {
-            branchParameterValue.setBranchId(getCurrentUser(request).getBranchId());
-            branchParameterValue.setCreateUserId(getCurrentUser(request).getId());
-            super.handleOperate("增加机构参数", OrganizationConst.OPERATE_ADD,"增加机构参数值["+branchParameterValue.getName()+"]",request);
-            return super.doWrappingData(organizationService.createBranchParameterValue(branchParameterValue));
-        } catch (Exception e){
-            return  super.doWrappingErrorData(e);
-        }
-
-    }
     @GetMapping(value = "getBranchBySerial/{serial}")
     public Map findBranchBySerial(@PathVariable String serial){
         try {
@@ -102,6 +90,21 @@ public class OrganizationController extends BaseController {
 
     }
 
+
+
+    @PostMapping(value = "createBranchParameterValue")
+    public Map createBranchParameterValue(HttpServletRequest request,  BranchParameterValue branchParameterValue){
+        try {
+            branchParameterValue.setBranchId(getCurrentUser(request).getBranchId());
+            branchParameterValue.setCreateUserId(getCurrentUser(request).getId());
+            super.handleOperate("增加机构参数", OrganizationConst.OPERATE_ADD,"增加机构参数值["+branchParameterValue.getName()+"]",request);
+            return super.doWrappingData(organizationService.createBranchParameterValue(branchParameterValue));
+        } catch (Exception e){
+            return  super.doWrappingErrorData(e);
+        }
+
+    }
+
     @GetMapping(value = "findBranchParameterAll")
     public Map findBranchParameterAll() {
         try {
@@ -110,6 +113,7 @@ public class OrganizationController extends BaseController {
             return  super.doWrappingErrorData(e);
         }
     }
+
     @GetMapping(value = "findBranchParameterValueAll/{parameterId}")
     public Map findBranchParameterValueAll(@PathVariable  Integer parameterId,HttpServletRequest request) {
         try {
@@ -122,4 +126,22 @@ public class OrganizationController extends BaseController {
         }
     }
 
+    @PostMapping(value = "createNewRole")
+    public Map createNewRole(HttpServletRequest request,@RequestParam(required = true) String name,@RequestParam(required = true)Integer [] authorities){
+        try {
+            //初始化权限数据
+            Role role = new Role();
+            User user = getCurrentUser(request);
+            role.setBranchId(user.getBranchId());
+            role.setSchoolId(user.getSchoolZoneId());
+            role.setCreateUserId(user.getId());
+            role.setName(name);
+            role=roleService.createRole(role,authorities);
+            super.handleOperate("增加角色",OrganizationConst.OPERATE_ADD,"增加角色【"+role.getName()+"】",request);
+            return super.doWrappingData(role);
+        } catch (Exception e)
+        {
+            return  super.doWrappingErrorData(e);
+        }
+    }
 }

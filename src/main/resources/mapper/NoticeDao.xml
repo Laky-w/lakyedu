@@ -10,6 +10,8 @@
     <result column="branch_id" property="branchId" jdbcType="INTEGER" />
     <result column="school_zone_id" property="schoolZoneId" jdbcType="INTEGER" />
     <result column="the_status" property="theStatus" jdbcType="INTEGER"/>
+    <!--不配置这里没有消息提示-->
+    <result column="content" property="content" jdbcType="VARCHAR"/>
     <association property="schoolZone" column="school_zone_id" javaType="com.laky.edu.organization.bean.SchoolZone" resultMap="SchoolZoneMap" />
     <association property="user" column="user_id" javaType="com.laky.edu.organization.bean.User" resultMap="UserMap" />
   </resultMap>
@@ -24,7 +26,7 @@
   <sql id="Base_Column_List" >
     id, user_id, create_datetime, the_type, last_datetime, branch_id, school_zone_id,content,the_status
   </sql>
-  <select id="queryNoticeByBranchOrSchool" resultType="com.laky.edu.organization.bean.Notice">
+  <select id="queryNoticeByBranchOrSchool"  resultMap="NoticeResultMap">
 
     SELECT s.*,u.`name` as u_name,sz.`name` as sz_name from  laky_organization_notice s RIGHT JOIN laky_organization_user u on s.user_id = u.id and u.the_status !=0
     <if test="userName != null">
@@ -72,13 +74,15 @@
     WHERE (school_zone_id = #{schoolZoneId,jdbcType=INTEGER} and the_type = 2)
     OR (branch_id=#{branchId,jdbcType=INTEGER} and the_type = 1)
     or the_type = 3 and last_datetime > now()
+
   </select>
 
   <delete id="deleteNoticeByLastDatetime" parameterType="java.lang.Integer" >
     delete from laky_organization_notice
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insertNotice" parameterType="com.laky.edu.organization.bean.Notice" >
+  <insert id="insertNotice" parameterType="com.laky.edu.organization.bean.Notice" useGeneratedKeys="true" keyProperty="id"
+          keyColumn="id">
     insert into laky_organization_notice (id, user_id, create_datetime,
       the_type, last_datetime, branch_id, 
       school_zone_id,content)

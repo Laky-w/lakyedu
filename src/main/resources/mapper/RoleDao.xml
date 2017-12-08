@@ -33,22 +33,41 @@
   <select id="queryRoleByParameter" resultMap="BaseResultMap" >
     SELECT s.*,u.`name` as u_name,sz.`name` as sz_name from laky_organization_role s
     RIGHT JOIN laky_organization_user u on s.create_user_id = u.id and u.the_status !=0
-    <if test="userName != null">
-      AND u.`name` LIKE CONCAT('%',#{userName,jdbcType=VARCHAR},'%')
-    </if>
+    <!--<if test="userName != null">-->
+      <!--AND u.`name` LIKE CONCAT('%',#{userName,jdbcType=VARCHAR},'%')-->
+    <!--</if>-->
     LEFT JOIN laky_organization_school_zone sz on s.school_id = sz.id and sz.the_status !=0
-    where s.the_status !=0 and s.school_id in
-    <foreach collection="schoolIds" item="schoolId" index="index"
-             open="(" close=")" separator=",">
-      #{schoolId}
-    </foreach>
+    where s.the_status !=0
+    <if test="name != null">
+    AND s.`name` LIKE CONCAT('%',#{name,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="schoolZoneId != null">
+      AND s.school_id IN
+      <foreach collection="schoolZoneId" item="schoolId" index="index"
+               open="(" close=")" separator=",">
+        #{schoolId}
+      </foreach>
+    </if>
+    <if test="schoolZoneId2 != null">
+      <if test="schoolZoneId2 instanceof String">
+        AND s.school_id = #{schoolZoneId2,jdbcType=INTEGER}
+      </if>
+      <if test="!(schoolZoneId2 instanceof String)">
+        AND s.school_id IN
+        <foreach collection="schoolZoneId2" item="schoolId" index="index"
+                 open="(" close=")" separator=",">
+          #{schoolId}
+        </foreach>
+      </if>
+    </if>
      and s.branch_id = #{branchId}
   </select>
-  <insert id="insertRole" parameterType="com.laky.edu.organization.bean.Role" >
-    insert into laky_organization_role (id, name, the_status, 
+  <insert id="insertRole" parameterType="com.laky.edu.organization.bean.Role" useGeneratedKeys="true" keyProperty="id"
+          keyColumn="id">
+    insert into laky_organization_role (name, the_status,
       create_time, create_user_id, school_id, 
       branch_id, the_type)
-    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{theStatus,jdbcType=TINYINT}, 
+    values ( #{name,jdbcType=VARCHAR}, #{theStatus,jdbcType=TINYINT},
       #{createTime,jdbcType=TIMESTAMP}, #{createUserId,jdbcType=INTEGER}, #{schoolId,jdbcType=INTEGER}, 
       #{branchId,jdbcType=INTEGER}, #{theType,jdbcType=TINYINT})
   </insert>

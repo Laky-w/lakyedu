@@ -33,6 +33,7 @@ public class OperateLogController extends BaseController{
             parameterMap.put("branchId",getCurrentUser(request).getBranchId());
             parameterMap.put("pageNum",pageNum);
             parameterMap.put("pageSize",pageSize);
+            parameterMap.put("schoolZoneId",getSchoolIds(request));
             parameterMap = super.doWrappingFormParameter(request,parameterMap);
             return super.doWrappingData(operateLogService.findLogAllByBranchId(parameterMap));
         }catch ( Exception e ){

@@ -41,6 +41,7 @@ public class NoticeController extends BaseController {
     public Map findNoticeAll(HttpServletRequest request){
         try {
             // 系统给的通知,当前校区给的通知,当前机构给的通知
+
             LinkedHashMap parameterMap = new LinkedHashMap();
             parameterMap.put("branchId",getCurrentUser(request).getBranchId());
             parameterMap.put("schoolZoneId",getCurrentUser(request).getSchoolZoneId());

@@ -1,6 +1,7 @@
 package com.laky.edu.organization.bean;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by 湖之教育工作室·laky on 2017/11/20.
@@ -24,6 +25,7 @@ public class User {
     private Date birthday;//生日
     private Integer isSuper;//是否超级管理员 1是 2 否
     private String idCard; //身份证
+    private List<UserRole> userRoleList;
 
     public Integer getId() {
         return id;
@@ -168,5 +170,13 @@ public class User {
 
     public void setIdCard(String idCard) {
         this.idCard = idCard;
+    }
+
+    public List<UserRole> getUserRoleList() {
+        return userRoleList;
+    }
+
+    public void setUserRoleList(List<UserRole> userRoleList) {
+        this.userRoleList = userRoleList;
     }
 }

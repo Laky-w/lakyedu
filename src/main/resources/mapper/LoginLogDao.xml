@@ -43,7 +43,23 @@
         AND u.`name` LIKE CONCAT('%',#{userName,jdbcType=VARCHAR},'%')
       </if>
       <if test="schoolZoneId != null">
-        AND s.school_zone_id = #{schoolZoneId,jdbcType=INTEGER}
+        AND s.school_zone_id IN
+        <foreach collection="schoolZoneId" item="schoolId" index="index"
+                 open="(" close=")" separator=",">
+          #{schoolId}
+        </foreach>
+      </if>
+      <if test="schoolZoneId2 != null">
+        <if test="schoolZoneId2 instanceof String">
+          AND s.school_zone_id = #{schoolZoneId2,jdbcType=INTEGER}
+        </if>
+        <if test="!(schoolZoneId2 instanceof String)">
+          AND s.school_zone_id IN
+          <foreach collection="schoolZoneId2" item="schoolId" index="index"
+                   open="(" close=")" separator=",">
+            #{schoolId}
+          </foreach>
+        </if>
       </if>
       <if test="branchId != null">
         AND s.branch_id = #{branchId,jdbcType=INTEGER}
@@ -54,12 +70,16 @@
       <if test="theType != null">
         AND s.the_type = #{theType,jdbcType=TINYINT}
       </if>
-      <if test="theDate1 != null">
-        AND s.the_datetime &gt;= #{theDate1,jdbcType=TIMESTAMP}
-      </if>
-      <if test="theDate2 != null">
-        AND s.the_datetime &lt;= #{theDate2,jdbcType=TIMESTAMP}
-      </if>
+      <if test="theDate != null">
+      AND s.the_datetime &gt;= #{theDate[0],jdbcType=TIMESTAMP}
+      AND s.the_datetime &lt;= #{theDate[1],jdbcType=TIMESTAMP}
+    </if>
+      <!--<if test="theDate1 != null">-->
+        <!--AND s.the_datetime &gt;= #{theDate1,jdbcType=TIMESTAMP}-->
+      <!--</if>-->
+      <!--<if test="theDate2 != null">-->
+        <!--AND s.the_datetime &lt;= #{theDate2,jdbcType=TIMESTAMP}-->
+      <!--</if>-->
     </where>
     ORDER BY s.the_datetime DESC
   </select>
@@ -67,7 +87,8 @@
     delete from laky_core_login_log
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.laky.edu.log.bean.LoginLog">
+  <insert id="insert" parameterType="com.laky.edu.log.bean.LoginLog" useGeneratedKeys="true" keyProperty="id"
+          keyColumn="id">
     insert into laky_core_login_log (id, user_id, school_zone_id, 
       branch_id, IP, the_type, 
       the_datetime)
@@ -75,7 +96,8 @@
       #{branchId,jdbcType=INTEGER}, #{ip,jdbcType=VARCHAR}, #{theType,jdbcType=TINYINT}, 
       #{theDatetime,jdbcType=TIMESTAMP})
   </insert>
-  <insert id="insertSelective" parameterType="com.laky.edu.log.bean.LoginLog">
+  <insert id="insertSelective" parameterType="com.laky.edu.log.bean.LoginLog" useGeneratedKeys="true" keyProperty="id"
+          keyColumn="id">
     insert into laky_core_login_log
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">

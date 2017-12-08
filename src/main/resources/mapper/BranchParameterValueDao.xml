@@ -37,7 +37,8 @@
     delete from laky_organization_parameter_value
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insertBranchParameterValue" parameterType="com.laky.edu.organization.bean.BranchParameterValue" >
+  <insert id="insertBranchParameterValue" parameterType="com.laky.edu.organization.bean.BranchParameterValue" useGeneratedKeys="true" keyProperty="id"
+          keyColumn="id">
     insert into laky_organization_parameter_value (name, parameter_id,
       branch_id, create_user_id, the_status, 
       sort)
@@ -45,7 +46,8 @@
       #{branchId,jdbcType=INTEGER}, #{createUserId,jdbcType=INTEGER}, #{theStatus,jdbcType=TINYINT}, 
       #{sort,jdbcType=INTEGER})
   </insert>
-  <insert id="insertSelective" parameterType="com.laky.edu.organization.bean.BranchParameterValue" >
+  <insert id="insertSelective" parameterType="com.laky.edu.organization.bean.BranchParameterValue" useGeneratedKeys="true" keyProperty="id"
+          keyColumn="id">
     insert into laky_organization_parameter_value
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >

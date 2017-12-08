@@ -4,6 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -13,7 +14,11 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -22,6 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
+@AutoConfigureRestDocs(outputDir = "target/snippets")
 public class OrganizationControllerTest {
 
     private MockMvc mockMvc; // 模拟MVC对象，通过MockMvcBuilders.webAppContextSetup(this.wac).build()初始化。
@@ -38,7 +44,9 @@ public class OrganizationControllerTest {
     @Test
     public void testCreateNewBranch(){
         try {
-
+            this.mockMvc.perform(get("/organization/createNewBranch")).andDo(print()).andExpect(status().isOk())
+//                    .andExpect(content().string(containsString("Hello World")))
+                    .andDo(document("home"));
             MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/organization/createNewBranch")
                     .param("branchName","蜜汁教育").param("serial","002").param("lastDatetime","2020-01-01 00:00:00")
                     .param("address","中南海")
@@ -56,13 +64,15 @@ public class OrganizationControllerTest {
     @Test
     public void testFindBranchAll(){
         try {
-
-            MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/organization/getBranchAll/1/100"))
-                    .andExpect(status().isOk())// 模拟向testRest发送get请求
-                    .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))// 预期返回值的媒体类型text/plain;charset=UTF-8
-                    .andReturn();// 返回执行请求的结果
-
-            System.out.println(result.getResponse().getContentAsString());
+            this.mockMvc.perform(get("/organization/getMenu")).andDo(print()).andExpect(status().isOk())
+//                    .andExpect(content().string(containsString("Hello World")))
+                    .andDo(document("getMenu"));
+//            MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/organization/getMenu"))
+//                    .andExpect(status().isOk())// 模拟向testRest发送get请求
+//                    .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))// 预期返回值的媒体类型text/plain;charset=UTF-8
+//                    .andReturn();// 返回执行请求的结果
+//
+//            System.out.println(result.getResponse().getContentAsString());
         } catch (Exception e) {
             e.printStackTrace();
         }

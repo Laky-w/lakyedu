@@ -98,9 +98,10 @@ public class UserController extends BaseController{
     public Map getUserList(HttpServletRequest request,@PathVariable int pageNum, @PathVariable int pageSize){
         try {
             LinkedHashMap parameterMap = new LinkedHashMap();
-            parameterMap.put("schoolIds",super.getSchoolIds(request));//获取当前用户所在校区的id和下级校区的数组
+            parameterMap.put("schoolZoneId",super.getSchoolIds(request));//获取当前用户所在校区的id和下级校区的数组
             parameterMap.put("pageNum",pageNum);
             parameterMap.put("pageSize",pageSize);
+            parameterMap = super.doWrappingFormParameter(request,parameterMap);
             return super.doWrappingData(userService.findUserBySchoolId(parameterMap));
         } catch (Exception e) {
             return  super.doWrappingErrorData(e);
@@ -115,18 +116,38 @@ public class UserController extends BaseController{
             parameterMap.put("pageNum",pageNum);
             parameterMap.put("pageSize",pageSize);
             parameterMap.put("branchId",getCurrentUser(request).getBranchId());
+            parameterMap=super.doWrappingFormParameter(request,parameterMap);
             return super.doWrappingData(roleService.findRoleBySchool(parameterMap));
         } catch (Exception e) {
             return  super.doWrappingErrorData(e);
         }
     }
 
+    @GetMapping("/getRoleListBySchoolZoneId/{schoolZoneId}")
+    public Map getRoleListBySchoolZoneId(HttpServletRequest request,@PathVariable Integer schoolZoneId){
+        try {
+            LinkedHashMap parameterMap = new LinkedHashMap();
+            parameterMap.put("schoolIds",new Integer[]{schoolZoneId});//获取当前用户所在校区的id和下级校区的数组
+            parameterMap.put("branchId",getCurrentUser(request).getBranchId());
+            return super.doWrappingData(roleService.findRoleBySchool(parameterMap));
+        } catch (Exception e) {
+            return  super.doWrappingErrorData(e);
+        }
+    }
 
+    /**
+     * 创建用户
+     * @param request
+     * @param user 用户基础信息
+     * @param roles 用户权限
+     * @return
+     */
     @PostMapping("/createUser")
-    public Map createUser(HttpServletRequest request,User user){
+    public Map createUser(HttpServletRequest request,User user,Integer [] roles){
         try {
             user.setBranchId(getCurrentUser(request).getBranchId());
-            return super.doWrappingData(userService.createUser(user));
+
+            return super.doWrappingData(userService.createUser(user,roles));
         } catch (Exception e) {
             return  super.doWrappingErrorData(e);
         }

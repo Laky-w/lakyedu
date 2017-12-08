@@ -1,5 +1,6 @@
 package com.laky.edu.organization.bean;
 
+import java.beans.Transient;
 import java.io.Serializable;
 
 public class RoleAuthority implements Serializable {
@@ -8,6 +9,7 @@ public class RoleAuthority implements Serializable {
     private Integer roleId;
 
     private Integer authorityId;
+    private Role role;
 
     private static final long serialVersionUID = 1L;
 
@@ -33,6 +35,15 @@ public class RoleAuthority implements Serializable {
 
     public void setAuthorityId(Integer authorityId) {
         this.authorityId = authorityId;
+    }
+
+    @Transient
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
     }
 
     @Override

@@ -15,11 +15,20 @@
     from laky_organization_role_authority
     where id = #{id,jdbcType=INTEGER}
   </select>
-  <insert id="insertRoleAuthority" parameterType="com.laky.edu.organization.bean.RoleAuthority" >
+  <insert id="insertRoleAuthority" parameterType="com.laky.edu.organization.bean.RoleAuthority" useGeneratedKeys="true" keyProperty="id"
+          keyColumn="id">
     insert into laky_organization_role_authority (id, role_id, authority_id
       )
     values (#{id,jdbcType=INTEGER}, #{roleId,jdbcType=INTEGER}, #{authorityId,jdbcType=INTEGER}
       )
+  </insert>
+  <insert id="insertRoleAuthorityBatch" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id"
+          keyColumn="id">
+    insert into laky_organization_role_authority (role_id, authority_id)
+    values
+    <foreach collection="list" item="item" index="index" separator="," >
+      (#{item.role.id,jdbcType=INTEGER}, #{item.authorityId,jdbcType=INTEGER})
+    </foreach>
   </insert>
   <update id="updateRoleAuthority" parameterType="com.laky.edu.organization.bean.RoleAuthority" >
     update laky_organization_role_authority

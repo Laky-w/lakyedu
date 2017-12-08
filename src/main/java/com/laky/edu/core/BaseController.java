@@ -87,8 +87,12 @@ public class BaseController {
         Enumeration pNames=request.getParameterNames();
         while(pNames.hasMoreElements()){
             String name=(String)pNames.nextElement();
-            String value=request.getParameter(name);
-            if (!StringUtils.isEmpty(value)) {
+            String [] value=request.getParameterValues(name);
+            if (value!=null && value.length==1) {
+                if(!StringUtils.isEmpty(value[0])){
+                    parameter.put(name,value[0]);
+                }
+            }else{
                 parameter.put(name,value);
             }
         }
@@ -136,16 +140,16 @@ public class BaseController {
      * @param content
      */
     public void handleOperate(String title,int type,String content,HttpServletRequest request){
-        OperateLog operatelog = new OperateLog();
-        operatelog.setContent(content);
-        operatelog.setCreateTime(new Date());
-        operatelog.setAccountId(getCurrentUser(request).getId());
-        operatelog.setOperatePerson(getCurrentUser(request).getName());
-        operatelog.setTheType(type);
-        operatelog.setTitle(title);
-        operatelog.setSchoolZoneId(getCurrentUser(request).getSchoolZoneId());
-        operatelog.setBranchId(getCurrentUser(request).getBranchId());
         try {
+            OperateLog operatelog = new OperateLog();
+            operatelog.setContent(content);
+            operatelog.setCreateTime(new Date());
+            operatelog.setAccountId(getCurrentUser(request).getId());
+            operatelog.setOperatePerson(getCurrentUser(request).getName());
+            operatelog.setTheType(type);
+            operatelog.setTitle(title);
+            operatelog.setSchoolZoneId(getCurrentUser(request).getSchoolZoneId());
+            operatelog.setBranchId(getCurrentUser(request).getBranchId());
             operateLogService.addOperateLog(operatelog);
         }  catch ( Exception e ){
             e.printStackTrace();

@@ -18,14 +18,20 @@
         <result column="branch_id" jdbcType="INTEGER" property="branchId" />
         <result column="school_zone_id" jdbcType="INTEGER" property="schoolZoneId" />
         <result column="sex" jdbcType="INTEGER" property="sex" />
+        <result column="is_super" jdbcType="INTEGER" property="isSuper" />
         <result column="birthday" jdbcType="INTEGER" property="birthday" />
         <result column="birthday" jdbcType="TIMESTAMP" property="birthday" />
         <result column="create_datetime" jdbcType="TIMESTAMP" property="createDatetime" />
         <association property="schoolZone" column="school_zone_id" javaType="com.laky.edu.organization.bean.SchoolZone" resultMap="SchoolZoneMap" />
+        <association property="branch" column="branch_id" javaType="com.laky.edu.organization.bean.Branch" resultMap="BranchMap" />
     </resultMap>
     <resultMap id="SchoolZoneMap" type="com.laky.edu.organization.bean.SchoolZone">
         <id property="id" column="id" />
         <result property="name" column="sz_name" />
+    </resultMap>
+    <resultMap id="BranchMap" type="com.laky.edu.organization.bean.Branch">
+        <id property="id" column="id" />
+        <result property="branchName" column="branch_name" />
     </resultMap>
     <insert id="insertUser" keyColumn="id" keyProperty="id" useGeneratedKeys="true" parameterType="com.laky.edu.organization.bean.User">
       INSERT  INTO  laky_organization_user(user_name,nick_name,`name`,`password`,head_logo,the_status,branch_id,school_zone_id,
@@ -34,18 +40,36 @@
       #{theStatus},#{branchId},#{schoolZoneId},#{createDatetime},#{phone},
       #{email},#{sex},#{birthday},#{isSuper},#{idCard})
     </insert>
-    <select id="queryUserByUserName"   resultType="com.laky.edu.organization.bean.User">
-      SELECT  u.* FROM laky_organization_user u LEFT JOIN  laky_organization_branch b on u.branch_id = b.id
+    <select id="queryUserByUserName"   resultMap="BaseResultMap">
+      SELECT  u.*,sz.`name` as sz_name,b.branch_name  FROM laky_organization_user u LEFT JOIN  laky_organization_branch b on u.branch_id = b.id and b.the_status =1 LEFT JOIN  laky_organization_school_zone sz on sz.id =u.school_zone_id and sz.the_status !=0
       WHERE (u.user_name = #{userName} or u.email = #{userName} or u.phone = #{userName}) and u.the_status != 0 and b.serial = #{serial} and b.the_status =1
 
     </select>
     <select id="queryUserBySchoolId"   resultType="com.laky.edu.organization.bean.User" resultMap="BaseResultMap">
        SELECT s.*,sz.`name` as sz_name  from laky_organization_user s
-       LEFT JOIN laky_organization_school_zone sz on sz.id =s.school_zone_id and sz.the_status !=0 where s.the_status !=0 and s.school_zone_id in
-        <foreach collection="schoolIds" item="schoolId" index="index"
-                 open="(" close=")" separator=",">
-            #{schoolId}
-        </foreach>
+       LEFT JOIN laky_organization_school_zone sz on sz.id =s.school_zone_id and sz.the_status !=0 where s.the_status !=0
+        <if test="userName != null">
+            AND s.`user_name` LIKE CONCAT('%',#{userName,jdbcType=VARCHAR},'%')
+        </if>
+        <if test="schoolZoneId != null">
+            AND s.school_zone_id IN
+            <foreach collection="schoolZoneId" item="schoolId" index="index"
+                     open="(" close=")" separator=",">
+                #{schoolId}
+            </foreach>
+        </if>
+        <if test="schoolZoneId2 != null">
+            <if test="schoolZoneId2 instanceof String">
+                AND s.school_zone_id = #{schoolZoneId2,jdbcType=INTEGER}
+            </if>
+            <if test="!(schoolZoneId2 instanceof String)">
+                AND s.school_zone_id IN
+                <foreach collection="schoolZoneId2" item="schoolId" index="index"
+                         open="(" close=")" separator=",">
+                    #{schoolId}
+                </foreach>
+            </if>
+        </if>
     </select>
     <!--<resultMap type="com.laky.edu.organization.bean.User" id="userResultMap">
 

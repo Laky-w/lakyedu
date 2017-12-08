@@ -39,8 +39,9 @@ public interface UserService {
     /**
      * 创建一个用户
      * @param user
+     * @param roles
      * @return
      * @throws Exception
      */
-    User createUser(User user) throws Exception;
+    User createUser(User user,Integer [] roles) throws Exception;
 }

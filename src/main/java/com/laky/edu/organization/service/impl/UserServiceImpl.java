@@ -6,9 +6,11 @@ import com.laky.edu.organization.OrganizationConst;
 import com.laky.edu.organization.bean.Authority;
 import com.laky.edu.organization.bean.Menu;
 import com.laky.edu.organization.bean.User;
+import com.laky.edu.organization.bean.UserRole;
 import com.laky.edu.organization.dao.AuthorityDao;
 import com.laky.edu.organization.dao.MenuDao;
 import com.laky.edu.organization.dao.UserDao;
+import com.laky.edu.organization.dao.UserRoleDao;
 import com.laky.edu.organization.service.UserService;
 import com.laky.edu.util.MD5;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +36,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private AuthorityDao authorityDao;
+
+    @Autowired
+    private UserRoleDao userRoleDao;
 
     @Override
     public User loginUser(String userName, String pwd,String serial) throws Exception{
@@ -122,14 +127,23 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public User createUser(User user) throws Exception {
+    public User createUser(User user,Integer [] roles) throws Exception {
         user.setTheStatus(1);
         user.setCreateDatetime(new Date());
         //010
-        user.setIsSuper(2);
         user.setPassword(MD5.getMd5("123456"));
         int row= userDao.insertUser(user);
-        return row>0 ?user: null;
+        if(row==0) throw new Exception("用户创建失败");
+        List<UserRole> dataList = new ArrayList<>();
+        for(Integer role:roles){
+            UserRole userRole = new UserRole();
+            userRole.setUserId(user.getId());
+            userRole.setRoleId(role);
+            dataList.add(userRole);
+        }
+        userRoleDao.insertUserRoleBatch(dataList);
+        user.setUserRoleList(dataList);
+        return user;
     }
 }
 

@@ -4,6 +4,7 @@ package com.laky.edu.config.web;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -35,7 +36,9 @@ public class WebSecurityConfig extends WebMvcConfigurerAdapter {
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 Date date = null;
                 try {
-                    date = sdf.parse(source);
+                    if(!StringUtils.isEmpty(source)){
+                        date = sdf.parse(source);
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

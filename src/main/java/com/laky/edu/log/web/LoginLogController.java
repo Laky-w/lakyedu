@@ -28,13 +28,14 @@ public class LoginLogController extends BaseController{
     public Map findLoginLog(HttpServletRequest request,
                             @PathVariable int pageNum, @PathVariable int pageSize){
         try {
+
             User user =userSession.get(request.getHeader("token"));
             LinkedHashMap parameterMap = new LinkedHashMap();
             parameterMap.put("schoolZoneId",user.getSchoolZoneId());
             parameterMap.put("pageNum",pageNum);
             parameterMap.put("pageSize",pageSize);
 //            Date date=new Date(request.getParameter("theDate1"));
-
+            parameterMap.put("schoolZoneId",getSchoolIds(request));
             parameterMap=super.doWrappingFormParameter(request,parameterMap);
             return super.doWrappingData(loginLogService.selectByParameter(parameterMap));
         } catch (Exception e) {

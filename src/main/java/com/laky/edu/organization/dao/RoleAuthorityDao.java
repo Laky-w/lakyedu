@@ -10,9 +10,10 @@ public interface RoleAuthorityDao {
 
     int insertRoleAuthority(RoleAuthority roleAuthority);
 
+    int insertRoleAuthorityBatch(List<RoleAuthority> roleAuthorities);
+
     Authority queryRoleAuthorityById(Integer id);
 
-    List<RoleAuthority> queryRoleAuthorityByParameter(Integer id);
 
     int updateRoleAuthority(RoleAuthority roleAuthority);
 }
