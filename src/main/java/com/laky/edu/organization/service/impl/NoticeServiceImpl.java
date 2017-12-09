@@ -21,6 +21,8 @@ public class NoticeServiceImpl implements NoticeService{
 
     @Override
     public int createNotice(Notice notice) throws Exception {
+        notice.setTheStatus(1);
+        notice.setCreateDatetime(new Date());
         return noticeDao.insertNotice(notice);
     }
 

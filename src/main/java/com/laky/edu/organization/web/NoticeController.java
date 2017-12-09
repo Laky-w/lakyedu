@@ -20,7 +20,22 @@ public class NoticeController extends BaseController {
     @Autowired
     private NoticeService noticeService;
 
-
+    @PostMapping(value = "createNotice")
+    public  Map createNotice(HttpServletRequest request,Notice notice){
+        try {
+            notice.setBranchId(getCurrentUser(request).getBranchId());
+            notice.setSchoolZoneId(getCurrentUser(request).getSchoolZoneId());
+            notice.setUserId(getCurrentUser(request).getId());
+            int rowCount= noticeService.createNotice(notice);
+            if(rowCount>0){
+                return  super.doWrappingData(notice);
+            } else {
+                throw new Exception("创建公告失败！");
+            }
+        } catch (Exception e){
+            return  super.doWrappingErrorData(e);
+        }
+    }
     @GetMapping(value = "/findNewNoticeAll")
     public Map findNewNoticeAll(HttpServletRequest request){
         try {
@@ -56,11 +71,11 @@ public class NoticeController extends BaseController {
     @PostMapping (value = "/findNoticeAll/{pageNum}/{pageSize}")
     public Map findNoticeAll(HttpServletRequest request,@PathVariable int pageNum,@PathVariable int pageSize){
         try {
-
             LinkedHashMap parameterMap = new LinkedHashMap();
             parameterMap.put("branchId",getCurrentUser(request).getBranchId());
             parameterMap.put("pageNum",pageNum);
             parameterMap.put("pageSize",pageSize);
+            parameterMap.put("schoolZoneId",getSchoolIds(request));
             parameterMap = super.doWrappingFormParameter(request,parameterMap);
             return super.doWrappingData(noticeService.findNoticeByBranchOrSchool(parameterMap));
         } catch (Exception e){

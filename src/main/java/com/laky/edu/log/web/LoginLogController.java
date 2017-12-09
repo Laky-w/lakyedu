@@ -29,9 +29,7 @@ public class LoginLogController extends BaseController{
                             @PathVariable int pageNum, @PathVariable int pageSize){
         try {
 
-            User user =userSession.get(request.getHeader("token"));
             LinkedHashMap parameterMap = new LinkedHashMap();
-            parameterMap.put("schoolZoneId",user.getSchoolZoneId());
             parameterMap.put("pageNum",pageNum);
             parameterMap.put("pageSize",pageSize);
 //            Date date=new Date(request.getParameter("theDate1"));

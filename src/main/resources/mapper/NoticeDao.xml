@@ -26,6 +26,7 @@
   <sql id="Base_Column_List" >
     id, user_id, create_datetime, the_type, last_datetime, branch_id, school_zone_id,content,the_status
   </sql>
+  <!--批量增加查看-->
   <select id="queryNoticeByBranchOrSchool"  resultMap="NoticeResultMap">
 
     SELECT s.*,u.`name` as u_name,sz.`name` as sz_name from  laky_organization_notice s RIGHT JOIN laky_organization_user u on s.user_id = u.id and u.the_status !=0
@@ -34,7 +35,7 @@
     </if>
     LEFT JOIN laky_organization_school_zone sz on s.school_zone_id = sz.id and sz.the_status !=0
     <where>
-      1=1
+      1=1 AND s.the_type!= 3
       <if test="userId != null">
         AND s.user_id = #{userId,jdbcType=INTEGER}
       </if>
@@ -42,20 +43,41 @@
         AND u.`name` LIKE CONCAT('%',#{userName,jdbcType=VARCHAR},'%')
       </if>
       <if test="schoolZoneId != null">
-        AND s.school_zone_id = #{schoolZoneId,jdbcType=INTEGER}
+        AND s.school_zone_id IN
+        <foreach collection="schoolZoneId" item="schoolId" index="index"
+                 open="(" close=")" separator=",">
+          #{schoolId}
+        </foreach>
+      </if>
+      <if test="schoolZoneId2 != null">
+        <if test="schoolZoneId2 instanceof String">
+          AND s.school_zone_id = #{schoolZoneId2,jdbcType=INTEGER}
+        </if>
+        <if test="!(schoolZoneId2 instanceof String)">
+          AND s.school_zone_id IN
+          <foreach collection="schoolZoneId2" item="schoolId" index="index"
+                   open="(" close=")" separator=",">
+            #{schoolId}
+          </foreach>
+        </if>
       </if>
       <if test="branchId != null">
         AND s.branch_id = #{branchId,jdbcType=INTEGER}
+      </if>
+      <if test="content != null">
+        AND s.content LIKE CONCAT('%',#{content,jdbcType=VARCHAR},'%')
       </if>
       <if test="theType != null">
         AND s.the_type = #{theType,jdbcType=TINYINT}
       </if>
       <if test="lastDatetime != null">
-        AND s.last_datetime &gt;= #{lastDatetime,jdbcType=TIMESTAMP}
+        AND s.last_datetime >= #{lastDatetime[0],jdbcType=TIMESTAMP}
+        AND s.last_datetime &lt;= #{lastDatetime[1],jdbcType=TIMESTAMP}
       </if>
       <if test="createDatetime != null">
         AND s.create_datetime &lt;= #{createDatetime,jdbcType=TIMESTAMP}
       </if>
+
     </where>
     ORDER BY s.create_datetime DESC
   </select>
@@ -83,12 +105,12 @@
   </delete>
   <insert id="insertNotice" parameterType="com.laky.edu.organization.bean.Notice" useGeneratedKeys="true" keyProperty="id"
           keyColumn="id">
-    insert into laky_organization_notice (id, user_id, create_datetime,
+    insert into laky_organization_notice (user_id, create_datetime,
       the_type, last_datetime, branch_id, 
-      school_zone_id,content)
-    values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{createDatetime,jdbcType=TIMESTAMP}, 
+      school_zone_id,content,the_status)
+    values ( #{userId,jdbcType=INTEGER}, #{createDatetime,jdbcType=TIMESTAMP},
       #{theType,jdbcType=INTEGER}, #{lastDatetime,jdbcType=TIMESTAMP}, #{branchId,jdbcType=INTEGER}, 
-      #{schoolZoneId,jdbcType=INTEGER},#{content}),#{theStatus,jdbcType=INTEGER}
+      #{schoolZoneId,jdbcType=INTEGER},#{content},#{theStatus,jdbcType=INTEGER})
   </insert>
   <update id="updateNoticeByPrimaryKeySelective" parameterType="com.laky.edu.organization.bean.Notice" >
     update laky_organization_notice
