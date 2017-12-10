@@ -120,6 +120,11 @@ public class OrganizationServiceImpl implements OrganizationService {
     }
 
     @Override
+    public List<BranchParameter> findBranchParameterByType(LinkedHashMap parameterMap) throws Exception {
+        return branchParameterDao.queryBranchParameterByParameter(parameterMap);
+    }
+
+    @Override
     public List<BranchParameterValue> findBranchParameterValueAll(LinkedHashMap parameterMap) throws Exception {
         return branchParameterValueDao.queryBranchParameterValueByBranchId(parameterMap);
     }

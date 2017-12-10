@@ -13,7 +13,7 @@ jdbc:
     driver-class-name: com.mysql.jdbc.Driver
 mybatis:
   config-location:  mybatis-config.xml
-  mapper-locations: mapper/**.xml
+  mapper-locations: mapper/*/**.xml
   type-aliases-package: com.laky.edu.bean
 
 

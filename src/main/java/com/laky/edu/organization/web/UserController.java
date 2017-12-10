@@ -60,8 +60,8 @@ public class UserController extends BaseController{
         }
     }
 
-    @GetMapping("/loginout")
-    public Map loginout(HttpServletRequest request) {
+    @GetMapping("/loginOut")
+    public Map loginOut(HttpServletRequest request) {
         try {
             String token=request.getHeader("token");
             loginLogService.insert((User) userSession.get(token),2,super.getRemortIP(request));

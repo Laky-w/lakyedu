@@ -6,6 +6,7 @@ public class BranchParameter implements Serializable {
     private Integer id;
     private String name;
     private Integer sort;
+    private Integer theType;
 
     public Integer getId() {
         return id;
@@ -29,5 +30,13 @@ public class BranchParameter implements Serializable {
 
     public void setSort(Integer sort) {
         this.sort = sort;
+    }
+
+    public Integer getTheType() {
+        return theType;
+    }
+
+    public void setTheType(Integer theType) {
+        this.theType = theType;
     }
 }

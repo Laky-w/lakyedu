@@ -114,6 +114,17 @@ public class OrganizationController extends BaseController {
         }
     }
 
+    @GetMapping(value = "findBranchParameterByType/{theType}")
+    public Map findBranchParameterByType(@PathVariable Integer theType) {
+        try {
+            LinkedHashMap parameterMap = new LinkedHashMap();
+            parameterMap.put("theType",theType);
+            return super.doWrappingData(organizationService.findBranchParameterByType(parameterMap));
+        } catch (Exception e){
+            return  super.doWrappingErrorData(e);
+        }
+    }
+
     @GetMapping(value = "findBranchParameterValueAll/{parameterId}")
     public Map findBranchParameterValueAll(@PathVariable  Integer parameterId,HttpServletRequest request) {
         try {

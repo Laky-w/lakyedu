@@ -35,7 +35,6 @@ public interface UserService {
      * @throws Exception
      */
     PageBean findUserBySchoolId(LinkedHashMap parameterMap)throws Exception;
-
     /**
      * 创建一个用户
      * @param user

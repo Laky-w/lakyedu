@@ -2,6 +2,7 @@ package com.laky.edu.organization.web;
 
 import com.laky.edu.core.BaseController;
 import com.laky.edu.core.PageBean;
+import com.laky.edu.organization.OrganizationConst;
 import com.laky.edu.organization.bean.Notice;
 import com.laky.edu.organization.bean.User;
 import com.laky.edu.organization.service.NoticeService;
@@ -26,8 +27,10 @@ public class NoticeController extends BaseController {
             notice.setBranchId(getCurrentUser(request).getBranchId());
             notice.setSchoolZoneId(getCurrentUser(request).getSchoolZoneId());
             notice.setUserId(getCurrentUser(request).getId());
+
             int rowCount= noticeService.createNotice(notice);
             if(rowCount>0){
+                super.handleOperate("添加公告", OrganizationConst.OPERATE_ADD,"公告内容【"+notice.getContent()+"】",request);
                 return  super.doWrappingData(notice);
             } else {
                 throw new Exception("创建公告失败！");

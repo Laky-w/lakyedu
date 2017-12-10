@@ -3,6 +3,7 @@ package com.laky.edu.organization.dao;
 import com.laky.edu.organization.bean.BranchParameter;
 import org.springframework.stereotype.Component;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 @Component
 public interface BranchParameterDao {
@@ -11,4 +12,7 @@ public interface BranchParameterDao {
     List<BranchParameter> queryUserParameterById(Integer Id);
 
     List<BranchParameter> queryBranchParameterAll();
+
+    List<BranchParameter> queryBranchParameterByParameter(LinkedHashMap parameterMap);
+
 }

@@ -14,4 +14,15 @@
   <select id="queryBranchParameterAll" resultType="com.laky.edu.organization.bean.BranchParameter" >
     select * from laky_organization_parameter ORDER BY sort
   </select>
+
+  <select id="queryBranchParameterByParameter" resultType="com.laky.edu.organization.bean.BranchParameter" >
+    select * from laky_organization_parameter
+    <where>
+      1=1
+      <if test="theType !=null">
+        AND  the_type = #{theType,jdbcType=INTEGER}
+      </if>
+    </where>
+    ORDER BY the_type,sort
+  </select>
 </mapper>

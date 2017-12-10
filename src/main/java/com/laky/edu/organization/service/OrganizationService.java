@@ -66,6 +66,14 @@ public interface OrganizationService {
     List<BranchParameter> findBranchParameterAll() throws Exception;
 
     /**
+     * 查询机构参数
+     * @param parameterMap
+     * @return
+     * @throws Exception
+     */
+    List<BranchParameter> findBranchParameterByType(LinkedHashMap parameterMap) throws Exception;
+
+    /**
      * 查询机构参数值
      * @param parameterMap
      * @return

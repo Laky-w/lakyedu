@@ -8,6 +8,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 public interface UserParameterService {
+
     int createUserParameter(BranchParameter userParameter);
 
     Authority findUserParameterById(Integer id);
