@@ -48,6 +48,7 @@ public class NoticeController extends BaseController {
             parameterMap.put("branchId",user.getBranchId());
             parameterMap.put("schoolZoneId",user.getSchoolZoneId());
             parameterMap = super.doWrappingFormParameter(request,parameterMap);
+
             return super.doWrappingData(noticeService.findNewNotice(parameterMap));
         } catch (Exception e){
             return  super.doWrappingErrorData(e);
@@ -80,6 +81,7 @@ public class NoticeController extends BaseController {
             parameterMap.put("pageSize",pageSize);
             parameterMap.put("schoolZoneId",getSchoolIds(request));
             parameterMap = super.doWrappingFormParameter(request,parameterMap);
+            super.handleOperate("增加公告", OrganizationConst.NOTICE_SCHOOL==2?OrganizationConst.NOTICE_SCHOOL:OrganizationConst.NOTICE_BRANCH,"增加公告【"+getCurrentUser(request).getName()+"】",request);
             return super.doWrappingData(noticeService.findNoticeByBranchOrSchool(parameterMap));
         } catch (Exception e){
             return  super.doWrappingErrorData(e);

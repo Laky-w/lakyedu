@@ -22,6 +22,7 @@
   </resultMap>
   <sql id="Base_Column_List">
     id, user_id, school_zone_id, branch_id, IP, the_type, the_datetime
+
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 

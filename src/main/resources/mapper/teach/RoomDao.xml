@@ -7,7 +7,7 @@
     <result column="max_count" property="maxCount" jdbcType="INTEGER" />
     <result column="sort" property="sort" jdbcType="INTEGER" />
     <result column="school_zone_id" property="schoolZoneId" jdbcType="INTEGER" />
-    <result column="school_zone_name" property="schoolZoneName" jdbcType="INTEGER" />
+    <result column="school_zone_name" property="schoolZoneName" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, name, max_count, sort, school_zone_id
