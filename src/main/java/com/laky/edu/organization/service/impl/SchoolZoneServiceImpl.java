@@ -1,5 +1,6 @@
 package com.laky.edu.organization.service.impl;
 
+import com.laky.edu.organization.OrganizationConst;
 import com.laky.edu.organization.bean.SchoolZone;
 import com.laky.edu.organization.dao.SchoolZoneDao;
 import com.laky.edu.organization.service.SchoolZoneService;
@@ -40,14 +41,13 @@ public class SchoolZoneServiceImpl implements SchoolZoneService{
     }
 
     @Override
-    public SchoolZone querySchoolZoneAllBySchoolZoneId(Integer branchId, Integer schoolZoneId) throws Exception {
+    public SchoolZone querySchoolZoneAllBySchoolZoneId(Integer branchId, Integer schoolZoneId,Integer theType) throws Exception {
         List<SchoolZone> list = schoolZoneDao.querySchoolZoneAllByBranchId(branchId);
         List<SchoolZone> newSchoolZoneList = new ArrayList<>();
         list.forEach(schoolZone -> {
-            if(schoolZone.getId() == schoolZoneId) {
-                schoolZone.setChildrenList(getSubs(schoolZone.getId(),list));
+            if(schoolZone.getId() == schoolZoneId ) {
+                schoolZone.setChildrenList(getSubs(schoolZone.getId(),list,theType));
                 newSchoolZoneList.add(schoolZone);
-                return;
             }
         });
         if(newSchoolZoneList.size()>0)
@@ -63,12 +63,14 @@ public class SchoolZoneServiceImpl implements SchoolZoneService{
      * @param schoolZoneList
      * @return
      */
-    private List<SchoolZone> getSubs(Integer id,List<SchoolZone> schoolZoneList){
+    private List<SchoolZone> getSubs(Integer id,List<SchoolZone> schoolZoneList,int theType){
         List<SchoolZone> newSchoolZoneList = new ArrayList<>();
         schoolZoneList.forEach(item->{
-            if(item.getFatherId() == id){
-                item.setChildrenList(getSubs(item.getId(),schoolZoneList));
-                newSchoolZoneList.add(item);
+            if(item.getFatherId() == id ){
+                if((theType ==0) || (item.getTheType() == theType)) {
+                    item.setChildrenList(getSubs(item.getId(),schoolZoneList,theType));
+                    newSchoolZoneList.add(item);
+                }
             }
         });
         if (newSchoolZoneList.size() == 0) return  null;

@@ -7,10 +7,7 @@ import com.laky.edu.teach.bean.Room;
 import com.laky.edu.teach.service.TeachService;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -33,6 +30,16 @@ public class TeachController extends BaseController{
             parameterMap.put("pageSize",pageSize);
             parameterMap = super.doWrappingFormParameter(request,parameterMap);
             return super.doWrappingData(teachService.findCourseByBranch(parameterMap));
+        } catch (Exception e) {
+            return  super.doWrappingErrorData(e);
+        }
+    }
+    @GetMapping("/getCourseTreeList")
+    public Map getCourseTreeList(HttpServletRequest request){
+        try {
+            LinkedHashMap parameterMap = new LinkedHashMap();
+            parameterMap.put("branchId",super.getCurrentUser(request).getBranchId());
+            return super.doWrappingData(teachService.findCourseTreeByBranch(parameterMap));
         } catch (Exception e) {
             return  super.doWrappingErrorData(e);
         }

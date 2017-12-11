@@ -38,11 +38,12 @@ public class SchoolZoneController extends BaseController {
         }
     }
 
-    @GetMapping(value = "/findSchoolZoneAll")
-    public Map findSchoolZoneAllByBranchId(HttpServletRequest request) {
+    @GetMapping(value = "/findSchoolZoneAll/{theType}")
+    public Map findSchoolZoneAllByBranchId(HttpServletRequest request,@PathVariable  Integer theType) {
         try {
             User user =super.getCurrentUser(request);
-            SchoolZone schoolZone = schoolZoneService.querySchoolZoneAllBySchoolZoneId(user.getBranchId(),user.getSchoolZoneId());
+            schoolZoneService.querySchoolZoneDaoById(user.getSchoolZoneId());//查询用户校区
+            SchoolZone schoolZone = schoolZoneService.querySchoolZoneAllBySchoolZoneId(user.getBranchId(),user.getSchoolZoneId(),theType);
             return  super.doWrappingData(schoolZone);
         } catch (Exception e){
             return  super.doWrappingErrorData(e);

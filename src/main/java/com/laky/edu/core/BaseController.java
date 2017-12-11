@@ -117,7 +117,7 @@ public class BaseController {
     public Integer [] getSchoolIds(HttpServletRequest request) throws Exception{
         User user=this.getCurrentUser(request);
         user.getSchoolZoneId();
-        SchoolZone schoolZone = schoolZoneService.querySchoolZoneAllBySchoolZoneId(user.getBranchId(),user.getSchoolZoneId());
+        SchoolZone schoolZone = schoolZoneService.querySchoolZoneAllBySchoolZoneId(user.getBranchId(),user.getSchoolZoneId(),0);
         Integer [] ids ;
         if(schoolZone.getChildrenList() != null && schoolZone.getChildrenList().size()>0) {
             ids = new Integer[schoolZone.getChildrenList().size()+1];

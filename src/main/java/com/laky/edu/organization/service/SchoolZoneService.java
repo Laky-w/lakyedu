@@ -26,10 +26,11 @@ public interface SchoolZoneService {
      * 查询校区下的全部校区
      * @param branchId
      * @param schoolZoneId
+     * @param theType
      * @return
      * @throws Exception
      */
-    SchoolZone querySchoolZoneAllBySchoolZoneId(Integer branchId,Integer schoolZoneId) throws Exception;
+    SchoolZone querySchoolZoneAllBySchoolZoneId(Integer branchId,Integer schoolZoneId,Integer theType) throws Exception;
 
     /**
      * 查询某个校区根据ID

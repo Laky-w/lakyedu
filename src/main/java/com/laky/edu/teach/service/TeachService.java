@@ -5,6 +5,8 @@ import com.laky.edu.teach.bean.Course;
 import com.laky.edu.teach.bean.Room;
 
 import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by 湖之教育工作室·laky on 2017/12/10.
@@ -40,4 +42,11 @@ public interface TeachService {
      * @throws Exception
      */
     Room createRoom(Room room) throws Exception;
+
+    /**
+     * 查询课程
+     * @param parameterMap
+     * @return 类目=》类别=》课程 三级树
+     */
+    List<Map> findCourseTreeByBranch(LinkedHashMap parameterMap);
 }
