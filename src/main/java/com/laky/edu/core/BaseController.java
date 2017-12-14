@@ -109,15 +109,38 @@ public class BaseController {
     }
 
     /**
-     * 获取当前用户所在校区的id和下级校区的数组
+     * 获取当前用户所在校区的下级校区和部门
      * @param request
      * @return
      * @throws Exception
      */
     public Integer [] getSchoolIds(HttpServletRequest request) throws Exception{
+        return  getSchoolIds(request,0);
+    }
+
+    /**
+     * 获取当前用户所在校区的下级校区或部门
+     * @param request
+     * @return
+     * @throws Exception
+     */
+    public Integer [] getSchoolIds(HttpServletRequest request,Object theType) throws Exception{
+        return  getSchoolIds(request,theType,null);
+    }
+
+    /**
+     *  获取某校区的下级校区或部门
+     * @param request
+     * @param theType
+     * @param parentSchoolId 校区id
+     * @return
+     * @throws Exception
+     */
+    public Integer [] getSchoolIds(HttpServletRequest request,Object theType,Object parentSchoolId) throws Exception{
         User user=this.getCurrentUser(request);
         user.getSchoolZoneId();
-        SchoolZone schoolZone = schoolZoneService.querySchoolZoneAllBySchoolZoneId(user.getBranchId(),user.getSchoolZoneId(),0);
+        SchoolZone schoolZone = schoolZoneService.querySchoolZoneAllBySchoolZoneId(user.getBranchId(),parentSchoolId == null ?user.getSchoolZoneId():Integer.parseInt(parentSchoolId.toString()),
+                theType == null ?0:Integer.parseInt(theType.toString()));
         Integer [] ids ;
         if(schoolZone.getChildrenList() != null && schoolZone.getChildrenList().size()>0) {
             ids = new Integer[schoolZone.getChildrenList().size()+1];

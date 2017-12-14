@@ -42,13 +42,26 @@ public class SchoolZoneController extends BaseController {
     public Map findSchoolZoneAllByBranchId(HttpServletRequest request,@PathVariable  Integer theType) {
         try {
             User user =super.getCurrentUser(request);
-            schoolZoneService.querySchoolZoneDaoById(user.getSchoolZoneId());//查询用户校区
-            SchoolZone schoolZone = schoolZoneService.querySchoolZoneAllBySchoolZoneId(user.getBranchId(),user.getSchoolZoneId(),theType);
+            SchoolZone schoolZone = schoolZoneService.querySchoolZoneAllBySchoolZoneId(user.getBranchId(),user.getSchoolZoneId(),theType);//查询用户校区
             return  super.doWrappingData(schoolZone);
         } catch (Exception e){
             return  super.doWrappingErrorData(e);
         }
     }
+    @GetMapping(value = "/findChildSchoolZoneAll/{theType}/{schoolId}")
+    public Map findChildSchoolZoneAllByBranchId(HttpServletRequest request,@PathVariable  Integer theType,@PathVariable Integer schoolId) {
+        try {
+            User user =super.getCurrentUser(request);
+            if(schoolId == 0) {
+                schoolId =user.getSchoolZoneId();
+            }
+            SchoolZone schoolZone = schoolZoneService.querySchoolZoneAllBySchoolZoneId(user.getBranchId(),schoolId,theType);//查询用户校区
+            return  super.doWrappingData(schoolZone);
+        } catch (Exception e){
+            return  super.doWrappingErrorData(e);
+        }
+    }
+
     @GetMapping(value = "/findSchoolZoneDaoById/{id}")
     public Map findSchoolZoneDaoById(@PathVariable Integer id) throws Exception {
         try {

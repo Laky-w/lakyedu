@@ -59,15 +59,15 @@
     delete from laky_teach_school_class
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.laky.edu.teach.bean.SchoolClass" >
-    insert into laky_teach_school_class (id, name, course_id, 
-      school_zone_id, the_status, roo_id, 
-      main_teacher_id, teacher_id, startData, 
-      endData, remarks, create_time)
-    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{courseId,jdbcType=INTEGER}, 
-      #{schoolZoneId,jdbcType=INTEGER}, #{theStatus,jdbcType=TINYINT}, #{rooId,jdbcType=INTEGER}, 
-      #{mainTeacherId,jdbcType=INTEGER}, #{teacherId,jdbcType=INTEGER}, #{startdata,jdbcType=DATE}, 
-      #{enddata,jdbcType=DATE}, #{remarks,jdbcType=VARCHAR},  #{createTime,jdbcType=DATE})
+  <insert id="insert" parameterType="com.laky.edu.teach.bean.SchoolClass" keyColumn="id" keyProperty="id" useGeneratedKeys="true">
+    insert into laky_teach_school_class (name, course_id,
+      school_zone_id, the_status, room_id,
+      main_teacher_id, teacher_id, start_date,
+      end_date, remarks, create_time)
+    values ( #{name,jdbcType=VARCHAR}, #{courseId,jdbcType=INTEGER},
+      #{schoolZoneId,jdbcType=INTEGER}, #{theStatus,jdbcType=TINYINT}, #{roomId,jdbcType=INTEGER},
+      #{mainTeacherId,jdbcType=INTEGER}, #{teacherId,jdbcType=INTEGER}, #{startDate,jdbcType=DATE},
+      #{endDate,jdbcType=DATE}, #{remarks,jdbcType=VARCHAR},  #{createTime,jdbcType=DATE})
   </insert>
   <insert id="insertSelective" parameterType="com.laky.edu.teach.bean.SchoolClass" >
     insert into laky_teach_school_class

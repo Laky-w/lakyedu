@@ -98,10 +98,10 @@ public class UserController extends BaseController{
     public Map getUserList(HttpServletRequest request,@PathVariable int pageNum, @PathVariable int pageSize){
         try {
             LinkedHashMap parameterMap = new LinkedHashMap();
-            parameterMap.put("schoolZoneId",super.getSchoolIds(request));//获取当前用户所在校区的id和下级校区的数组
+            parameterMap = super.doWrappingFormParameter(request,parameterMap);
+            parameterMap.put("schoolZoneId",super.getSchoolIds(request,parameterMap.get("theType"),parameterMap.get("parentSchoolId")));//获取当前用户所在校区的id和下级校区的数组
             parameterMap.put("pageNum",pageNum);
             parameterMap.put("pageSize",pageSize);
-            parameterMap = super.doWrappingFormParameter(request,parameterMap);
             return super.doWrappingData(userService.findUserBySchoolId(parameterMap));
         } catch (Exception e) {
             return  super.doWrappingErrorData(e);

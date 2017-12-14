@@ -34,10 +34,15 @@ public class WebSecurityConfig extends WebMvcConfigurerAdapter {
             @Override
             public Date convert(String source) {
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd");
                 Date date = null;
                 try {
                     if(!StringUtils.isEmpty(source)){
-                        date = sdf.parse(source);
+                        if(source.length() == 10){
+                            date = sdf1.parse(source);
+                        } else {
+                            date = sdf.parse(source);
+                        }
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

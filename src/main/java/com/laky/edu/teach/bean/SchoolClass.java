@@ -14,15 +14,15 @@ public class SchoolClass implements Serializable {
 
     private Integer theStatus;
 
-    private Integer rooId;
+    private Integer roomId;
 
     private Integer mainTeacherId;
 
     private Integer teacherId;
 
-    private Date startDate;
-
     private Date createTime;
+
+    private Date startDate;
 
     private Date endDate;
 
@@ -78,12 +78,12 @@ public class SchoolClass implements Serializable {
         this.theStatus = theStatus;
     }
 
-    public Integer getRooId() {
-        return rooId;
+    public Integer getRoomId() {
+        return roomId;
     }
 
-    public void setRooId(Integer rooId) {
-        this.rooId = rooId;
+    public void setRoomId(Integer roomId) {
+        this.roomId = roomId;
     }
 
     public Integer getMainTeacherId() {
@@ -102,20 +102,20 @@ public class SchoolClass implements Serializable {
         this.teacherId = teacherId;
     }
 
-    public Date getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(Date endDate) {
-        this.endDate = endDate;
-    }
-
     public Date getStartDate() {
         return startDate;
     }
 
     public void setStartDate(Date startDate) {
         this.startDate = startDate;
+    }
+
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
     }
 
     public String getRemarks() {
