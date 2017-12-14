@@ -11,12 +11,13 @@
     <result column="main_teacher_id" property="mainTeacherId" jdbcType="INTEGER" />
     <result column="teacher_id" property="teacherId" jdbcType="INTEGER" />
     <result column="start_date" property="startDate" jdbcType="DATE" />
+    <result column="create_time" property="createTime" jdbcType="DATE" />
     <result column="end_date" property="endDate" jdbcType="DATE" />
     <result column="remarks" property="remarks" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, name, course_id, school_zone_id, the_status, roo_id, main_teacher_id, teacher_id, 
-    startData, endData, remarks
+    startData, endData, remarks, createTime
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -62,11 +63,11 @@
     insert into laky_teach_school_class (id, name, course_id, 
       school_zone_id, the_status, roo_id, 
       main_teacher_id, teacher_id, startData, 
-      endData, remarks)
+      endData, remarks, create_time)
     values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{courseId,jdbcType=INTEGER}, 
       #{schoolZoneId,jdbcType=INTEGER}, #{theStatus,jdbcType=TINYINT}, #{rooId,jdbcType=INTEGER}, 
       #{mainTeacherId,jdbcType=INTEGER}, #{teacherId,jdbcType=INTEGER}, #{startdata,jdbcType=DATE}, 
-      #{enddata,jdbcType=DATE}, #{remarks,jdbcType=VARCHAR})
+      #{enddata,jdbcType=DATE}, #{remarks,jdbcType=VARCHAR},  #{createTime,jdbcType=DATE})
   </insert>
   <insert id="insertSelective" parameterType="com.laky.edu.teach.bean.SchoolClass" >
     insert into laky_teach_school_class
@@ -139,6 +140,9 @@
       <if test="remarks != null" >
         #{remarks,jdbcType=VARCHAR},
       </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=DATE},
+      </if>
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.laky.edu.teach.bean.SchoolClass" >
@@ -174,6 +178,9 @@
       <if test="remarks != null" >
         remarks = #{remarks,jdbcType=VARCHAR},
       </if>
+      <if test="remarks != null" >
+        remarks = #{createTime,jdbcType=DATE},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -188,7 +195,8 @@
       teacher_id = #{teacherId,jdbcType=INTEGER},
       startData = #{startdata,jdbcType=DATE},
       endData = #{enddata,jdbcType=DATE},
-      remarks = #{remarks,jdbcType=VARCHAR}
+      remarks = #{remarks,jdbcType=VARCHAR},
+      create_time =#{createTime,jdbcType=DATE}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

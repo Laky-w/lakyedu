@@ -5,6 +5,7 @@ import com.laky.edu.organization.OrganizationConst;
 import com.laky.edu.organization.service.SchoolZoneService;
 import com.laky.edu.teach.bean.Course;
 import com.laky.edu.teach.bean.Room;
+import com.laky.edu.teach.bean.SchoolClass;
 import com.laky.edu.teach.service.SchoolClassService;
 import com.laky.edu.teach.service.TeachService;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
@@ -38,6 +39,17 @@ public class SchoolClassController extends BaseController{
             parameterMap.put("pageSize",pageSize);
             parameterMap = super.doWrappingFormParameter(request,parameterMap);
             return super.doWrappingData(schoolClassService.findSchoolClassAllBySchool(parameterMap));
+        } catch (Exception e) {
+            return  super.doWrappingErrorData(e);
+        }
+    }
+
+    @PostMapping("/createSchoolClass")
+    public Map createSchoolClass(HttpServletRequest request, SchoolClass schoolClass){
+        try {
+            schoolClass=schoolClassService.createSchoolClass(schoolClass); //
+            super.handleOperate("添加班级", OrganizationConst.OPERATE_ADD,"添加班级【"+schoolClass.getName()+"】",request);
+            return  super.doWrappingData(schoolClass);
         } catch (Exception e) {
             return  super.doWrappingErrorData(e);
         }

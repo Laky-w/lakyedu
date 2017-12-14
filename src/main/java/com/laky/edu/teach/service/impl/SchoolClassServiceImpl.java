@@ -7,7 +7,9 @@ import com.laky.edu.teach.dao.SchoolClassDao;
 import com.laky.edu.teach.service.SchoolClassService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -22,5 +24,14 @@ public class SchoolClassServiceImpl implements SchoolClassService{
     public PageBean<Map> findSchoolClassAllBySchool(LinkedHashMap parameterMap) {
         PageHelper.startPage((int)parameterMap.get("pageNum"),(int)parameterMap.get("pageSize"));
         return new PageBean<>(schoolClassDao.selectByParameterMap(parameterMap));
+    }
+    @Transactional
+    @Override
+    public SchoolClass createSchoolClass(SchoolClass schoolClass) throws Exception {
+        schoolClass.setTheStatus(1);
+        schoolClass.setCreateTime(new Date());
+        int rows=schoolClassDao.insert(schoolClass);
+        if(rows==0) throw new Exception("创建班级失败！");
+        return schoolClass;
     }
 }

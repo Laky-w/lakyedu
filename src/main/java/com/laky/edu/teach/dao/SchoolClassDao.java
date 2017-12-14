@@ -11,7 +11,7 @@ import java.util.Map;
 public interface SchoolClassDao {
     int deleteByPrimaryKey(Integer id);
 
-    int insert(SchoolClass record);
+    int insert(SchoolClass schoolClass);
 
     int insertSelective(SchoolClass record);
 

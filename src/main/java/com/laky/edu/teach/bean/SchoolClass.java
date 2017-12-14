@@ -22,11 +22,21 @@ public class SchoolClass implements Serializable {
 
     private Date startDate;
 
+    private Date createTime;
+
     private Date endDate;
 
     private String remarks;
 
     private static final long serialVersionUID = 1L;
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
 
     public Integer getId() {
         return id;

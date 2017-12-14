@@ -17,4 +17,12 @@ public interface SchoolClassService {
      * @return
      */
     PageBean<Map> findSchoolClassAllBySchool(LinkedHashMap parameterMap);
+
+    /**
+     *  增加班级
+     * @param schoolClass
+     * @return
+     * @throws Exception
+     */
+    SchoolClass createSchoolClass(SchoolClass schoolClass) throws Exception;
 }
