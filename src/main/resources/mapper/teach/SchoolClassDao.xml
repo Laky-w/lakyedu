@@ -11,13 +11,13 @@
     <result column="main_teacher_id" property="mainTeacherId" jdbcType="INTEGER" />
     <result column="teacher_id" property="teacherId" jdbcType="INTEGER" />
     <result column="start_date" property="startDate" jdbcType="DATE" />
-    <result column="create_time" property="createTime" jdbcType="DATE" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="end_date" property="endDate" jdbcType="DATE" />
     <result column="remarks" property="remarks" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, name, course_id, school_zone_id, the_status, roo_id, main_teacher_id, teacher_id, 
-    startData, endData, remarks, createTime
+    id, name, course_id, school_zone_id, the_status, room_id, main_teacher_id, teacher_id,
+    startData, endData, remarks, create_time
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -27,7 +27,14 @@
   </select>
 
   <select id="selectByParameterMap" resultType="java.util.Map">
-    SELECT s.*,sz.name as school_zone_name from laky_teach_school_class s RIGHT JOIN laky_organization_school_zone sz on s.school_zone_id = sz.id and s.the_status !=0
+    SELECT s.id AS id,s.end_date AS endDate,s.start_date AS startDate,s.name AS name,s.create_time AS createTime,s.remarks AS remarks,
+    r.`name` AS roomName, c.`name` AS courseName,u1.name AS mainTeacherName,u.`name` AS teacherName,sz.name as schoolZoneName
+    from laky_teach_school_class s
+    RIGHT JOIN laky_organization_school_zone sz on s.school_zone_id = sz.id and sz.the_status !=0
+    LEFT JOIN laky_teach_room r ON s.room_id=r.id AND r.the_status !=0
+    LEFT JOIN laky_teach_course c ON s.course_id=c.id AND c.the_status!=0
+    LEFT JOIN laky_organization_user u ON s.teacher_id =u.id AND u.the_status!=0
+    LEFT JOIN  laky_organization_user u1 ON  s.main_teacher_id = u1.id and u1.the_status!=0
     where s.the_status !=0
     <if test="name != null">
       AND s.`name` LIKE CONCAT('%',#{name,jdbcType=VARCHAR},'%')
@@ -67,7 +74,7 @@
     values ( #{name,jdbcType=VARCHAR}, #{courseId,jdbcType=INTEGER},
       #{schoolZoneId,jdbcType=INTEGER}, #{theStatus,jdbcType=TINYINT}, #{roomId,jdbcType=INTEGER},
       #{mainTeacherId,jdbcType=INTEGER}, #{teacherId,jdbcType=INTEGER}, #{startDate,jdbcType=DATE},
-      #{endDate,jdbcType=DATE}, #{remarks,jdbcType=VARCHAR},  #{createTime,jdbcType=DATE})
+      #{endDate,jdbcType=DATE}, #{remarks,jdbcType=VARCHAR},  #{createTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.laky.edu.teach.bean.SchoolClass" >
     insert into laky_teach_school_class
@@ -87,7 +94,7 @@
       <if test="theStatus != null" >
         the_status,
       </if>
-      <if test="rooId != null" >
+      <if test="roomId != null" >
         roo_id,
       </if>
       <if test="mainTeacherId != null" >
@@ -122,7 +129,7 @@
       <if test="theStatus != null" >
         #{theStatus,jdbcType=TINYINT},
       </if>
-      <if test="rooId != null" >
+      <if test="roomId != null" >
         #{rooId,jdbcType=INTEGER},
       </if>
       <if test="mainTeacherId != null" >
@@ -141,7 +148,7 @@
         #{remarks,jdbcType=VARCHAR},
       </if>
       <if test="createTime != null" >
-        #{createTime,jdbcType=DATE},
+        #{createTime,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
@@ -160,7 +167,7 @@
       <if test="theStatus != null" >
         the_status = #{theStatus,jdbcType=TINYINT},
       </if>
-      <if test="rooId != null" >
+      <if test="roomId != null" >
         roo_id = #{rooId,jdbcType=INTEGER},
       </if>
       <if test="mainTeacherId != null" >
@@ -190,13 +197,13 @@
       course_id = #{courseId,jdbcType=INTEGER},
       school_zone_id = #{schoolZoneId,jdbcType=INTEGER},
       the_status = #{theStatus,jdbcType=TINYINT},
-      roo_id = #{rooId,jdbcType=INTEGER},
+      room_id = #{rooId,jdbcType=INTEGER},
       main_teacher_id = #{mainTeacherId,jdbcType=INTEGER},
       teacher_id = #{teacherId,jdbcType=INTEGER},
-      startData = #{startdata,jdbcType=DATE},
-      endData = #{enddata,jdbcType=DATE},
+      start_date = #{startdata,jdbcType=DATE},
+      end_date= #{enddata,jdbcType=DATE},
       remarks = #{remarks,jdbcType=VARCHAR},
-      create_time =#{createTime,jdbcType=DATE}
+      create_time =#{createTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>
