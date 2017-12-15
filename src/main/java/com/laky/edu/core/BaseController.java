@@ -138,7 +138,6 @@ public class BaseController {
      */
     public Integer [] getSchoolIds(HttpServletRequest request,Object theType,Object parentSchoolId) throws Exception{
         User user=this.getCurrentUser(request);
-        user.getSchoolZoneId();
         SchoolZone schoolZone = schoolZoneService.querySchoolZoneAllBySchoolZoneId(user.getBranchId(),parentSchoolId == null ?user.getSchoolZoneId():Integer.parseInt(parentSchoolId.toString()),
                 theType == null ?0:Integer.parseInt(theType.toString()));
         Integer [] ids ;

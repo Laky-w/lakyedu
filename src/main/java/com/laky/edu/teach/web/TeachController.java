@@ -62,10 +62,11 @@ public class TeachController extends BaseController{
     public Map getRoomList(HttpServletRequest request, @PathVariable int pageNum, @PathVariable int pageSize){
         try {
             LinkedHashMap parameterMap = new LinkedHashMap();
-            parameterMap.put("schoolIds",super.getSchoolIds(request));
+            parameterMap = super.doWrappingFormParameter(request,parameterMap);
+            parameterMap.put("schoolIds",super.getSchoolIds(request,parameterMap.get("theType"),parameterMap.get("parentSchoolId")));
             parameterMap.put("pageNum",pageNum);
             parameterMap.put("pageSize",pageSize);
-            parameterMap = super.doWrappingFormParameter(request,parameterMap);
+
             return super.doWrappingData(teachService.findRoomAll(parameterMap));
         } catch (Exception e) {
             return  super.doWrappingErrorData(e);
