@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.laky.edu.supply.dao.ActivityDao" >
+  <resultMap id="BaseResultMap" type="com.laky.edu.supply.bean.Activity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="school_zone_id" property="schoolZoneId" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="start_date" property="startDate" jdbcType="DATE" />
+    <result column="end_date" property="endDate" jdbcType="DATE" />
+    <result column="cost" property="cost" jdbcType="DECIMAL" />
+    <result column="target_number" property="targetNumber" jdbcType="INTEGER" />
+    <result column="category_id" property="categoryId" jdbcType="INTEGER" />
+    <result column="the_type" property="theType" jdbcType="TINYINT" />
+    <result column="the_status" property="theStatus" jdbcType="TINYINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, name, user_id, school_zone_id, create_time, start_date, end_date, cost, target_number, 
+    category_id, the_type, the_status
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from laky_supply_market_activity
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectByParameterMap" resultType="com.laky.edu.supply.bean.Activity">
+    SELECT s.id AS id, s.name  AS name, s.create_time AS createTime, s.end_date AS endDate, s.start_date AS startDate,
+    s.cost AS  cost,s.target_number AS targetNumber, sz.name AS schoolZoneName,u.name AS userName
+    FROM laky_supply_market_activity s
+    RIGHT JOIN laky_organization_school_zone sz ON s.school_zone_id=sz.id AND sz.the_status!=0
+    LEFT JOIN laky_organization_user u ON s.user_id = u.id AND u.the_status!=0
+    WHERE s.the_status!=0
+    <if test="name != null">
+      AND s.`name` LIKE CONCAT('%',#{name,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="schoolZoneId != null">
+      AND s.school_zone_id IN
+      <foreach collection="schoolZoneId" item="schoolId" index="index"
+               open="(" close=")" separator=",">
+        #{schoolId}
+      </foreach>
+    </if>
+    <if test="schoolZoneId2 != null">
+      <if test="schoolZoneId2 instanceof String">
+        AND s.school_zone_id = #{schoolZoneId2,jdbcType=INTEGER}
+      </if>
+      <if test="!(schoolZoneId2 instanceof String)">
+        AND s.school_zone_id IN
+        <foreach collection="schoolZoneId2" item="schoolId" index="index"
+                 open="(" close=")" separator=",">
+          #{schoolId}
+        </foreach>
+      </if>
+    </if>
+    ORDER BY s.create_time DESC
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from laky_supply_market_activity
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.laky.edu.supply.bean.Activity"  keyColumn="id" keyProperty="id" useGeneratedKeys="true">
+    insert into laky_supply_market_activity (id, name, user_id, 
+      school_zone_id, create_time, start_date, 
+      end_date, cost, target_number, 
+      category_id, the_type, the_status
+      )
+    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{userId,jdbcType=INTEGER}, 
+      #{schoolZoneId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{startDate,jdbcType=DATE}, 
+      #{endDate,jdbcType=DATE}, #{cost,jdbcType=DECIMAL}, #{targetNumber,jdbcType=INTEGER}, 
+      #{categoryId,jdbcType=INTEGER}, #{theType,jdbcType=TINYINT}, #{theStatus,jdbcType=TINYINT}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.laky.edu.supply.bean.Activity"  keyColumn="id" keyProperty="id" useGeneratedKeys="true" >
+    insert into laky_supply_market_activity
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="schoolZoneId != null" >
+        school_zone_id,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="startDate != null" >
+        start_date,
+      </if>
+      <if test="endDate != null" >
+        end_date,
+      </if>
+      <if test="cost != null" >
+        cost,
+      </if>
+      <if test="targetNumber != null" >
+        target_number,
+      </if>
+      <if test="categoryId != null" >
+        category_id,
+      </if>
+      <if test="theType != null" >
+        the_type,
+      </if>
+      <if test="theStatus != null" >
+        the_status,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="schoolZoneId != null" >
+        #{schoolZoneId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="startDate != null" >
+        #{startDate,jdbcType=DATE},
+      </if>
+      <if test="endDate != null" >
+        #{endDate,jdbcType=DATE},
+      </if>
+      <if test="cost != null" >
+        #{cost,jdbcType=DECIMAL},
+      </if>
+      <if test="targetNumber != null" >
+        #{targetNumber,jdbcType=INTEGER},
+      </if>
+      <if test="categoryId != null" >
+        #{categoryId,jdbcType=INTEGER},
+      </if>
+      <if test="theType != null" >
+        #{theType,jdbcType=TINYINT},
+      </if>
+      <if test="theStatus != null" >
+        #{theStatus,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.laky.edu.supply.bean.Activity" >
+    update laky_supply_market_activity
+    <set >
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="schoolZoneId != null" >
+        school_zone_id = #{schoolZoneId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="startDate != null" >
+        start_date = #{startDate,jdbcType=DATE},
+      </if>
+      <if test="endDate != null" >
+        end_date = #{endDate,jdbcType=DATE},
+      </if>
+      <if test="cost != null" >
+        cost = #{cost,jdbcType=DECIMAL},
+      </if>
+      <if test="targetNumber != null" >
+        target_number = #{targetNumber,jdbcType=INTEGER},
+      </if>
+      <if test="categoryId != null" >
+        category_id = #{categoryId,jdbcType=INTEGER},
+      </if>
+      <if test="theType != null" >
+        the_type = #{theType,jdbcType=TINYINT},
+      </if>
+      <if test="theStatus != null" >
+        the_status = #{theStatus,jdbcType=TINYINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.laky.edu.supply.bean.Activity" >
+    update laky_supply_market_activity
+    set name = #{name,jdbcType=VARCHAR},
+      user_id = #{userId,jdbcType=INTEGER},
+      school_zone_id = #{schoolZoneId,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      start_date = #{startDate,jdbcType=DATE},
+      end_date = #{endDate,jdbcType=DATE},
+      cost = #{cost,jdbcType=DECIMAL},
+      target_number = #{targetNumber,jdbcType=INTEGER},
+      category_id = #{categoryId,jdbcType=INTEGER},
+      the_type = #{theType,jdbcType=TINYINT},
+      the_status = #{theStatus,jdbcType=TINYINT}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+</mapper>

@@ -8,6 +8,7 @@ import java.util.Date;
 
 public class LoginLog implements Serializable {
 
+    
     private Integer id;
 
     private User user;
