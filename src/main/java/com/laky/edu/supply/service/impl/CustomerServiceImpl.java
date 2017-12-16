@@ -9,8 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
-import java.util.LinkedHashMap;
+import java.lang.reflect.Array;
+import java.util.*;
 
 @Service
 public class CustomerServiceImpl implements CustomerService {
@@ -23,12 +23,24 @@ public class CustomerServiceImpl implements CustomerService {
     }
     @Transactional
     @Override
-    public Customer createCustomer(Customer customer) throws Exception {
+    public Customer createCustomer(Customer customer,Integer [] intentionIds) throws Exception {
         customer.setTheStatus(1);
+        customer.setTheType(1);//生源类型处理
         customer.setCreateTime(new Date());
         int rows=customerDao.insertCustomer(customer);
         if(rows==0) throw new Exception("创建生源失败！");
+        if(null !=intentionIds){ //意向课程添加
+            List<Map> intentionCourseList = new ArrayList<>();
+            for (Integer intentionId: intentionIds) {
+                Map map = new HashMap<>();
+                map.put("courseId",intentionId);
+                map.put("studentId",customer.getId());
+                intentionCourseList.add(map);
+            }
+            customerDao.insertIntentionCourse(intentionCourseList);
+        }
         return customer;
+
     }
 
     @Override

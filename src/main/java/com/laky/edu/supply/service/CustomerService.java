@@ -9,7 +9,14 @@ import java.util.List;
 public interface CustomerService {
     int deleteByPrimaryKey(Integer id)throws Exception;
 
-    Customer createCustomer(Customer customer)throws Exception;
+    /**
+     * 创建一个生源
+     * @param customer
+     * @param intentionIds
+     * @return
+     * @throws Exception
+     */
+    Customer createCustomer(Customer customer,Integer [] intentionIds)throws Exception;
 
     Customer createSelective(Customer customer)throws Exception;
 

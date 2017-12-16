@@ -14,7 +14,7 @@ public class Customer implements Serializable {
 
     private String phone;
 
-    private Integer soureId;
+    private Integer sourceId;
 
     private Integer schoolZoneId;
 
@@ -32,7 +32,25 @@ public class Customer implements Serializable {
 
     private Date createTime;
 
+    private Integer contactId;
+
     private static final long serialVersionUID = 1L;
+
+    public Integer getContactId() {
+        return contactId;
+    }
+
+    public void setContactId(Integer contactId) {
+        this.contactId = contactId;
+    }
+
+    public Integer getSourceId() {
+        return sourceId;
+    }
+
+    public void setSourceId(Integer sourceId) {
+        this.sourceId = sourceId;
+    }
 
     public Date getCreateTime() {
         return createTime;
@@ -90,13 +108,7 @@ public class Customer implements Serializable {
         this.phone = phone == null ? null : phone.trim();
     }
 
-    public Integer getSoureId() {
-        return soureId;
-    }
 
-    public void setSoureId(Integer soureId) {
-        this.soureId = soureId;
-    }
 
     public Integer getSchoolZoneId() {
         return schoolZoneId;
@@ -146,26 +158,5 @@ public class Customer implements Serializable {
         this.remarks = remarks == null ? null : remarks.trim();
     }
 
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(getClass().getSimpleName());
-        sb.append(" [");
-        sb.append("Hash = ").append(hashCode());
-        sb.append(", id=").append(id);
-        sb.append(", name=").append(name);
-        sb.append(", sex=").append(sex);
-        sb.append(", birthday=").append(birthday);
-        sb.append(", phone=").append(phone);
-        sb.append(", soureId=").append(soureId);
-        sb.append(", schoolZoneId=").append(schoolZoneId);
-        sb.append(", introducerId=").append(introducerId);
-        sb.append(", ownerId=").append(ownerId);
-        sb.append(", theStatus=").append(theStatus);
-        sb.append(", theType=").append(theType);
-        sb.append(", remarks=").append(remarks);
-        sb.append(", serialVersionUID=").append(serialVersionUID);
-        sb.append("]");
-        return sb.toString();
-    }
+
 }

@@ -5,11 +5,15 @@ import org.springframework.stereotype.Component;
 
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+
 @Component
 public interface CustomerDao {
     int deleteByPrimaryKey(Integer id);
 
     int insertCustomer(Customer customer);
+
+    int insertIntentionCourse(List<Map> intentionCourseList);
 
     int insertSelective(Customer record);
 
@@ -20,4 +24,6 @@ public interface CustomerDao {
     int updateByPrimaryKeySelective(Customer record);
 
     int updateByPrimaryKey(Customer record);
+
+
 }

@@ -43,11 +43,11 @@ public class CustomerController extends BaseController{
     }
 
     @PostMapping("/createCustomer")
-    public Map createCustomer(HttpServletRequest request, Customer customer){
+    public Map createCustomer(HttpServletRequest request, Customer customer,Integer [] intentionId ){
         try {
             LinkedHashMap parameterMap = new LinkedHashMap();
             customer.setSchoolZoneId(super.getCurrentUser(request).getSchoolZoneId());
-            customerService.createCustomer(customer);
+            customerService.createCustomer(customer,intentionId);
             super.handleOperate("添加学员", OrganizationConst.OPERATE_ADD,"添加学员【"+customer.getName()+"】",request);
             return super.doWrappingData(customer);
         } catch (Exception e) {

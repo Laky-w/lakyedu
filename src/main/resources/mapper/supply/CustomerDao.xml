@@ -7,7 +7,7 @@
     <result column="sex" property="sex" jdbcType="TINYINT" />
     <result column="birthday" property="birthday" jdbcType="DATE" />
     <result column="phone" property="phone" jdbcType="CHAR" />
-    <result column="soure_id" property="soureId" jdbcType="INTEGER" />
+    <result column="source_id" property="sourceId" jdbcType="INTEGER" />
     <result column="school_zone_id" property="schoolZoneId" jdbcType="INTEGER" />
     <result column="introducer_id" property="introducerId" jdbcType="INTEGER" />
     <result column="owner_id" property="ownerId" jdbcType="INTEGER" />
@@ -16,10 +16,11 @@
     <result column="remarks" property="remarks" jdbcType="VARCHAR" />
     <result column="create_time" property="createTime"  jdbcType="TIMESTAMP"/>
     <result column="school_zone_name" property="schoolZoneName" jdbcType="INTEGER" />
+    <result column="contact_id" property="contactId" jdbcType="INTEGER"/>
   </resultMap>
   <sql id="Base_Column_List" >
-    id, name, sex, birthday, phone, soure_id, school_zone_id, introducer_id, owner_id, 
-    the_status, the_type, remarks, create_time
+    id, name, sex, birthday, phone, source_id, school_zone_id, introducer_id, owner_id,
+    the_status, the_type, remarks, create_time,contact_id
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -27,9 +28,15 @@
     from laky_supply_student
     where id = #{id,jdbcType=INTEGER}
   </select>
-  <select id="selectByParameterMap" resultMap="BaseResultMap">
-    SELECT s.*,sz.name as school_zone_name from laky_supply_student s
+  <select id="selectByParameterMap" resultType="java.util.Map">
+    SELECT s.id , s.name ,s.sex ,s.birthday AS birthday,s.phone,
+    s.the_type AS theType, s.remarks ,s.create_time AS createTime,
+    sz.name as schoolZoneName, v.name AS contactId, u.name AS ownerId, a.name AS sourceId
+    from laky_supply_student s
     RIGHT JOIN laky_organization_school_zone sz on s.school_zone_id = sz.id and s.the_status !=0
+    LEFT JOIN laky_organization_parameter_value v ON s.contact_id = v.id AND v.the_status!=0
+    LEFT JOIN laky_organization_user u ON s.owner_id = u.id AND  u.the_status!=0
+    LEFT JOIN laky_supply_market_activity a ON s.source_id = a.id AND a.the_status!=0
     where s.the_status !=0
     <if test="name != null">
       AND s.`name` LIKE CONCAT('%',#{name,jdbcType=VARCHAR},'%')
@@ -74,96 +81,26 @@
   <insert id="insertCustomer" parameterType="com.laky.edu.supply.bean.Customer" useGeneratedKeys="true" keyProperty="id"
           keyColumn="id">
     insert into laky_supply_student (id, name, sex, 
-      birthday, phone, soure_id, 
+      birthday, phone, source_id,
       school_zone_id, introducer_id, owner_id, 
-      the_status, the_type, remarks, create_time
+      the_status, the_type, remarks, create_time, contact_id
       )
     values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{sex,jdbcType=TINYINT}, 
-      #{birthday,jdbcType=DATE}, #{phone,jdbcType=CHAR}, #{soureId,jdbcType=INTEGER}, 
+      #{birthday,jdbcType=DATE}, #{phone,jdbcType=CHAR}, #{sourceId,jdbcType=INTEGER},
       #{schoolZoneId,jdbcType=INTEGER}, #{introducerId,jdbcType=INTEGER}, #{ownerId,jdbcType=INTEGER}, 
-      #{theStatus,jdbcType=TINYINT}, #{theType,jdbcType=TINYINT}, #{remarks,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}
+      #{theStatus,jdbcType=TINYINT}, #{theType,jdbcType=TINYINT}, #{remarks,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{contactId,jdbcType=INTEGER}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.laky.edu.supply.bean.Customer" useGeneratedKeys="true" keyProperty="id"
+
+  <insert id="insertIntentionCourse"  useGeneratedKeys="true" keyProperty="id"
           keyColumn="id">
-    insert into laky_supply_student
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        id,
-      </if>
-      <if test="name != null" >
-        name,
-      </if>
-      <if test="sex != null" >
-        sex,
-      </if>
-      <if test="birthday != null" >
-        birthday,
-      </if>
-      <if test="phone != null" >
-        phone,
-      </if>
-      <if test="soureId != null" >
-        soure_id,
-      </if>
-      <if test="schoolZoneId != null" >
-        school_zone_id,
-      </if>
-      <if test="introducerId != null" >
-        introducer_id,
-      </if>
-      <if test="ownerId != null" >
-        owner_id,
-      </if>
-      <if test="theStatus != null" >
-        the_status,
-      </if>
-      <if test="theType != null" >
-        the_type,
-      </if>
-      <if test="remarks != null" >
-        remarks,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        #{id,jdbcType=INTEGER},
-      </if>
-      <if test="name != null" >
-        #{name,jdbcType=VARCHAR},
-      </if>
-      <if test="sex != null" >
-        #{sex,jdbcType=TINYINT},
-      </if>
-      <if test="birthday != null" >
-        #{birthday,jdbcType=DATE},
-      </if>
-      <if test="phone != null" >
-        #{phone,jdbcType=CHAR},
-      </if>
-      <if test="soureId != null" >
-        #{soureId,jdbcType=INTEGER},
-      </if>
-      <if test="schoolZoneId != null" >
-        #{schoolZoneId,jdbcType=INTEGER},
-      </if>
-      <if test="introducerId != null" >
-        #{introducerId,jdbcType=INTEGER},
-      </if>
-      <if test="ownerId != null" >
-        #{ownerId,jdbcType=INTEGER},
-      </if>
-      <if test="theStatus != null" >
-        #{theStatus,jdbcType=TINYINT},
-      </if>
-      <if test="theType != null" >
-        #{theType,jdbcType=TINYINT},
-      </if>
-      <if test="remarks != null" >
-        #{remarks,jdbcType=VARCHAR},
-      </if>
-    </trim>
+   INSERT INTO laky_supply_intention_course (course_id,student_id)
+   VALUES
+    <foreach collection="list" item="item" index="index" separator=",">
+      (#{item.courseId,jdbcType=INTEGER}, #{item.studentId,jdbcType=INTEGER})
+    </foreach>
   </insert>
+
   <update id="updateByPrimaryKeySelective" parameterType="com.laky.edu.supply.bean.Customer" >
     update laky_supply_student
     <set >
@@ -179,8 +116,8 @@
       <if test="phone != null" >
         phone = #{phone,jdbcType=CHAR},
       </if>
-      <if test="soureId != null" >
-        soure_id = #{soureId,jdbcType=INTEGER},
+      <if test="sourceId != null" >
+        source_id = #{sourceId,jdbcType=INTEGER},
       </if>
       <if test="schoolZoneId != null" >
         school_zone_id = #{schoolZoneId,jdbcType=INTEGER},
@@ -209,7 +146,7 @@
       sex = #{sex,jdbcType=TINYINT},
       birthday = #{birthday,jdbcType=DATE},
       phone = #{phone,jdbcType=CHAR},
-      soure_id = #{soureId,jdbcType=INTEGER},
+      source_id = #{sourceId,jdbcType=INTEGER},
       school_zone_id = #{schoolZoneId,jdbcType=INTEGER},
       introducer_id = #{introducerId,jdbcType=INTEGER},
       owner_id = #{ownerId,jdbcType=INTEGER},
