@@ -15,8 +15,6 @@ public interface CustomerDao {
 
     int insertIntentionCourse(List<Map> intentionCourseList);
 
-    int insertSelective(Customer record);
-
     Customer selectByPrimaryKey(Integer id);
 
     List<Customer> selectByParameterMap(LinkedHashMap parameterMap);

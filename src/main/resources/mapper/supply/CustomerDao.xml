@@ -31,7 +31,10 @@
   <select id="selectByParameterMap" resultType="java.util.Map">
     SELECT s.id , s.name ,s.sex ,s.birthday AS birthday,s.phone,
     s.the_type AS theType, s.remarks ,s.create_time AS createTime,
-    sz.name as schoolZoneName, v.name AS contactId, u.name AS ownerId, a.name AS sourceId
+    sz.name as schoolZoneName, v.name AS contactId, u.name AS ownerId, a.name AS sourceId,
+    (SELECT group_concat(c.name) FROM laky_supply_intention_course i
+    RIGHT JOIN laky_teach_course c ON i.course_id = c.id AND c.the_status!=0
+    WHERE i.student_id=s.id ) AS intentionCourseName
     from laky_supply_student s
     RIGHT JOIN laky_organization_school_zone sz on s.school_zone_id = sz.id and s.the_status !=0
     LEFT JOIN laky_organization_parameter_value v ON s.contact_id = v.id AND v.the_status!=0
@@ -73,6 +76,7 @@
         </foreach>
       </if>
     </if>
+    ORDER BY s.create_time DESC
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from laky_supply_student
