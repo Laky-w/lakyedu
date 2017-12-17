@@ -87,12 +87,13 @@
     insert into laky_supply_student (id, name, sex, 
       birthday, phone, source_id,
       school_zone_id, introducer_id, owner_id, 
-      the_status, the_type, remarks, create_time, contact_id
+      the_status, the_type, remarks, create_time, contact_id,pinyin
       )
     values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{sex,jdbcType=TINYINT}, 
       #{birthday,jdbcType=DATE}, #{phone,jdbcType=CHAR}, #{sourceId,jdbcType=INTEGER},
       #{schoolZoneId,jdbcType=INTEGER}, #{introducerId,jdbcType=INTEGER}, #{ownerId,jdbcType=INTEGER}, 
-      #{theStatus,jdbcType=TINYINT}, #{theType,jdbcType=TINYINT}, #{remarks,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{contactId,jdbcType=INTEGER}
+      #{theStatus,jdbcType=TINYINT}, #{theType,jdbcType=TINYINT}, #{remarks,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{contactId,jdbcType=INTEGER},
+      #{pinyin,jdbcType=VARCHAR}
       )
   </insert>
 

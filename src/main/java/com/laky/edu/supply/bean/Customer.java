@@ -34,6 +34,8 @@ public class Customer implements Serializable {
 
     private Integer contactId;
 
+    private String pinyin;
+
     private static final long serialVersionUID = 1L;
 
     public Integer getContactId() {
@@ -159,4 +161,11 @@ public class Customer implements Serializable {
     }
 
 
+    public String getPinyin() {
+        return pinyin;
+    }
+
+    public void setPinyin(String pinyin) {
+        this.pinyin = pinyin;
+    }
 }

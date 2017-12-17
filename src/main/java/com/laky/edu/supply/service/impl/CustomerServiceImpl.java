@@ -5,6 +5,8 @@ import com.laky.edu.core.PageBean;
 import com.laky.edu.supply.bean.Customer;
 import com.laky.edu.supply.dao.CustomerDao;
 import com.laky.edu.supply.service.CustomerService;
+import com.laky.edu.util.PinYinUtil;
+import net.sourceforge.pinyin4j.PinyinHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,6 +29,8 @@ public class CustomerServiceImpl implements CustomerService {
         customer.setTheStatus(1);
         customer.setTheType(1);//生源类型处理
         customer.setCreateTime(new Date());
+        //PinyinHelper.
+        customer.setPinyin(PinYinUtil.parsePinYin(customer.getName()));
         int rows=customerDao.insertCustomer(customer);
         if(rows==0) throw new Exception("创建生源失败！");
         if(null !=intentionIds){ //意向课程添加
