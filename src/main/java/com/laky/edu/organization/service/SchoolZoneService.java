@@ -26,7 +26,7 @@ public interface SchoolZoneService {
      * 查询校区下的全部校区
      * @param branchId
      * @param schoolZoneId
-     * @param theType
+     * @param theType 0 全部子校区和部门 2 子校区 3子部门
      * @return
      * @throws Exception
      */

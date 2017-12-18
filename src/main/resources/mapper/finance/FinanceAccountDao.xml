@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.laky.edu.finance.dao.FinanceAccountDao" >
+  <resultMap id="BaseResultMap" type="com.laky.edu.finance.bean.FinanceAccount" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="the_status" property="theStatus" jdbcType="TINYINT" />
+    <result column="school_zone_id" property="schoolZoneId" jdbcType="INTEGER" />
+    <result column="branch_id" property="branchId" jdbcType="INTEGER" />
+    <result column="money" property="money" jdbcType="DECIMAL" />
+    <result column="the_open" property="theOpen" jdbcType="TINYINT" />
+    <result column="the_type" property="theType" jdbcType="TINYINT" />
+    <result column="remarks" property="remarks" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, name, the_status, school_zone_id, branch_id, money, the_open, the_type, remarks
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from laky_finance_account
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectByParameterMap" resultType="java.util.Map" >
+    select
+    s.id,s.`name`,s.the_public AS thePublic,s.the_type as theType,s.the_open as theOpen,s.money,s.remarks,sz.`name` AS schoolZoneName
+    from laky_finance_account s
+    RIGHT JOIN laky_organization_school_zone sz ON s.school_zone_id=sz.id AND sz.the_status!=0
+    where s.the_status !=0 AND
+    ((s.branch_id = #{branchId,jdbcType=INTEGER} AND s.the_open =2) OR (
+    s.school_zone_id IN
+    <foreach collection="schoolZoneId" item="schoolId" index="index"
+             open="(" close=")" separator=",">
+      #{schoolId}
+    </foreach> AND s.the_open =1)
+    )
+    <if test="name != null">
+      AND s.`name` LIKE CONCAT('%',#{name,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="theType != null">
+      AND s.the_type =#{theType,jdbcType=INTEGER}
+    </if>
+    <if test="schoolZoneId2 != null">
+      <if test="schoolZoneId2 instanceof String">
+        AND s.school_zone_id = #{schoolZoneId2,jdbcType=INTEGER}
+      </if>
+      <if test="!(schoolZoneId2 instanceof String)">
+        AND s.school_zone_id IN
+        <foreach collection="schoolZoneId2" item="schoolId" index="index"
+                 open="(" close=")" separator=",">
+          #{schoolId}
+        </foreach>
+      </if>
+    </if>
+    ORDER BY s.school_zone_id,s.the_time DESC
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from laky_finance_account
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.laky.edu.finance.bean.FinanceAccount" useGeneratedKeys="true" keyProperty="id"
+          keyColumn="id">
+    insert into laky_finance_account (name, the_status,
+      school_zone_id, branch_id, money,
+      the_open, the_type,the_public, the_time,remarks
+      )
+    values (#{name,jdbcType=VARCHAR}, #{theStatus,jdbcType=TINYINT},
+      #{schoolZoneId,jdbcType=INTEGER}, #{branchId,jdbcType=INTEGER}, #{money,jdbcType=DECIMAL},
+      #{theOpen,jdbcType=TINYINT}, #{theType,jdbcType=TINYINT},#{thePublic,jdbcType=TINYINT},#{theTime,jdbcType=TIMESTAMP}, #{remarks,jdbcType=VARCHAR}
+      )
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.laky.edu.finance.bean.FinanceAccount" >
+    update laky_finance_account
+    <set >
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="theStatus != null" >
+        the_status = #{theStatus,jdbcType=TINYINT},
+      </if>
+      <if test="schoolId != null" >
+        school_id = #{schoolId,jdbcType=INTEGER},
+      </if>
+      <if test="branchId != null" >
+        branch_id = #{branchId,jdbcType=INTEGER},
+      </if>
+      <if test="money != null" >
+        money = #{money,jdbcType=DECIMAL},
+      </if>
+      <if test="theOpen != null" >
+        the_open = #{theOpen,jdbcType=TINYINT},
+      </if>
+      <if test="theType != null" >
+        the_type = #{theType,jdbcType=TINYINT},
+      </if>
+      <if test="remarks != null" >
+        remarks = #{remarks,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.laky.edu.finance.bean.FinanceAccount" >
+    update laky_finance_account
+    set name = #{name,jdbcType=VARCHAR},
+      the_status = #{theStatus,jdbcType=TINYINT},
+      school_id = #{schoolId,jdbcType=INTEGER},
+      branch_id = #{branchId,jdbcType=INTEGER},
+      money = #{money,jdbcType=DECIMAL},
+      the_open = #{theOpen,jdbcType=TINYINT},
+      the_type = #{theType,jdbcType=TINYINT},
+      remarks = #{remarks,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
