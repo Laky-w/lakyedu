@@ -3,7 +3,6 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.laky.edu.organization.dao.UserDao">
-
     <resultMap id="BaseResultMap" type="com.laky.edu.organization.bean.User">
         <id column="id" jdbcType="INTEGER" property="id" />
         <result column="user_name" jdbcType="INTEGER" property="userName" />

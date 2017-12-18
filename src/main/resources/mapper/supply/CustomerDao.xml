@@ -42,7 +42,9 @@
     LEFT JOIN laky_supply_market_activity a ON s.source_id = a.id AND a.the_status!=0
     where s.the_status !=0
     <if test="name != null">
-      AND s.`name` LIKE CONCAT('%',#{name,jdbcType=VARCHAR},'%')
+      AND (s.`name` LIKE CONCAT('%',#{name,jdbcType=VARCHAR},'%')
+      OR s.pinyin LIKE CONCAT('%',#{pinyin,jdbcType=VARCHAR},'%')
+      OR s.phone LIKE CONCAT('%',#{phone},jdbcType="CHAR"'%'))
     </if>
     <if test="sex!=null">
       AND s.sex = #{sex,jdbcType="INTEGER"}

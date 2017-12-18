@@ -27,19 +27,24 @@
     <if test="content != null">
       AND s.content LIKE CONCAT('%',#{content,jdbcType=LONGVARCHAR},'%')
     </if>
-    <if test="theType != null">
-      AND s.the_type = #{theType,jdbcType=INTEGER}
+    <if test="studentName!=null">
+      AND (v.name LIKE CONCAT('%',#{studentName,jdbcType=VARCHAR},'%')
+      OR v.pinyin LIKE CONCAT('%',#{studentName,jdbcType=VARCHAR},'%')
+      OR v.phone LIKE CONCAT('%',#{studentName,jdbcType=VARCHAR},'%'))
     </if>
-
+    <if test="userName!=null">
+      AND u.name LIKE CONCAT('%',#{userName,jdbcType=VARCHAR},'%')
+    </if>
     ORDER BY s.contact_time DESC
   </select>
 
-  <insert id="insert" parameterType="com.laky.edu.supply.bean.Contact" >
-    insert into laky_supply_contact (id, contact_time, user_id, 
+  <insert id="insert"   parameterType="com.laky.edu.supply.bean.Contact" useGeneratedKeys="true" keyProperty="id"
+          keyColumn="id">
+    insert into laky_supply_contact ( contact_time, user_id,
       student_id, contact_style_id, the_status,
       content)
-    values (#{id,jdbcType=INTEGER}, #{contactTime,jdbcType=TIMESTAMP}, #{userId,jdbcType=INTEGER}, 
-      #{studentId,jdbcType=INTEGER}, #{contactStyle,jdbcType=INTEGER}, #{theStatus,jdbcType=INTEGER}, 
+    values (#{contactTime,jdbcType=TIMESTAMP}, #{userId,jdbcType=INTEGER},
+      #{studentId,jdbcType=INTEGER}, #{contactStyleId,jdbcType=INTEGER}, #{theStatus,jdbcType=INTEGER},
       #{content,jdbcType=LONGVARCHAR})
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.laky.edu.supply.bean.Contact" >
@@ -55,7 +60,7 @@
         student_id = #{studentId,jdbcType=INTEGER},
       </if>
       <if test="contactStyleId != null" >
-        contact_style_id = #{contactStyle,jdbcType=INTEGER},
+        contact_style_id = #{contactStyleId,jdbcType=INTEGER},
       </if>
       <if test="theStatus != null" >
         the_status = #{theStatus,jdbcType=INTEGER},

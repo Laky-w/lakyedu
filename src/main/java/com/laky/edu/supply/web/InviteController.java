@@ -1,9 +1,10 @@
 package com.laky.edu.supply.web;
+
 import com.laky.edu.core.BaseController;
 import com.laky.edu.organization.OrganizationConst;
-import com.laky.edu.supply.bean.Contact;
-import com.laky.edu.supply.bean.Customer;
-import com.laky.edu.supply.service.ContactService;
+import com.laky.edu.supply.bean.Activity;
+import com.laky.edu.supply.bean.Invite;
+import com.laky.edu.supply.service.InviteService;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,34 +14,36 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
-
 @RestController
 @RequestMapping("/supply")
-public class ContactController extends BaseController{
+public class InviteController extends BaseController{
 
     @Autowired
-    private ContactService contactService;
+    private InviteService inviteService;
 
-    @PostMapping("/getContactList/{pageNum}/{pageSize}")
-    public Map getContactList(HttpServletRequest request, @PathVariable int pageNum, @PathVariable int pageSize){
+    @PostMapping("/getInviteList/{pageNum}/{pageSize}")
+    public Map getInviteList(HttpServletRequest request, @PathVariable int pageNum, @PathVariable int pageSize){
         try {
             LinkedHashMap parameterMap = new LinkedHashMap();
+            parameterMap.put("schoolIds",super.getSchoolIds(request));
             parameterMap.put("pageNum",pageNum);
             parameterMap.put("pageSize",pageSize);
             parameterMap = super.doWrappingFormParameter(request,parameterMap);
-            return super.doWrappingData(contactService.findContactAll(parameterMap));
+            return super.doWrappingData(inviteService.findByInviteAll(parameterMap));
         } catch (Exception e) {
             return  super.doWrappingErrorData(e);
         }
     }
 
-    @PostMapping("/createContact")
-    public Map createContact(HttpServletRequest request, Contact contact){
+    @PostMapping("/createInvite")
+    public Map createInvite(HttpServletRequest request, Invite invite){
         try {
             LinkedHashMap parameterMap = new LinkedHashMap();
-            contactService.createContact(contact);
-            super.handleOperate("添加联系人", OrganizationConst.OPERATE_ADD,"添加联系人【"+getCurrentUser(request).getName()+"】",request);
-            return super.doWrappingData(contact);
+            invite.setSchoolZoneId(super.getCurrentUser(request).getSchoolZoneId());
+            inviteService.addInvite(invite);
+//
+            super.handleOperate("添加邀请试听", OrganizationConst.OPERATE_ADD,"添加邀约参观,参观人【"+invite.getUserId()+"】,参观时间:"+invite.getInviteTime(),request);
+            return super.doWrappingData(invite);
         } catch (Exception e) {
             return  super.doWrappingErrorData(e);
         }
