@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.laky.edu.supply.dao.InviteDao" >
+  <resultMap id="BaseResultMap" type="com.laky.edu.supply.bean.Invite" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="invite_time" property="inviteTime" jdbcType="TIMESTAMP" />
+    <result column="school_zone_id" property="schoolZoneId" jdbcType="INTEGER" />
+    <result column="student_id" property="studentId" jdbcType="INTEGER" />
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="the_status" property="theStatus" jdbcType="TINYINT" />
+    <result column="invite_status" property="inviteStatus" jdbcType="TINYINT" />
+    <result column="remarks" property="remarks" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, invite_time, school_zone_id, student_id, user_id, the_status, invite_status,
+    remarks
+  </sql>
+  <select id="selectByParameterMap" resultType="java.util.Map" >
+    select s.id,s.invite_time AS inviteTime,s.the_status AS theStatus,s.remarks,
+    sz.name AS schoolZoneName,st.name AS studentId,u.name AS userId
+    FROM laky_supply_invite s
+    RIGHT JOIN laky_organization_school_zone sz ON s.school_zone_id = sz.id AND sz.the_status!=0
+    LEFT JOIN  laky_supply_student st ON s.student_id = st.id AND st.the_status!=0
+    LEFT JOIN  laky_organization_user u ON s.user_id = u.id AND u.the_status!=0
+    where s.the_status !=0
+    <if test="userId != null">
+      AND u.name LIKE CONCAT('%',#{userId,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="studentName!=null">
+      AND (st.name LIKE CONCAT('%',#{studentName,jdbcType=VARCHAR},'%')
+      OR st.pinyin LIKE CONCAT('%',#{pinyin,jdbcType=VARCHAR},'%')
+      OR st.phone LIKE CONCAT('%',#{phone,jdbcType=CHAR},'%'))
+    </if>
+    <if test="schoolZoneId != null">
+      AND s.school_zone_id IN
+      <foreach collection="schoolZoneId" item="schoolId" index="index"
+               open="(" close=")" separator=",">
+        #{schoolId}
+      </foreach>
+    </if>
+    <if test="schoolZoneId2 != null">
+      <if test="schoolZoneId2 instanceof String">
+        AND s.school_zone_id = #{schoolZoneId2,jdbcType=INTEGER}
+      </if>
+      <if test="!(schoolZoneId2 instanceof String)">
+        AND s.school_zone_id IN
+        <foreach collection="schoolZoneId2" item="schoolId" index="index"
+                 open="(" close=")" separator=",">
+          #{schoolId}
+        </foreach>
+      </if>
+    </if>
+  </select>
+  <insert id="insert" parameterType="com.laky.edu.supply.bean.Invite" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+    insert into laky_supply_invite (id, invite_time, school_zone_id,
+      student_id, user_id, the_status, 
+      invite_status, remarks)
+    values (#{id,jdbcType=INTEGER}, #{inviteTime,jdbcType=TIMESTAMP}, #{schoolZoneId,jdbcType=INTEGER},
+      #{studentId,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{theStatus,jdbcType=TINYINT}, 
+      #{inviteStatus,jdbcType=TINYINT}, #{remarks,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.laky.edu.supply.bean.Invite" >
+    update laky_supply_invite
+    <set >
+      <if test="inviteTime != null" >
+        invite_time = #{inviteTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="schoolZoneId != null" >
+        school_zone_id = #{schoolZoneId,jdbcType=INTEGER},
+      </if>
+      <if test="studentId != null" >
+        student_id = #{studentId,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="theStatus != null" >
+        the_status = #{theStatus,jdbcType=TINYINT},
+      </if>
+      <if test="inviteStatus != null" >
+        invitation_status = #{inviteStatus,jdbcType=TINYINT},
+      </if>
+      <if test="remarks != null" >
+        remarks = #{remarks,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.laky.edu.supply.bean.Invite" >
+    update laky_supply_invite
+    set invite_time = #{inviteTime,jdbcType=TIMESTAMP},
+      school_zone_id = #{schoolZoneId,jdbcType=INTEGER},
+      student_id = #{studentId,jdbcType=INTEGER},
+      user_id = #{userId,jdbcType=INTEGER},
+      the_status = #{theStatus,jdbcType=TINYINT},
+      invite_status = #{inviteStatus,jdbcType=TINYINT},
+      remarks = #{remarks,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
