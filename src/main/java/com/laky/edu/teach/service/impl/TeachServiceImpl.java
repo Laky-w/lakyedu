@@ -1,5 +1,8 @@
 package com.laky.edu.teach.service.impl;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
 import com.laky.edu.core.PageBean;
 import com.laky.edu.teach.bean.Course;
@@ -32,10 +35,32 @@ public class TeachServiceImpl implements TeachService{
 
     @Transactional
     @Override
-    public Course createCourse(Course course) throws Exception {
+    public Course createCourse(Course course,String[] schoolIds, JSONArray chargeStandards) throws Exception {
         course.setTheStatus(1);
         int rows=courseDao.insert(course);
         if(rows==0) throw new Exception("创建课程失败！");
+        //课程收费
+        if(chargeStandards!=null && chargeStandards.size()>0){
+            List<Map> chargeStandardList = new ArrayList<>();
+            for(Object object:chargeStandards){
+                Map objectMap = (Map) object;
+                objectMap.put("courseId",course.getId());
+                objectMap.put("theType",1);
+                chargeStandardList.add(objectMap);
+            }
+            courseDao.insertCourseChargeStandard(chargeStandardList);
+        }
+        //课程授权
+        if (schoolIds!=null && schoolIds.length>0) {
+            List<Map> courseSchoolList = new ArrayList<>();
+            for(int i=0;i<schoolIds.length;i++){
+                Map objectMap = new HashMap<>();
+                objectMap.put("schoolZoneId",schoolIds[i]);
+                objectMap.put("courseId",course.getId());
+                courseSchoolList.add(objectMap);
+            }
+            courseDao.insertCourseSchool(courseSchoolList);
+        }
         return course;
     }
 

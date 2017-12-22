@@ -13,6 +13,11 @@ public interface CustomerDao {
 
     int insertCustomer(Customer customer);
 
+    /**
+     * 创建意向课程
+     * @param intentionCourseList
+     * @return
+     */
     int insertIntentionCourse(List<Map> intentionCourseList);
 
     Customer selectByPrimaryKey(Integer id);

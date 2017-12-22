@@ -65,7 +65,6 @@ public class UserServiceImpl implements UserService {
         List<Authority> authorities = authorityDao.queryAuthorityByParameter(null);
         menuList.forEach(item->{
             if(item.getParentId() == 0){
-
                 List<Menu> subs=getSubs(item.getId(),menuList,authorities);
                 item.setSubs(subs);
                 if(null==subs){

@@ -5,13 +5,29 @@ import org.springframework.stereotype.Component;
 
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+
 @Component
 public interface CourseDao {
     int deleteByPrimaryKey(Integer id);
 
     int insert(Course record);
 
-    int insertSelective(Course record);
+    /**
+     * 授权校区
+     * @param courseSchoolList
+     * @return
+     */
+    int insertCourseSchool(List<Map> courseSchoolList);
+
+
+    /**
+     * 授权收费标准
+     * @param chargeStandardList
+     * @return
+     */
+    int insertCourseChargeStandard(List<Map> chargeStandardList);
+
 
     Course selectByPrimaryKey(Integer id);
 

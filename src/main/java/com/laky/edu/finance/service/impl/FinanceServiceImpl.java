@@ -8,6 +8,7 @@ import com.laky.edu.finance.service.FinanceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.LinkedHashMap;
 
@@ -30,6 +31,7 @@ public class FinanceServiceImpl implements FinanceService {
     public FinanceAccount createFinanceAccount(FinanceAccount financeAccount) throws Exception {
         financeAccount.setTheStatus(1);
         financeAccount.setTheTime(new Date());
+        if(null==financeAccount.getMoney()) financeAccount.setMoney(BigDecimal.ZERO);
         int rows=financeAccountDao.insert(financeAccount);
         if(rows==0) throw new Exception("创建校区账户失败");
         return financeAccount;

@@ -60,61 +60,33 @@
   <insert id="insert" parameterType="com.laky.edu.teach.bean.Course"  useGeneratedKeys="true" keyProperty="id"
           keyColumn="id">
     insert into laky_teach_course (id, name, the_status, 
-      the_type, branch_id, clazz_id, 
+      the_type, branch_id, clazz_id,standard_type,
       remarks)
     values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{theStatus,jdbcType=TINYINT}, 
-      #{theType,jdbcType=TINYINT}, #{branchId,jdbcType=INTEGER}, #{clazzId,jdbcType=INTEGER}, 
-      #{remarks,jdbcType=LONGVARCHAR})
+      #{theType,jdbcType=TINYINT}, #{branchId,jdbcType=INTEGER}, #{clazzId,jdbcType=INTEGER},
+      #{standardType,jdbcType=INTEGER},#{remarks,jdbcType=LONGVARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.laky.edu.teach.bean.Course" >
-    insert into laky_teach_course
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        id,
-      </if>
-      <if test="name != null" >
-        name,
-      </if>
-      <if test="theStatus != null" >
-        the_status,
-      </if>
-      <if test="theType != null" >
-        the_type,
-      </if>
-      <if test="branchId != null" >
-        branch_id,
-      </if>
-      <if test="clazzId != null" >
-        clazz_id,
-      </if>
-      <if test="remarks != null" >
-        remarks,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        #{id,jdbcType=INTEGER},
-      </if>
-      <if test="name != null" >
-        #{name,jdbcType=VARCHAR},
-      </if>
-      <if test="theStatus != null" >
-        #{theStatus,jdbcType=TINYINT},
-      </if>
-      <if test="theType != null" >
-        #{theType,jdbcType=TINYINT},
-      </if>
-      <if test="branchId != null" >
-        #{branchId,jdbcType=INTEGER},
-      </if>
-      <if test="clazzId != null" >
-        #{clazzId,jdbcType=INTEGER},
-      </if>
-      <if test="remarks != null" >
-        #{remarks,jdbcType=LONGVARCHAR},
-      </if>
-    </trim>
+
+  <insert id="insertCourseSchool"  useGeneratedKeys="true" keyProperty="id"
+          keyColumn="id">
+    INSERT INTO laky_teach_course_school (course_id,school_zone_id)
+    VALUES
+    <foreach collection="list" item="item" index="index" separator=",">
+      (#{item.courseId,jdbcType=INTEGER}, #{item.schoolZoneId,jdbcType=INTEGER})
+    </foreach>
   </insert>
+
+  <insert id="insertCourseChargeStandard"  useGeneratedKeys="true" keyProperty="id"
+          keyColumn="id">
+    INSERT INTO laky_teach_course_charge_standard (course_id,max_hourse,min_hourse,price,the_type)
+    VALUES
+    <foreach collection="list" item="item" index="index" separator=",">
+      (#{item.courseId,jdbcType=INTEGER}, #{item.maxHourse,jdbcType=INTEGER},
+      #{item.minHourse,jdbcType=INTEGER}, #{item.price,jdbcType=DECIMAL},
+      #{item.theType,jdbcType=TINYINT})
+    </foreach>
+  </insert>
+
   <update id="updateByPrimaryKeySelective" parameterType="com.laky.edu.teach.bean.Course" >
     update laky_teach_course
     <set >

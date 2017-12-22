@@ -1,5 +1,6 @@
 package com.laky.edu.teach.service;
 
+import com.alibaba.fastjson.JSONArray;
 import com.laky.edu.core.PageBean;
 import com.laky.edu.teach.bean.Course;
 import com.laky.edu.teach.bean.Room;
@@ -22,11 +23,13 @@ public interface TeachService {
 
     /**
      * 创建课程
-     * @param course
+     * @param course 课程
+     * @param schoolIds 授权校区
+     * @param chargeStandards 收费标准
      * @return
      * @throws Exception
      */
-    Course createCourse(Course course) throws Exception;
+    Course createCourse(Course course, String[] schoolIds, JSONArray chargeStandards) throws Exception;
 
     /**
      * 查询校区教室

@@ -13,6 +13,7 @@ public class Menu {
     private Integer parentId;
     private String url;
     private Integer sort;
+    private String path; //页面路径
     private List<Menu> subs; //下级菜单
     private List<Authority> authorities; //菜单权限
 
@@ -87,5 +88,13 @@ public class Menu {
 
     public void setAuthorities(List<Authority> authorities) {
         this.authorities = authorities;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
     }
 }

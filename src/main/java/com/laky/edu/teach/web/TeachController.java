@@ -1,5 +1,6 @@
 package com.laky.edu.teach.web;
 
+import com.alibaba.fastjson.JSON;
 import com.laky.edu.core.BaseController;
 import com.laky.edu.organization.OrganizationConst;
 import com.laky.edu.teach.bean.Course;
@@ -7,9 +8,11 @@ import com.laky.edu.teach.bean.Room;
 import com.laky.edu.teach.service.TeachService;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -50,8 +53,10 @@ public class TeachController extends BaseController{
         try {
             LinkedHashMap parameterMap = new LinkedHashMap();
             course.setBranchId(super.getCurrentUser(request).getBranchId());
-            course =teachService.createCourse(course);
-            super.handleOperate("添加课程", OrganizationConst.OPERATE_ADD,"添加教室【"+course.getName()+"】",request);
+            String chargeStandardStr=request.getParameter("chargeStandardStr");
+            if(StringUtils.isEmpty(chargeStandardStr)) chargeStandardStr="[]";
+            course =teachService.createCourse(course,request.getParameterValues("schoolIds"),JSON.parseArray(chargeStandardStr));
+            super.handleOperate("添加课程", OrganizationConst.OPERATE_ADD,"添加课程【"+course.getName()+"】",request);
             return super.doWrappingData(course);
         } catch (Exception e) {
             return  super.doWrappingErrorData(e);

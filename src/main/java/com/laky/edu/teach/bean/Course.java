@@ -15,6 +15,8 @@ public class Course implements Serializable {
 
     private Integer clazzId;
 
+    private Integer standardType;
+
     private String clazzName;
 
     private String remarks;
@@ -85,21 +87,12 @@ public class Course implements Serializable {
         this.clazzName = clazzName;
     }
 
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(getClass().getSimpleName());
-        sb.append(" [");
-        sb.append("Hash = ").append(hashCode());
-        sb.append(", id=").append(id);
-        sb.append(", name=").append(name);
-        sb.append(", theStatus=").append(theStatus);
-        sb.append(", theType=").append(theType);
-        sb.append(", branchId=").append(branchId);
-        sb.append(", clazzId=").append(clazzId);
-        sb.append(", remarks=").append(remarks);
-        sb.append(", serialVersionUID=").append(serialVersionUID);
-        sb.append("]");
-        return sb.toString();
+
+    public Integer getStandardType() {
+        return standardType;
+    }
+
+    public void setStandardType(Integer standardType) {
+        this.standardType = standardType;
     }
 }
