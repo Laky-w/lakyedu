@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.laky.edu.reception.dao.StudentDao" >
+  <resultMap id="BaseResultMap" type="com.laky.edu.reception.bean.Student" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="sex" property="sex" jdbcType="TINYINT" />
+    <result column="birthday" property="birthday" jdbcType="DATE" />
+    <result column="phone" property="phone" jdbcType="CHAR" />
+    <result column="source_id" property="sourceId" jdbcType="INTEGER" />
+    <result column="school_zone_id" property="schoolZoneId" jdbcType="INTEGER" />
+    <result column="introducer_id" property="introducerId" jdbcType="INTEGER" />
+    <result column="owner_id" property="ownerId" jdbcType="INTEGER" />
+    <result column="the_status" property="theStatus" jdbcType="TINYINT" />
+    <result column="the_type" property="theType" jdbcType="TINYINT" />
+    <result column="remarks" property="remarks" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="contact_id" property="contactId" jdbcType="INTEGER" />
+    <result column="customer_id" property="customerId" jdbcType="INTEGER" />
+    <result column="class_status" property="classStatus" jdbcType="TINYINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, name, sex, birthday, phone, source_id, school_zone_id, introducer_id, owner_id, 
+    the_status, the_type, remarks, create_time, contact_id, customer_id, class_status
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from laky_reception_student
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <select id="selectByParameterMap" resultType="java.util.Map">
+    SELECT s.id , s.name ,s.sex ,s.birthday AS birthday,s.phone,
+    s.the_type AS theType, s.remarks ,s.create_time AS createTime,s.class_status AS classStatus,
+    sz.name as schoolZoneName, v.name AS contactId, u.name AS ownerId, a.name AS sourceId
+    from laky_reception_student s
+    RIGHT JOIN laky_organization_school_zone sz on s.school_zone_id = sz.id and s.the_status !=0
+    LEFT JOIN laky_organization_parameter_value v ON s.contact_id = v.id AND v.the_status!=0
+    LEFT JOIN laky_organization_user u ON s.owner_id = u.id AND  u.the_status!=0
+    LEFT JOIN laky_supply_market_activity a ON s.source_id = a.id AND a.the_status!=0
+    where s.the_status !=0
+    <if test="name != null">
+      AND (
+      s.`name` LIKE CONCAT('%',#{name,jdbcType=VARCHAR},'%')
+      OR s.pinyin LIKE CONCAT('%',#{name,jdbcType=VARCHAR},'%')
+      OR s.phone LIKE CONCAT('%',#{name,jdbcType=CHAR},'%')
+      )
+    </if>
+    <if test="classStatus != null">
+      AND s.class_status  = #{classStatus,jdbcType=INTEGER}
+    </if>
+    <if test="sex!=null">
+      AND s.sex = #{sex,jdbcType=INTEGER}
+    </if>
+    <if test="birthday!=null">
+      AND s.birthday =#{birthday,jdbcType=DATE}
+    </if>
+
+    <if test="schoolZoneId != null">
+      AND s.school_zone_id IN
+      <foreach collection="schoolZoneId" item="schoolId" index="index"
+               open="(" close=")" separator=",">
+        #{schoolId}
+      </foreach>
+    </if>
+    <if test="schoolZoneId2 != null">
+      <if test="schoolZoneId2 instanceof String">
+        AND s.school_zone_id = #{schoolZoneId2,jdbcType=INTEGER}
+      </if>
+      <if test="!(schoolZoneId2 instanceof String)">
+        AND s.school_zone_id IN
+        <foreach collection="schoolZoneId2" item="schoolId" index="index"
+                 open="(" close=")" separator=",">
+          #{schoolId}
+        </foreach>
+      </if>
+    </if>
+    ORDER BY s.create_time DESC
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from laky_reception_student
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.laky.edu.reception.bean.Student" useGeneratedKeys="true" keyProperty="id"
+          keyColumn="id">
+    insert into laky_reception_student ( name,pinyin, sex,
+      birthday, phone, source_id, 
+      school_zone_id, introducer_id, owner_id, 
+      the_status, the_type, remarks, 
+      create_time, contact_id, customer_id, 
+      class_status)
+    values (#{name,jdbcType=VARCHAR},#{pinyin,jdbcType=VARCHAR}, #{sex,jdbcType=TINYINT},
+      #{birthday,jdbcType=DATE}, #{phone,jdbcType=CHAR}, #{sourceId,jdbcType=INTEGER}, 
+      #{schoolZoneId,jdbcType=INTEGER}, #{introducerId,jdbcType=INTEGER}, #{ownerId,jdbcType=INTEGER}, 
+      #{theStatus,jdbcType=TINYINT}, #{theType,jdbcType=TINYINT}, #{remarks,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{contactId,jdbcType=INTEGER}, #{customerId,jdbcType=INTEGER}, 
+      #{classStatus,jdbcType=TINYINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.laky.edu.reception.bean.Student" >
+    insert into laky_reception_student
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="sex != null" >
+        sex,
+      </if>
+      <if test="birthday != null" >
+        birthday,
+      </if>
+      <if test="phone != null" >
+        phone,
+      </if>
+      <if test="sourceId != null" >
+        source_id,
+      </if>
+      <if test="schoolZoneId != null" >
+        school_zone_id,
+      </if>
+      <if test="introducerId != null" >
+        introducer_id,
+      </if>
+      <if test="ownerId != null" >
+        owner_id,
+      </if>
+      <if test="theStatus != null" >
+        the_status,
+      </if>
+      <if test="theType != null" >
+        the_type,
+      </if>
+      <if test="remarks != null" >
+        remarks,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="contactId != null" >
+        contact_id,
+      </if>
+      <if test="customerId != null" >
+        customer_id,
+      </if>
+      <if test="classStatus != null" >
+        class_status,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null" >
+        #{sex,jdbcType=TINYINT},
+      </if>
+      <if test="birthday != null" >
+        #{birthday,jdbcType=DATE},
+      </if>
+      <if test="phone != null" >
+        #{phone,jdbcType=CHAR},
+      </if>
+      <if test="sourceId != null" >
+        #{sourceId,jdbcType=INTEGER},
+      </if>
+      <if test="schoolZoneId != null" >
+        #{schoolZoneId,jdbcType=INTEGER},
+      </if>
+      <if test="introducerId != null" >
+        #{introducerId,jdbcType=INTEGER},
+      </if>
+      <if test="ownerId != null" >
+        #{ownerId,jdbcType=INTEGER},
+      </if>
+      <if test="theStatus != null" >
+        #{theStatus,jdbcType=TINYINT},
+      </if>
+      <if test="theType != null" >
+        #{theType,jdbcType=TINYINT},
+      </if>
+      <if test="remarks != null" >
+        #{remarks,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="contactId != null" >
+        #{contactId,jdbcType=INTEGER},
+      </if>
+      <if test="customerId != null" >
+        #{customerId,jdbcType=INTEGER},
+      </if>
+      <if test="classStatus != null" >
+        #{classStatus,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.laky.edu.reception.bean.Student" >
+    update laky_reception_student
+    <set >
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null" >
+        sex = #{sex,jdbcType=TINYINT},
+      </if>
+      <if test="birthday != null" >
+        birthday = #{birthday,jdbcType=DATE},
+      </if>
+      <if test="phone != null" >
+        phone = #{phone,jdbcType=CHAR},
+      </if>
+      <if test="sourceId != null" >
+        source_id = #{sourceId,jdbcType=INTEGER},
+      </if>
+      <if test="schoolZoneId != null" >
+        school_zone_id = #{schoolZoneId,jdbcType=INTEGER},
+      </if>
+      <if test="introducerId != null" >
+        introducer_id = #{introducerId,jdbcType=INTEGER},
+      </if>
+      <if test="ownerId != null" >
+        owner_id = #{ownerId,jdbcType=INTEGER},
+      </if>
+      <if test="theStatus != null" >
+        the_status = #{theStatus,jdbcType=TINYINT},
+      </if>
+      <if test="theType != null" >
+        the_type = #{theType,jdbcType=TINYINT},
+      </if>
+      <if test="remarks != null" >
+        remarks = #{remarks,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="contactId != null" >
+        contact_id = #{contactId,jdbcType=INTEGER},
+      </if>
+      <if test="customerId != null" >
+        customer_id = #{customerId,jdbcType=INTEGER},
+      </if>
+      <if test="classStatus != null" >
+        class_status = #{classStatus,jdbcType=TINYINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.laky.edu.reception.bean.Student" >
+    update laky_reception_student
+    set name = #{name,jdbcType=VARCHAR},
+      sex = #{sex,jdbcType=TINYINT},
+      birthday = #{birthday,jdbcType=DATE},
+      phone = #{phone,jdbcType=CHAR},
+      source_id = #{sourceId,jdbcType=INTEGER},
+      school_zone_id = #{schoolZoneId,jdbcType=INTEGER},
+      introducer_id = #{introducerId,jdbcType=INTEGER},
+      owner_id = #{ownerId,jdbcType=INTEGER},
+      the_status = #{theStatus,jdbcType=TINYINT},
+      the_type = #{theType,jdbcType=TINYINT},
+      remarks = #{remarks,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      contact_id = #{contactId,jdbcType=INTEGER},
+      customer_id = #{customerId,jdbcType=INTEGER},
+      class_status = #{classStatus,jdbcType=TINYINT}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
