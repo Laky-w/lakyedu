@@ -43,21 +43,21 @@
     where s.the_status !=0
     <if test="name != null">
       AND (s.`name` LIKE CONCAT('%',#{name,jdbcType=VARCHAR},'%')
-      OR s.pinyin LIKE CONCAT('%',#{pinyin,jdbcType=VARCHAR},'%')
-      OR s.phone LIKE CONCAT('%',#{phone},jdbcType="CHAR"'%'))
+      OR s.pinyin LIKE CONCAT('%',#{name,jdbcType=VARCHAR},'%')
+      OR s.phone LIKE CONCAT('%',#{name,jdbcType=CHAR},'%'))
     </if>
     <if test="sex!=null">
-      AND s.sex = #{sex,jdbcType="INTEGER"}
+      AND s.sex = #{sex,jdbcType=INTEGER}
     </if>
     <if test="birthday!=null">
-      AND s.birthday =#{birthday,jdbcType="DATE"}
+      AND s.birthday =#{birthday,jdbcType=DATE}
     </if>
 
     <if test="phone!=null">
-      AND s.phone = #{phone,jdbcType="CHAR"}
+      AND s.phone = #{phone,jdbcType=CHAR}
     </if>
     <if test="remarks!=null">
-      AND s.remarks =#{remarks,jdbcType="VARCHAR"}
+      AND s.remarks =#{remarks,jdbcType=VARCHAR}
     </if>
     <if test="schoolZoneId != null">
       AND s.school_zone_id IN

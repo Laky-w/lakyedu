@@ -21,6 +21,10 @@ public class Course implements Serializable {
 
     private String remarks;
 
+    private Integer schoolId;
+
+    private String schoolName;
+
     private static final long serialVersionUID = 1L;
 
     public Integer getId() {
@@ -94,5 +98,21 @@ public class Course implements Serializable {
 
     public void setStandardType(Integer standardType) {
         this.standardType = standardType;
+    }
+
+    public Integer getSchoolId() {
+        return schoolId;
+    }
+
+    public void setSchoolId(Integer schoolId) {
+        this.schoolId = schoolId;
+    }
+
+    public String getSchoolName() {
+        return schoolName;
+    }
+
+    public void setSchoolName(String schoolName) {
+        this.schoolName = schoolName;
     }
 }

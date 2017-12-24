@@ -29,6 +29,7 @@ public class TeachController extends BaseController{
         try {
             LinkedHashMap parameterMap = new LinkedHashMap();
             parameterMap.put("branchId",super.getCurrentUser(request).getBranchId());
+            parameterMap.put("schoolZoneId",super.getSchoolIds(request,2));
             parameterMap.put("pageNum",pageNum);
             parameterMap.put("pageSize",pageSize);
             parameterMap = super.doWrappingFormParameter(request,parameterMap);

@@ -9,6 +9,8 @@
     <result column="branch_id" property="branchId" jdbcType="INTEGER" />
     <result column="clazz_id" property="clazzId" jdbcType="INTEGER" />
     <result column="clazz_name" property="clazzName" jdbcType="VARCHAR" />
+    <result column="school_name" property="schoolName" jdbcType="VARCHAR" />
+    <result column="school_id" property="schoolId" jdbcType="VARCHAR" />
   </resultMap>
   <resultMap id="ResultMapWithBLOBs" type="com.laky.edu.teach.bean.Course" extends="BaseResultMap" >
     <result column="remarks" property="remarks" jdbcType="LONGVARCHAR" />
@@ -28,10 +30,30 @@
     where  id = #{id,jdbcType=INTEGER}
   </select>
 
-  <select id="selectByParameterMap" resultMap="ResultMapWithBLOBs"  >
+  <select id="selectByParameterMap" resultMap="ResultMapWithBLOBs">
     select
-    s.*,p.name as clazz_name
-    from laky_teach_course s LEFT JOIN laky_organization_parameter_value p on s.clazz_id = p.id and p.the_status !=0
+    s.*,p.name as clazz_name,sz1.name as school_name,sz.school_zone_id as school_id
+    from laky_teach_course s
+    LEFT JOIN laky_organization_parameter_value p on s.clazz_id = p.id and p.the_status !=0
+    RIGHT JOIN laky_teach_course_school sz on sz.course_id = s.id
+    and sz.school_zone_id IN
+    <foreach collection="schoolZoneId" item="schoolId" index="index"
+             open="(" close=")" separator=",">
+      #{schoolId}
+    </foreach>
+    <if test="schoolZoneId2 != null">
+      <if test="schoolZoneId2 instanceof String">
+        AND sz.school_zone_id = #{schoolZoneId2,jdbcType=INTEGER}
+      </if>
+      <if test="!(schoolZoneId2 instanceof String)">
+        AND sz.school_zone_id IN
+        <foreach collection="schoolZoneId2" item="schoolId" index="index"
+                 open="(" close=")" separator=",">
+          #{schoolId}
+        </foreach>
+      </if>
+    </if>
+    LEFT JOIN laky_organization_school_zone sz1 on sz.school_zone_id = sz1.id
     where s.the_status !=0 AND s.branch_id = #{branchId,jdbcType=INTEGER}
     <if test="name!=null">
       AND s.`name` LIKE CONCAT('%',#{name,jdbcType=VARCHAR},'%')

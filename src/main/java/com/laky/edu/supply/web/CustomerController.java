@@ -47,8 +47,8 @@ public class CustomerController extends BaseController{
         try {
             LinkedHashMap parameterMap = new LinkedHashMap();
             customer.setSchoolZoneId(super.getCurrentUser(request).getSchoolZoneId());
-            customerService.createCustomer(customer,intentionId);
-            super.handleOperate("添加学员", OrganizationConst.OPERATE_ADD,"添加学员【"+customer.getName()+"】",request);
+            customer=customerService.createCustomer(customer,intentionId);
+            super.handleOperate("添加生源", OrganizationConst.OPERATE_ADD,"添加生源【"+customer.getName()+"】",request);
             return super.doWrappingData(customer);
         } catch (Exception e) {
             return  super.doWrappingErrorData(e);

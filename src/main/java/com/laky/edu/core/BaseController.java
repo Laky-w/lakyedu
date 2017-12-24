@@ -121,7 +121,7 @@ public class BaseController {
     /**
      * 获取当前用户所在校区的下级校区或部门
      * @param request
-     * @return
+     * @return 2 校区 3 部门
      * @throws Exception
      */
     public Integer [] getSchoolIds(HttpServletRequest request,Object theType) throws Exception{
