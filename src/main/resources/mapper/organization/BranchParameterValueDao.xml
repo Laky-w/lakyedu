@@ -31,7 +31,7 @@
     s.* ,u.`name` as u_name
     from laky_organization_parameter_value  s LEFT JOIN laky_organization_user u ON s.create_user_id = u.id and u.the_status!=0
 
-    where s.branch_id = #{branchId} AND s.the_status !=0 AND  s.parameter_id =#{parameterId} ORDER BY sort
+    where s.branch_id = #{branchId,jdbcType=INTEGER} AND s.the_status !=0 AND  s.parameter_id =#{parameterId,jdbcType=INTEGER} ORDER BY sort DESC
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from laky_organization_parameter_value

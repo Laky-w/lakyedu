@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.laky.edu.reception.dao.StudentOrderDao" >
+  <resultMap id="BaseResultMap" type="com.laky.edu.reception.bean.StudentOrder" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="student_id" property="studentId" jdbcType="INTEGER" />
+    <result column="the_status" property="theStatus" jdbcType="TINYINT" />
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="school_zone_id" property="schoolZoneId" jdbcType="INTEGER" />
+    <result column="total" property="total" jdbcType="DECIMAL" />
+    <result column="receivable" property="receivable" jdbcType="DECIMAL" />
+    <result column="subtract_money" property="subtractMoney" jdbcType="DECIMAL" />
+    <result column="the_type" property="theType" jdbcType="TINYINT" />
+    <result column="cost_status" property="costStatus" jdbcType="TINYINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, student_id, the_status, user_id, create_time, school_zone_id, total, receivable, 
+    subtract_money, the_type, cost_status
+  </sql>
+  <select id="selectByParameterMap" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from laky_reception_student_order
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <insert id="insert" parameterType="com.laky.edu.reception.bean.StudentOrder" >
+    insert into laky_reception_student_order (id, student_id, the_status, 
+      user_id, create_time, school_zone_id, 
+      total, receivable, subtract_money, 
+      the_type, cost_status)
+    values (#{id,jdbcType=INTEGER}, #{studentId,jdbcType=INTEGER}, #{theStatus,jdbcType=TINYINT}, 
+      #{userId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{schoolZoneId,jdbcType=INTEGER}, 
+      #{total,jdbcType=DECIMAL}, #{receivable,jdbcType=DECIMAL}, #{subtractMoney,jdbcType=DECIMAL}, 
+      #{theType,jdbcType=TINYINT}, #{costStatus,jdbcType=TINYINT})
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.laky.edu.reception.bean.StudentOrder" >
+    update laky_reception_student_order
+    <set >
+      <if test="studentId != null" >
+        student_id = #{studentId,jdbcType=INTEGER},
+      </if>
+      <if test="theStatus != null" >
+        the_status = #{theStatus,jdbcType=TINYINT},
+      </if>
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="schoolZoneId != null" >
+        school_zone_id = #{schoolZoneId,jdbcType=INTEGER},
+      </if>
+      <if test="total != null" >
+        total = #{total,jdbcType=DECIMAL},
+      </if>
+      <if test="receivable != null" >
+        receivable = #{receivable,jdbcType=DECIMAL},
+      </if>
+      <if test="subtractMoney != null" >
+        subtract_money = #{subtractMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="theType != null" >
+        the_type = #{theType,jdbcType=TINYINT},
+      </if>
+      <if test="costStatus != null" >
+        cost_status = #{costStatus,jdbcType=TINYINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.laky.edu.reception.bean.StudentOrder" >
+    update laky_reception_student_order
+    set student_id = #{studentId,jdbcType=INTEGER},
+      the_status = #{theStatus,jdbcType=TINYINT},
+      user_id = #{userId,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      school_zone_id = #{schoolZoneId,jdbcType=INTEGER},
+      total = #{total,jdbcType=DECIMAL},
+      receivable = #{receivable,jdbcType=DECIMAL},
+      subtract_money = #{subtractMoney,jdbcType=DECIMAL},
+      the_type = #{theType,jdbcType=TINYINT},
+      cost_status = #{costStatus,jdbcType=TINYINT}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

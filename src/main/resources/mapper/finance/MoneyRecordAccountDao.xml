@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.laky.edu.finance.dao.MoneyRecordAccountDao" >
+  <resultMap id="BaseResultMap" type="com.laky.edu.finance.bean.MoneyRecordAccount" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="record_id" property="recordId" jdbcType="INTEGER" />
+    <result column="account_id" property="accountId" jdbcType="INTEGER" />
+    <result column="money" property="money" jdbcType="DECIMAL" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, record_id, account_id, money
+  </sql>
+  <select id="selectByParameter" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from laky_finance_money_record_account
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <insert id="insert" parameterType="com.laky.edu.finance.bean.MoneyRecordAccount" >
+    insert into laky_finance_money_record_account (id, record_id, account_id, 
+      money)
+    values (#{id,jdbcType=INTEGER}, #{recordId,jdbcType=INTEGER}, #{accountId,jdbcType=INTEGER}, 
+      #{money,jdbcType=DECIMAL})
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.laky.edu.finance.bean.MoneyRecordAccount" >
+    update laky_finance_money_record_account
+    <set >
+      <if test="recordId != null" >
+        record_id = #{recordId,jdbcType=INTEGER},
+      </if>
+      <if test="accountId != null" >
+        account_id = #{accountId,jdbcType=INTEGER},
+      </if>
+      <if test="money != null" >
+        money = #{money,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.laky.edu.finance.bean.MoneyRecordAccount" >
+    update laky_finance_money_record_account
+    set record_id = #{recordId,jdbcType=INTEGER},
+      account_id = #{accountId,jdbcType=INTEGER},
+      money = #{money,jdbcType=DECIMAL}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

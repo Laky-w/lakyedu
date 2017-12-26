@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.laky.edu.reception.dao.StudentOrderDetailDao" >
+  <resultMap id="BaseResultMap" type="com.laky.edu.reception.bean.StudentOrderDetail" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="order_id" property="orderId" jdbcType="INTEGER" />
+    <result column="course_id" property="courseId" jdbcType="INTEGER" />
+    <result column="class_id" property="classId" jdbcType="INTEGER" />
+    <result column="the_type" property="theType" jdbcType="TINYINT" />
+    <result column="item_type" property="itemType" jdbcType="TINYINT" />
+    <result column="number" property="number" jdbcType="INTEGER" />
+    <result column="price" property="price" jdbcType="DECIMAL" />
+    <result column="discount" property="discount" jdbcType="DECIMAL" />
+    <result column="sell_price" property="sellPrice" jdbcType="DECIMAL" />
+    <result column="total" property="total" jdbcType="INTEGER" />
+    <result column="subtract_price" property="subtractPrice" jdbcType="DECIMAL" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, order_id, course_id, class_id, the_type, item_type, number, price, discount, 
+    sell_price, total, subtract_price
+  </sql>
+  <select id="selectByParameterMap" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from laky_reception_student_order_detail
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <insert id="insert" parameterType="com.laky.edu.reception.bean.StudentOrderDetail" >
+    insert into laky_reception_student_order_detail (id, order_id, course_id, 
+      class_id, the_type, item_type, 
+      number, price, discount, 
+      sell_price, total, subtract_price
+      )
+    values (#{id,jdbcType=INTEGER}, #{orderId,jdbcType=INTEGER}, #{courseId,jdbcType=INTEGER}, 
+      #{classId,jdbcType=INTEGER}, #{theType,jdbcType=TINYINT}, #{itemType,jdbcType=TINYINT}, 
+      #{number,jdbcType=INTEGER}, #{price,jdbcType=DECIMAL}, #{discount,jdbcType=DECIMAL}, 
+      #{sellPrice,jdbcType=DECIMAL}, #{total,jdbcType=INTEGER}, #{subtractPrice,jdbcType=DECIMAL}
+      )
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.laky.edu.reception.bean.StudentOrderDetail" >
+    update laky_reception_student_order_detail
+    <set >
+      <if test="orderId != null" >
+        order_id = #{orderId,jdbcType=INTEGER},
+      </if>
+      <if test="courseId != null" >
+        course_id = #{courseId,jdbcType=INTEGER},
+      </if>
+      <if test="classId != null" >
+        class_id = #{classId,jdbcType=INTEGER},
+      </if>
+      <if test="theType != null" >
+        the_type = #{theType,jdbcType=TINYINT},
+      </if>
+      <if test="itemType != null" >
+        item_type = #{itemType,jdbcType=TINYINT},
+      </if>
+      <if test="number != null" >
+        number = #{number,jdbcType=INTEGER},
+      </if>
+      <if test="price != null" >
+        price = #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="discount != null" >
+        discount = #{discount,jdbcType=DECIMAL},
+      </if>
+      <if test="sellPrice != null" >
+        sell_price = #{sellPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="total != null" >
+        total = #{total,jdbcType=INTEGER},
+      </if>
+      <if test="subtractPrice != null" >
+        subtract_price = #{subtractPrice,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.laky.edu.reception.bean.StudentOrderDetail" >
+    update laky_reception_student_order_detail
+    set order_id = #{orderId,jdbcType=INTEGER},
+      course_id = #{courseId,jdbcType=INTEGER},
+      class_id = #{classId,jdbcType=INTEGER},
+      the_type = #{theType,jdbcType=TINYINT},
+      item_type = #{itemType,jdbcType=TINYINT},
+      number = #{number,jdbcType=INTEGER},
+      price = #{price,jdbcType=DECIMAL},
+      discount = #{discount,jdbcType=DECIMAL},
+      sell_price = #{sellPrice,jdbcType=DECIMAL},
+      total = #{total,jdbcType=INTEGER},
+      subtract_price = #{subtractPrice,jdbcType=DECIMAL}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

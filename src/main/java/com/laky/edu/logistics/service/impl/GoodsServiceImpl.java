@@ -21,6 +21,7 @@ public class GoodsServiceImpl implements GoodsService {
     public Goods addGoods(Goods goods) throws Exception {
         goods.setTheStatus(1);
         goods.setCreateTime(new Date());
+        goods.setTheType(1);
         int rows = goodsDao.insert(goods);
         if (rows==0) throw new Exception("创建物品管理失败");
         return goods;

@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.laky.edu.logistics.dao.GoodsRecordDao">
+    <resultMap id="BaseResultMap" type="com.laky.edu.logistics.bean.GoodsRecord">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="goods_id" property="goodsId" jdbcType="INTEGER"/>
+        <result column="school_zone_id" property="schoolZoneId" jdbcType="INTEGER"/>
+        <result column="the_type" property="theType" jdbcType="TINYINT"/>
+        <result column="amount" property="amount" jdbcType="DECIMAL"/>
+        <result column="user_id" property="userId" jdbcType="INTEGER"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="price" property="price" jdbcType="DECIMAL"/>
+        <result column="other_name" property="otherName" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, goods_id, school_zone_id, the_type, amount, user_id, create_time, price, other_name
+    </sql>
+    <select id="selectByParameterMap" resultType="java.util.Map">
+        select r.id,r.the_type AS theType,r.amount,r.create_time AS createTime,r.price,r.other_name AS otherName,
+        s.name AS schoolZoneName,g.name AS goodsName,u.name AS userName,v.name as clazzName
+        from laky_logistics_goods_record r
+        RIGHT JOIN laky_organization_school_zone s ON r.school_zone_id = s.id AND s.the_status!=0
+        LEFT JOIN laky_logistics_goods g ON r.goods_id = g.id AND g.the_status!=0
+        LEFT JOIN laky_organization_parameter_value v ON g.clazz_id= v.id
+        LEFT JOIN laky_organization_user u ON r.user_id = u.id AND u.the_status!=0
+        WHERE 1=1
+        <if test="name!=null">
+            AND g.name LIKE CONCAT('%',#{name,jdbcType=VARCHAR},'%')
+        </if>
+        <if test="schoolIds != null">
+            AND r.school_zone_id IN
+            <foreach collection="schoolIds" item="schoolId" index="index"
+                     open="(" close=")" separator=",">
+                #{schoolId}
+            </foreach>
+        </if>
+        <if test="schoolZoneId2 != null">
+            <if test="schoolZoneId2 instanceof String">
+                AND r.school_zone_id = #{schoolZoneId2,jdbcType=INTEGER}
+            </if>
+            <if test="!(schoolZoneId2 instanceof String)">
+                AND r.school_zone_id IN
+                <foreach collection="schoolZoneId2" item="schoolId" index="index"
+                         open="(" close=")" separator=",">
+                    #{schoolId}
+                </foreach>
+            </if>
+        </if>
+        ORDER BY r.create_time DESC
+    </select>
+    <insert id="insert" parameterType="com.laky.edu.logistics.bean.GoodsRecord" useGeneratedKeys="true" keyColumn="id"
+            keyProperty="id">
+        INSERT INTO laky_logistics_goods_record (goods_id, school_zone_id,
+                                                 the_type, amount, user_id,
+                                                 create_time, price, other_name
+        )
+        VALUES ( #{goodsId,jdbcType=INTEGER}, #{schoolZoneId,jdbcType=INTEGER},
+                #{theType,jdbcType=TINYINT}, #{amount,jdbcType=DECIMAL}, #{userId,jdbcType=INTEGER},
+                #{createTime,jdbcType=TIMESTAMP}, #{price,jdbcType=DECIMAL}, #{otherName,jdbcType=VARCHAR}
+        )
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.laky.edu.logistics.bean.GoodsRecord">
+        update laky_logistics_goods_record
+        <set>
+            <if test="goodsId != null">
+                goods_id = #{goodsId,jdbcType=INTEGER},
+            </if>
+            <if test="schoolZoneId != null">
+                school_zone_id = #{schoolZoneId,jdbcType=INTEGER},
+            </if>
+            <if test="theType != null">
+                the_type = #{theType,jdbcType=TINYINT},
+            </if>
+            <if test="amount != null">
+                amount = #{amount,jdbcType=DECIMAL},
+            </if>
+            <if test="userId != null">
+                user_id = #{userId,jdbcType=INTEGER},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="price != null">
+                price = #{price,jdbcType=DECIMAL},
+            </if>
+            <if test="otherName != null">
+                other_name = #{otherName,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.laky.edu.logistics.bean.GoodsRecord">
+        UPDATE laky_logistics_goods_record
+        SET goods_id       = #{goodsId,jdbcType=INTEGER},
+            school_zone_id = #{schoolZoneId,jdbcType=INTEGER},
+            the_type       = #{theType,jdbcType=TINYINT},
+            amount         = #{amount,jdbcType=DECIMAL},
+            user_id        = #{userId,jdbcType=INTEGER},
+            create_time    = #{createTime,jdbcType=TIMESTAMP},
+            price          = #{price,jdbcType=DECIMAL},
+            other_name     = #{otherName,jdbcType=VARCHAR}
+        WHERE id = #{id,jdbcType=INTEGER}
+    </update>
+</mapper>

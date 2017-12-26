@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.laky.edu.finance.dao.MoneyRecordDao" >
+  <resultMap id="BaseResultMap" type="com.laky.edu.finance.bean.MoneyRecord" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="school_zone_id" property="schoolZoneId" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="money" property="money" jdbcType="TINYINT" />
+    <result column="the_type" property="theType" jdbcType="TINYINT" />
+    <result column="saler_id" property="salerId" jdbcType="INTEGER" />
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="the_status" property="theStatus" jdbcType="TINYINT" />
+    <result column="check_status" property="checkStatus" jdbcType="TINYINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, school_zone_id, create_time, money, the_type, saler_id, user_id, the_status, 
+    check_status
+  </sql>
+  <select id="selectByParameterMap" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from laky_finance_money_record
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <insert id="insert" parameterType="com.laky.edu.finance.bean.MoneyRecord" >
+    insert into laky_finance_money_record (id, school_zone_id, create_time, 
+      money, the_type, saler_id, 
+      user_id, the_status, check_status
+      )
+    values (#{id,jdbcType=INTEGER}, #{schoolZoneId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{money,jdbcType=TINYINT}, #{theType,jdbcType=TINYINT}, #{salerId,jdbcType=INTEGER}, 
+      #{userId,jdbcType=INTEGER}, #{theStatus,jdbcType=TINYINT}, #{checkStatus,jdbcType=TINYINT}
+      )
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.laky.edu.finance.bean.MoneyRecord" >
+    update laky_finance_money_record
+    <set >
+      <if test="schoolZoneId != null" >
+        school_zone_id = #{schoolZoneId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="money != null" >
+        money = #{money,jdbcType=TINYINT},
+      </if>
+      <if test="theType != null" >
+        the_type = #{theType,jdbcType=TINYINT},
+      </if>
+      <if test="salerId != null" >
+        saler_id = #{salerId,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="theStatus != null" >
+        the_status = #{theStatus,jdbcType=TINYINT},
+      </if>
+      <if test="checkStatus != null" >
+        check_status = #{checkStatus,jdbcType=TINYINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.laky.edu.finance.bean.MoneyRecord" >
+    update laky_finance_money_record
+    set school_zone_id = #{schoolZoneId,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      money = #{money,jdbcType=TINYINT},
+      the_type = #{theType,jdbcType=TINYINT},
+      saler_id = #{salerId,jdbcType=INTEGER},
+      user_id = #{userId,jdbcType=INTEGER},
+      the_status = #{theStatus,jdbcType=TINYINT},
+      check_status = #{checkStatus,jdbcType=TINYINT}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
