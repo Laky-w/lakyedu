@@ -109,6 +109,13 @@
     </foreach>
   </insert>
 
+  <select id="selectCourseChargeStandard" resultType="java.util.Map" >
+    select
+     id,max_hourse as maxHourse,min_hourse as minHourse,price,the_type as theType
+    from laky_teach_course_charge_standard
+    where  course_id = #{courseId,jdbcType=INTEGER}
+  </select>
+
   <update id="updateByPrimaryKeySelective" parameterType="com.laky.edu.teach.bean.Course" >
     update laky_teach_course
     <set >

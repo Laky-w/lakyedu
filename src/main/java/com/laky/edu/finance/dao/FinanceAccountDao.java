@@ -18,5 +18,7 @@ public interface FinanceAccountDao {
 
     int updateByPrimaryKeySelective(FinanceAccount record);
 
+    int batchUpdateByPrimaryKeySelective(List<FinanceAccount> record);
+
     int updateByPrimaryKey(FinanceAccount record);
 }

@@ -22,6 +22,13 @@ public interface TeachService {
     PageBean<Course> findCourseByBranch(LinkedHashMap parameterMap);
 
     /**
+     * 查询课程收费标准
+     * @param parameterMap
+     * @return
+     */
+    List<Map> findChargeStandardByCourseId(LinkedHashMap parameterMap);
+
+    /**
      * 创建课程
      * @param course 课程
      * @param schoolIds 授权校区

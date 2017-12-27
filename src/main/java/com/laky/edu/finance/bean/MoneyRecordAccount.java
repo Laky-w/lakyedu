@@ -12,6 +12,8 @@ public class MoneyRecordAccount implements Serializable {
 
     private BigDecimal money;
 
+    private BigDecimal arrears;
+
     private static final long serialVersionUID = 1L;
 
     public Integer getId() {
@@ -46,5 +48,11 @@ public class MoneyRecordAccount implements Serializable {
         this.money = money;
     }
 
+    public BigDecimal getArrears() {
+        return arrears;
+    }
 
+    public void setArrears(BigDecimal arrears) {
+        this.arrears = arrears;
+    }
 }

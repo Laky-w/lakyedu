@@ -28,6 +28,7 @@ public interface CourseDao {
      */
     int insertCourseChargeStandard(List<Map> chargeStandardList);
 
+    List<Map> selectCourseChargeStandard(LinkedHashMap parameterMap);
 
     Course selectByPrimaryKey(Integer id);
 

@@ -38,6 +38,18 @@ public class TeachController extends BaseController{
             return  super.doWrappingErrorData(e);
         }
     }
+    @GetMapping("/getChargeStandard/{courseId}")
+    public Map getChargeStandard(HttpServletRequest request,@PathVariable Integer courseId){
+        try {
+            LinkedHashMap parameterMap = new LinkedHashMap();
+//            parameterMap.put("branchId",super.getCurrentUser(request).getBranchId());
+            if(StringUtils.isEmpty(courseId)) throw new Exception("课程必填");
+            parameterMap.put("courseId",courseId);
+            return super.doWrappingData(teachService.findChargeStandardByCourseId(parameterMap));
+        } catch (Exception e) {
+            return  super.doWrappingErrorData(e);
+        }
+    }
     @GetMapping("/getCourseTreeList")
     public Map getCourseTreeList(HttpServletRequest request){
         try {

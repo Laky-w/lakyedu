@@ -13,4 +13,11 @@ public class SupplyConst {
      */
     public static int INVITE_UNARRIVED=1;//未到
     public static int INVITE_ARRIVED=1;//到达
+
+    /**
+     * 客户类型
+     */
+    public static int CUSTOMER_TYPE_ALLOT = 1; //分配
+    public static int CUSTOMER_TYPE_ALLOT_NO = 2; //未分配
+    public static int CUSTOMER_TYPE_STUDENT = 9; //报名
 }

@@ -10,6 +10,8 @@ public interface StudentClassDao {
 
     int insert(StudentClass studentClass);
 
+    int batchInsert(List<StudentClass> studentClass);
+
     List<StudentClass> selectByParameterMap(LinkedHashMap parameterMap);
 
     int updateByPrimaryKeySelective(StudentClass record);

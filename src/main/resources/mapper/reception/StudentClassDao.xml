@@ -21,13 +21,27 @@
     where id = #{id,jdbcType=INTEGER}
   </select>
 
-  <insert id="insert" parameterType="com.laky.edu.reception.bean.StudentClass" >
-    insert into laky_reception_student_class (id, student_id, class_id, 
+  <insert id="insert" parameterType="com.laky.edu.reception.bean.StudentClass" useGeneratedKeys="true" keyProperty="id"
+          keyColumn="id">
+    insert into laky_reception_student_class (student_id, class_id,
       the_status, class_status, create_time, 
       order_id, school_zone_id)
-    values (#{id,jdbcType=INTEGER}, #{studentId,jdbcType=INTEGER}, #{classId,jdbcType=INTEGER}, 
+    values ( #{studentId,jdbcType=INTEGER}, #{classId,jdbcType=INTEGER},
       #{theStatus,jdbcType=TINYINT}, #{classStatus,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP}, 
       #{orderId,jdbcType=INTEGER}, #{schoolZoneId,jdbcType=INTEGER})
+  </insert>
+  <insert id="batchInsert" parameterType="com.laky.edu.reception.bean.StudentClass" useGeneratedKeys="true" keyProperty="id"
+          keyColumn="id">
+    insert into laky_reception_student_class (student_id, class_id,
+    the_status, class_status, create_time,
+    order_id, school_zone_id)
+    values
+    <foreach collection="list" item="item" index="index" separator="," >
+      (#{item.studentId,jdbcType=INTEGER}, #{item.classId,jdbcType=INTEGER},
+      #{item.theStatus,jdbcType=TINYINT}, #{item.classStatus,jdbcType=TINYINT}, #{item.createTime,jdbcType=TIMESTAMP},
+      #{item.orderId,jdbcType=INTEGER}, #{item.schoolZoneId,jdbcType=INTEGER})
+    </foreach>
+
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.laky.edu.reception.bean.StudentClass" >
     update laky_reception_student_class

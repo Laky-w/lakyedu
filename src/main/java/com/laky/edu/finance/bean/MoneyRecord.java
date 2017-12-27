@@ -1,6 +1,7 @@
 package com.laky.edu.finance.bean;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 
 public class MoneyRecord implements Serializable {
@@ -10,17 +11,20 @@ public class MoneyRecord implements Serializable {
 
     private Date createTime;
 
-    private Integer money;
+
+    private BigDecimal money;
 
     private Integer theType;
 
-    private Integer salerId;
+    private Integer salesmanId;
 
     private Integer userId;
 
     private Integer theStatus;
 
     private Integer checkStatus;
+
+    private Integer orderId;
 
     private static final long serialVersionUID = 1L;
 
@@ -49,12 +53,12 @@ public class MoneyRecord implements Serializable {
     }
 
 
-    public Integer getSalerId() {
-        return salerId;
+    public Integer getSalesmanId() {
+        return salesmanId;
     }
 
-    public void setSalerId(Integer salerId) {
-        this.salerId = salerId;
+    public void setSalesmanId(Integer salesmanId) {
+        this.salesmanId = salesmanId;
     }
 
     public Integer getUserId() {
@@ -65,11 +69,11 @@ public class MoneyRecord implements Serializable {
         this.userId = userId;
     }
 
-    public Integer getMoney() {
+    public BigDecimal getMoney() {
         return money;
     }
 
-    public void setMoney(Integer money) {
+    public void setMoney(BigDecimal money) {
         this.money = money;
     }
 
@@ -95,5 +99,13 @@ public class MoneyRecord implements Serializable {
 
     public void setCheckStatus(Integer checkStatus) {
         this.checkStatus = checkStatus;
+    }
+
+    public Integer getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(Integer orderId) {
+        this.orderId = orderId;
     }
 }

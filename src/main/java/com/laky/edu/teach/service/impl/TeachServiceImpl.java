@@ -33,6 +33,11 @@ public class TeachServiceImpl implements TeachService{
         return new PageBean<>(courseDao.selectByParameterMap(parameterMap));
     }
 
+    @Override
+    public List<Map> findChargeStandardByCourseId(LinkedHashMap parameterMap) {
+        return courseDao.selectCourseChargeStandard(parameterMap);
+    }
+
     @Transactional
     @Override
     public Course createCourse(Course course,String[] schoolIds, JSONArray chargeStandards) throws Exception {

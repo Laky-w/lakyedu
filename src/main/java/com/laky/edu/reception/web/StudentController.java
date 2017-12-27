@@ -1,8 +1,13 @@
 package com.laky.edu.reception.web;
 
+import com.alibaba.fastjson.JSON;
 import com.laky.edu.core.BaseController;
+import com.laky.edu.finance.bean.MoneyRecordAccount;
 import com.laky.edu.organization.OrganizationConst;
 import com.laky.edu.reception.bean.Student;
+import com.laky.edu.reception.bean.StudentOrder;
+import com.laky.edu.reception.bean.StudentOrderDetail;
+import com.laky.edu.reception.form.StudentApplyForm;
 import com.laky.edu.reception.service.StudentService;
 import com.laky.edu.supply.bean.Customer;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
@@ -13,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -47,6 +53,24 @@ public class StudentController extends BaseController{
             parameterMap.put("pageSize",pageSize);
             parameterMap = super.doWrappingFormParameter(request,parameterMap);
             return super.doWrappingData(studentService.findStudentAll(parameterMap));
+        } catch (Exception e) {
+            return  super.doWrappingErrorData(e);
+        }
+    }
+
+    /**
+     * 学生报名
+     * @return
+     */
+    @PostMapping("createStudentApply/{studentId}")
+    public Map studentApply(HttpServletRequest request, @PathVariable Integer studentId,String form){
+        try {
+            StudentApplyForm applyForm= JSON.parseObject(form,StudentApplyForm.class);
+            StudentOrder order= applyForm.getBill();
+            order.setSchoolZoneId(getCurrentUser(request).getSchoolZoneId());
+            List<StudentOrderDetail> chargeDetails = applyForm.getChargeDetails();
+            List<MoneyRecordAccount> financeAccount = applyForm.getFinanceAccount();
+            return super.doWrappingData(studentService.studentApply(studentId,order,chargeDetails,financeAccount,getCurrentUser(request).getId()));
         } catch (Exception e) {
             return  super.doWrappingErrorData(e);
         }

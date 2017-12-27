@@ -17,7 +17,7 @@
   </resultMap>
   <sql id="Base_Column_List" >
     id, name, course_id, school_zone_id, the_status, room_id, main_teacher_id, teacher_id,
-    startData, endData, remarks, create_time
+    start_date, end_date, remarks, create_time
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -57,6 +57,9 @@
           #{schoolId}
         </foreach>
       </if>
+    </if>
+    <if test="courseId != null">
+      AND s.course_id = #{courseId,jdbcType=INTEGER}
     </if>
 
     ORDER BY s.create_time DESC

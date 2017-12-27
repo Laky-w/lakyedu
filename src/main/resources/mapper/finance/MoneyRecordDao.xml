@@ -7,10 +7,11 @@
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="money" property="money" jdbcType="TINYINT" />
     <result column="the_type" property="theType" jdbcType="TINYINT" />
-    <result column="saler_id" property="salerId" jdbcType="INTEGER" />
+    <result column="salesman_id" property="salesmanId" jdbcType="INTEGER" />
     <result column="user_id" property="userId" jdbcType="INTEGER" />
     <result column="the_status" property="theStatus" jdbcType="TINYINT" />
     <result column="check_status" property="checkStatus" jdbcType="TINYINT" />
+    <result column="order_id" property="orderId" jdbcType="INTEGER" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, school_zone_id, create_time, money, the_type, saler_id, user_id, the_status, 
@@ -22,14 +23,16 @@
     from laky_finance_money_record
     where id = #{id,jdbcType=INTEGER}
   </select>
-  <insert id="insert" parameterType="com.laky.edu.finance.bean.MoneyRecord" >
-    insert into laky_finance_money_record (id, school_zone_id, create_time, 
-      money, the_type, saler_id, 
-      user_id, the_status, check_status
+  <insert id="insert" parameterType="com.laky.edu.finance.bean.MoneyRecord" useGeneratedKeys="true" keyProperty="id"
+          keyColumn="id">
+    insert into laky_finance_money_record ( school_zone_id, create_time,
+      money, the_type, salesman_id,
+      user_id, the_status, check_status,order_id
       )
-    values (#{id,jdbcType=INTEGER}, #{schoolZoneId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{money,jdbcType=TINYINT}, #{theType,jdbcType=TINYINT}, #{salerId,jdbcType=INTEGER}, 
-      #{userId,jdbcType=INTEGER}, #{theStatus,jdbcType=TINYINT}, #{checkStatus,jdbcType=TINYINT}
+    values ( #{schoolZoneId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP},
+      #{money,jdbcType=DECIMAL}, #{theType,jdbcType=TINYINT}, #{salesmanId,jdbcType=INTEGER},
+      #{userId,jdbcType=INTEGER}, #{theStatus,jdbcType=TINYINT}, #{checkStatus,jdbcType=TINYINT},
+      #{orderId,jdbcType=INTEGER}
       )
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.laky.edu.finance.bean.MoneyRecord" >
@@ -47,8 +50,8 @@
       <if test="theType != null" >
         the_type = #{theType,jdbcType=TINYINT},
       </if>
-      <if test="salerId != null" >
-        saler_id = #{salerId,jdbcType=INTEGER},
+      <if test="salesmanId != null" >
+        salesman_id = #{salerId,jdbcType=INTEGER},
       </if>
       <if test="userId != null" >
         user_id = #{userId,jdbcType=INTEGER},
@@ -68,7 +71,7 @@
       create_time = #{createTime,jdbcType=TIMESTAMP},
       money = #{money,jdbcType=TINYINT},
       the_type = #{theType,jdbcType=TINYINT},
-      saler_id = #{salerId,jdbcType=INTEGER},
+      salesman_id = #{salesmanId,jdbcType=INTEGER},
       user_id = #{userId,jdbcType=INTEGER},
       the_status = #{theStatus,jdbcType=TINYINT},
       check_status = #{checkStatus,jdbcType=TINYINT}

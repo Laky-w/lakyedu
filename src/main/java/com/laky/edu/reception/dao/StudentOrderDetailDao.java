@@ -11,6 +11,8 @@ public interface StudentOrderDetailDao {
 
     int insert(StudentOrderDetail studentOrderDetail);
 
+    int batchInsert(List<StudentOrderDetail> studentOrderDetail);
+
     List<StudentOrderDetail> selectByParameterMap(LinkedHashMap parameterMap);
 
     int updateByPrimaryKeySelective(StudentOrderDetail record);

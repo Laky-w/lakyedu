@@ -17,10 +17,11 @@
     <result column="create_time" property="createTime"  jdbcType="TIMESTAMP"/>
     <result column="school_zone_name" property="schoolZoneName" jdbcType="INTEGER" />
     <result column="contact_id" property="contactId" jdbcType="INTEGER"/>
+    <result column="pinyin" property="pinyin" jdbcType="VARCHAR"/>
   </resultMap>
   <sql id="Base_Column_List" >
     id, name, sex, birthday, phone, source_id, school_zone_id, introducer_id, owner_id,
-    the_status, the_type, remarks, create_time,contact_id
+    the_status, the_type, remarks, create_time,contact_id,pinyin
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -41,6 +42,7 @@
     LEFT JOIN laky_organization_user u ON s.owner_id = u.id AND  u.the_status!=0
     LEFT JOIN laky_supply_market_activity a ON s.source_id = a.id AND a.the_status!=0
     where s.the_status !=0
+    AND s.the_type !=9
     <if test="name != null">
       AND (s.`name` LIKE CONCAT('%',#{name,jdbcType=VARCHAR},'%')
       OR s.pinyin LIKE CONCAT('%',#{name,jdbcType=VARCHAR},'%')

@@ -99,6 +99,15 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
+  <update id="batchUpdateByPrimaryKeySelective" parameterType="com.laky.edu.finance.bean.FinanceAccount" >
+    <foreach collection="list" item="item" index="index" open="" close="" separator=";">
+      update laky_finance_account
+      <set>
+        money = #{item.money,jdbcType=DECIMAL}
+      </set>
+      where id = #{item.id,jdbcType=INTEGER}
+    </foreach>
+  </update>
   <update id="updateByPrimaryKey" parameterType="com.laky.edu.finance.bean.FinanceAccount" >
     update laky_finance_account
     set name = #{name,jdbcType=VARCHAR},

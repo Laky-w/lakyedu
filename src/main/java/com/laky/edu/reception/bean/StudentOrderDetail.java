@@ -26,6 +26,8 @@ public class StudentOrderDetail implements Serializable {
 
     private Integer total;
 
+    private Integer schoolId;//校区id 前台表单字段（报名时）
+
     private BigDecimal subtractPrice;
 
     private static final long serialVersionUID = 1L;
@@ -124,6 +126,14 @@ public class StudentOrderDetail implements Serializable {
 
     public void setSubtractPrice(BigDecimal subtractPrice) {
         this.subtractPrice = subtractPrice;
+    }
+
+    public Integer getSchoolId() {
+        return schoolId;
+    }
+
+    public void setSchoolId(Integer schoolId) {
+        this.schoolId = schoolId;
     }
 
     @Override
