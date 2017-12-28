@@ -5,6 +5,8 @@ import org.springframework.stereotype.Component;
 
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+
 @Component
 public interface StudentClassDao {
 
@@ -12,7 +14,7 @@ public interface StudentClassDao {
 
     int batchInsert(List<StudentClass> studentClass);
 
-    List<StudentClass> selectByParameterMap(LinkedHashMap parameterMap);
+    List<Map> selectByParameterMap(LinkedHashMap parameterMap);
 
     int updateByPrimaryKeySelective(StudentClass record);
 

@@ -25,4 +25,11 @@ public interface SchoolClassService {
      * @throws Exception
      */
     SchoolClass createSchoolClass(SchoolClass schoolClass) throws Exception;
+
+    /**
+     * 查询待分班学员
+     * @param parameterMap
+     * @return
+     */
+    PageBean<Map> findWaitStudentAll(LinkedHashMap parameterMap);
 }

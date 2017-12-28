@@ -196,6 +196,7 @@ public class StudentServiceImpl implements StudentService{
                 studentClass.setOrderId(order.getId());
                 studentClass.setSchoolZoneId(orderDetail.getSchoolId());//班级或者课程所在校区
                 studentClass.setStudentId(order.getStudentId());
+                studentClass.setCourseId(orderDetail.getCourseId());
                 if(orderDetail.getClassId()!=null){ //学员已报班
                     studentClass.setClassStatus(ReceptionConst.STUDENT_CLASS_STATUS_STUDYING);//在读状态
                 } else {
@@ -229,22 +230,22 @@ public class StudentServiceImpl implements StudentService{
         moneyRecordDao.insert(record);
         //生成收支账户金额信息
         if(financeAccount !=null){
-            List<FinanceAccount> accountList = new ArrayList<>();//回填账户信息
+//            List<FinanceAccount> accountList = new ArrayList<>();//回填账户信息（审核通过在加）
             List<MoneyRecordAccount> newFinanceAccount = new ArrayList<>();
             for(MoneyRecordAccount recordAccount :financeAccount){
                 recordAccount.setRecordId(record.getId());
-                FinanceAccount account = financeAccountDao.selectByPrimaryKey(recordAccount.getAccountId());
-                if (account.getMoney()==null){
-                    account.setMoney(BigDecimal.ZERO);
-                }
+//                FinanceAccount account = financeAccountDao.selectByPrimaryKey(recordAccount.getAccountId());
+//                if (account.getMoney()==null){
+//                    account.setMoney(BigDecimal.ZERO);
+//                }
                 if(recordAccount.getMoney()!=null && recordAccount.getMoney().compareTo(BigDecimal.ZERO) !=0){
                     newFinanceAccount.add(recordAccount);
                 }
-                account.setMoney(account.getMoney().add(recordAccount.getMoney()));
-                accountList.add(account);
+//                account.setMoney(account.getMoney().add(recordAccount.getMoney()));
+//                accountList.add(account);
             }
             moneyRecordAccountDao.batchInsert(newFinanceAccount);
-            financeAccountDao.batchUpdateByPrimaryKeySelective(accountList);
+//            financeAccountDao.batchUpdateByPrimaryKeySelective(accountList);
         }
     }
 }

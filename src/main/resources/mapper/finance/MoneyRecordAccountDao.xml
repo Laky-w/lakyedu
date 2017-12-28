@@ -10,11 +10,11 @@
   <sql id="Base_Column_List" >
     id, record_id, account_id, money
   </sql>
-  <select id="selectByParameter" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+  <select id="selectByParameter" resultType="java.util.Map" parameterType="java.lang.Integer" >
     select 
-    <include refid="Base_Column_List" />
-    from laky_finance_money_record_account
-    where id = #{id,jdbcType=INTEGER}
+    s.record_id as recordId,s.money,a.name as accountName,s.account_id as accountId
+    from laky_finance_money_record_account s LEFT JOIN laky_finance_account a on s.account_id =a.id
+    where s.record_id = #{recordId,jdbcType=INTEGER}
   </select>
   <insert id="insert" parameterType="com.laky.edu.finance.bean.MoneyRecordAccount" useGeneratedKeys="true" keyProperty="id"
           keyColumn="id">

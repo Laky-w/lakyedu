@@ -18,6 +18,8 @@ public class StudentClass implements Serializable {
 
     private Integer orderId;
 
+    private Integer courseId;
+
     private Integer schoolZoneId;
 
     private static final long serialVersionUID = 1L;
@@ -85,5 +87,13 @@ public class StudentClass implements Serializable {
 
     public void setClassStatus(Integer classStatus) {
         this.classStatus = classStatus;
+    }
+
+    public Integer getCourseId() {
+        return courseId;
+    }
+
+    public void setCourseId(Integer courseId) {
+        this.courseId = courseId;
     }
 }

@@ -6,10 +6,7 @@ import com.laky.edu.finance.service.FinanceService;
 import com.laky.edu.organization.OrganizationConst;
 import com.laky.edu.teach.bean.Course;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.LinkedHashMap;
@@ -34,6 +31,29 @@ public class FinanceController extends BaseController {
             parameterMap.put("pageSize",pageSize);
             parameterMap = super.doWrappingFormParameter(request,parameterMap);
             return super.doWrappingData(financeService.findFinanceAccountAllBySchool(parameterMap));
+        } catch (Exception e) {
+            return  super.doWrappingErrorData(e);
+        }
+    }
+
+    @GetMapping("/getMoneyRecordAccountList/{recordId}")
+    public Map getMoneyRecordAccountList(HttpServletRequest request, @PathVariable int recordId){
+        try {
+            return super.doWrappingData(financeService.findMoneyRecordAccountList(recordId));
+        } catch (Exception e) {
+            return  super.doWrappingErrorData(e);
+        }
+    }
+
+    @PostMapping("/getMoneyRecordList/{pageNum}/{pageSize}")
+    public Map getMoneyRecordList(HttpServletRequest request, @PathVariable int pageNum, @PathVariable int pageSize){
+        try {
+            LinkedHashMap parameterMap = new LinkedHashMap();
+            parameterMap.put("schoolZoneId",super.getSchoolIds(request, OrganizationConst.SCHOOL_ZONE_TYPE_CHILD));
+            parameterMap.put("pageNum",pageNum);
+            parameterMap.put("pageSize",pageSize);
+            parameterMap = super.doWrappingFormParameter(request,parameterMap);
+            return super.doWrappingData(financeService.findMoneyRecordAllBySchool(parameterMap));
         } catch (Exception e) {
             return  super.doWrappingErrorData(e);
         }

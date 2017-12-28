@@ -55,4 +55,18 @@ public class SchoolClassController extends BaseController{
         }
     }
 
+    @PostMapping("/getWaitStudentList/{pageNum}/{pageSize}")
+    public Map getWaitStudentList(HttpServletRequest request, @PathVariable int pageNum, @PathVariable int pageSize){
+        try {
+            LinkedHashMap parameterMap = new LinkedHashMap();
+            parameterMap.put("schoolZoneId",super.getSchoolIds(request));
+            parameterMap.put("pageNum",pageNum);
+            parameterMap.put("pageSize",pageSize);
+            parameterMap = super.doWrappingFormParameter(request,parameterMap);
+            return super.doWrappingData(schoolClassService.findWaitStudentAll(parameterMap));
+        } catch (Exception e) {
+            return  super.doWrappingErrorData(e);
+        }
+    }
+
 }

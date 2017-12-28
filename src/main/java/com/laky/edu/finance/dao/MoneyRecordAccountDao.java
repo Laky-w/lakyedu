@@ -12,7 +12,7 @@ public interface MoneyRecordAccountDao {
 
     int batchInsert(List<MoneyRecordAccount> record);
 
-    List<MoneyRecordAccount> selectByParameter(LinkedHashMap parameterMap);
+    List<MoneyRecordAccount> selectByParameter(Integer recordId);
 
     int updateByPrimaryKeySelective(MoneyRecordAccount record);
 

@@ -19,11 +19,15 @@
     id, order_id, course_id, class_id, the_type, item_type, number, price, discount, 
     sell_price, total, subtract_price
   </sql>
-  <select id="selectByParameterMap" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
-    select 
-    <include refid="Base_Column_List" />
-    from laky_reception_student_order_detail
-    where id = #{id,jdbcType=INTEGER}
+  <select id="selectByParameterMap" resultType="java.util.Map"  >
+    SELECT s.id,sc.name as className,c.name as courseName,s.the_type as theType,s.item_type as itemType,s.number,s.price,s.discount,s.sell_price as sellPrice,
+    s.total,s.subtract_price as subtractPrice
+     from laky_reception_student_order_detail s
+    LEFT JOIN laky_teach_course c on s.course_id = c.id
+    LEFT JOIN laky_teach_school_class sc on sc.id = s.class_id
+    <where>
+      s.order_id = #{orderId,jdbcType=INTEGER}
+    </where>
   </select>
   <insert id="insert" parameterType="com.laky.edu.reception.bean.StudentOrderDetail" useGeneratedKeys="true" keyProperty="id"
           keyColumn="id">

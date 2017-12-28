@@ -17,12 +17,47 @@
     id, school_zone_id, create_time, money, the_type, saler_id, user_id, the_status, 
     check_status
   </sql>
-  <select id="selectByParameterMap" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+  <select id="selectByParameterMap" resultType="java.util.Map" parameterType="java.lang.Integer" >
     select 
-    <include refid="Base_Column_List" />
-    from laky_finance_money_record
-    where id = #{id,jdbcType=INTEGER}
+    s.id,s.check_status AS checkStatus,s.create_time as createTime,s.money,
+    s.salesman_id AS salesmanId,u.name as salesmanName,s.the_type as theType,s.order_id AS orderId,sz.name as schoolName
+    from laky_finance_money_record s
+    RIGHT JOIN laky_organization_school_zone sz ON s.school_zone_id=sz.id AND sz.the_status!=0
+    LEFT JOIN laky_organization_user u ON s.salesman_id = u.id AND  u.the_status!=0
+    where s.the_status !=0 and
+    s.school_zone_id IN
+    <foreach collection="schoolZoneId" item="schoolId" index="index"
+             open="(" close=")" separator=",">
+      #{schoolId}
+    </foreach>
+    <if test="schoolZoneId2 != null">
+      <if test="schoolZoneId2 instanceof String">
+        AND s.school_zone_id = #{schoolZoneId2,jdbcType=INTEGER}
+      </if>
+      <if test="!(schoolZoneId2 instanceof String)">
+        AND s.school_zone_id IN
+        <foreach collection="schoolZoneId2" item="schoolId" index="index"
+                 open="(" close=")" separator=",">
+          #{schoolId}
+        </foreach>
+      </if>
+    </if>
+    <if test="theType !=null">
+      AND s.the_type = #{theType,jdbcType=INTEGER}
+    </if>
+    <if test="checkStatus !=null">
+      AND s.check_status = #{checkStatus,jdbcType=INTEGER}
+    </if>
+    <if test="createTime != null">
+      AND s.create_time &gt;= #{createTime[0],jdbcType=TIMESTAMP}
+      AND s.create_time &lt;= #{createTime[1],jdbcType=TIMESTAMP}
+    </if>
+
+    ORDER BY s.create_time DESC
   </select>
+
+
+
   <insert id="insert" parameterType="com.laky.edu.finance.bean.MoneyRecord" useGeneratedKeys="true" keyProperty="id"
           keyColumn="id">
     insert into laky_finance_money_record ( school_zone_id, create_time,

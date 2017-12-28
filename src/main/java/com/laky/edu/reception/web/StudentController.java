@@ -70,7 +70,9 @@ public class StudentController extends BaseController{
             order.setSchoolZoneId(getCurrentUser(request).getSchoolZoneId());
             List<StudentOrderDetail> chargeDetails = applyForm.getChargeDetails();
             List<MoneyRecordAccount> financeAccount = applyForm.getFinanceAccount();
-            return super.doWrappingData(studentService.studentApply(studentId,order,chargeDetails,financeAccount,getCurrentUser(request).getId()));
+            order = studentService.studentApply(studentId,order,chargeDetails,financeAccount,getCurrentUser(request).getId());
+            super.handleOperate("学员报名", OrganizationConst.OPERATE_ADD,"报名课程：....",request);
+            return super.doWrappingData(order);
         } catch (Exception e) {
             return  super.doWrappingErrorData(e);
         }

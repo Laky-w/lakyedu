@@ -2,6 +2,7 @@ package com.laky.edu.teach.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.laky.edu.core.PageBean;
+import com.laky.edu.reception.dao.StudentClassDao;
 import com.laky.edu.teach.bean.SchoolClass;
 import com.laky.edu.teach.dao.SchoolClassDao;
 import com.laky.edu.teach.service.SchoolClassService;
@@ -20,6 +21,8 @@ import java.util.Map;
 public class SchoolClassServiceImpl implements SchoolClassService{
     @Autowired
     private SchoolClassDao schoolClassDao;
+    @Autowired
+    private StudentClassDao studentClassDao;
     @Override
     public PageBean<Map> findSchoolClassAllBySchool(LinkedHashMap parameterMap) {
         PageHelper.startPage((int)parameterMap.get("pageNum"),(int)parameterMap.get("pageSize"));
@@ -33,5 +36,11 @@ public class SchoolClassServiceImpl implements SchoolClassService{
         int rows=schoolClassDao.insert(schoolClass);
         if(rows==0) throw new Exception("创建班级失败！");
         return schoolClass;
+    }
+
+    @Override
+    public PageBean<Map> findWaitStudentAll(LinkedHashMap parameterMap) {
+        PageHelper.startPage((int)parameterMap.get("pageNum"),(int)parameterMap.get("pageSize"));
+        return new PageBean<>(studentClassDao.selectByParameterMap(parameterMap));
     }
 }
