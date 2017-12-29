@@ -48,16 +48,32 @@
         </if>
         ORDER BY r.create_time DESC
     </select>
-    <insert id="insert" parameterType="com.laky.edu.logistics.bean.GoodsRecord" useGeneratedKeys="true" keyColumn="id"
+    <insert id="insertGoodsRecord"  useGeneratedKeys="true" keyColumn="id"
             keyProperty="id">
         INSERT INTO laky_logistics_goods_record (goods_id, school_zone_id,
                                                  the_type, amount, user_id,
                                                  create_time, price, other_name
         )
-        VALUES ( #{goodsId,jdbcType=INTEGER}, #{schoolZoneId,jdbcType=INTEGER},
-                #{theType,jdbcType=TINYINT}, #{amount,jdbcType=DECIMAL}, #{userId,jdbcType=INTEGER},
-                #{createTime,jdbcType=TIMESTAMP}, #{price,jdbcType=DECIMAL}, #{otherName,jdbcType=VARCHAR}
+        VALUES
+            <foreach collection="list" index="index"  item="item" separator=",">
+                ( #{item.goodsId,jdbcType=INTEGER}, #{item.schoolZoneId,jdbcType=INTEGER},
+                #{item.theType,jdbcType=TINYINT}, #{item.amount,jdbcType=DECIMAL}, #{item.userId,jdbcType=INTEGER},
+                #{item.createTime,jdbcType=TIMESTAMP}, #{item.price,jdbcType=DECIMAL}, #{item.otherName,jdbcType=VARCHAR}
+                )
+            </foreach>
+
+    </insert>
+    <insert id="insert" parameterType="com.laky.edu.logistics.bean.GoodsRecord" useGeneratedKeys="true"
+            keyColumn="id" keyProperty="id">
+        INSERT INTO laky_logistics_goods_record (goods_id, school_zone_id,
+        the_type, amount, user_id,
+        create_time, price, other_name
         )
+        VALUES
+            ( #{goodsId,jdbcType=INTEGER}, #{schoolZoneId,jdbcType=INTEGER},
+            #{theType,jdbcType=TINYINT}, #{amount,jdbcType=DECIMAL}, #{userId,jdbcType=INTEGER},
+            #{createTime,jdbcType=TIMESTAMP}, #{price,jdbcType=DECIMAL}, #{otherName,jdbcType=VARCHAR}
+            )
     </insert>
     <update id="updateByPrimaryKeySelective" parameterType="com.laky.edu.logistics.bean.GoodsRecord">
         update laky_logistics_goods_record
@@ -101,4 +117,5 @@
             other_name     = #{otherName,jdbcType=VARCHAR}
         WHERE id = #{id,jdbcType=INTEGER}
     </update>
+
 </mapper>

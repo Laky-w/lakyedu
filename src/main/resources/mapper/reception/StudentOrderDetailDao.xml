@@ -31,36 +31,17 @@
   </select>
   <insert id="insert" parameterType="com.laky.edu.reception.bean.StudentOrderDetail" useGeneratedKeys="true" keyProperty="id"
           keyColumn="id">
-    insert into laky_reception_student_order_detail ( order_id, course_id,
+    insert into laky_reception_student_order_detail (id, order_id, course_id, 
       class_id, the_type, item_type, 
       number, price, discount, 
       sell_price, total, subtract_price
       )
-    values ( #{orderId,jdbcType=INTEGER}, #{courseId,jdbcType=INTEGER},
+    values (#{id,jdbcType=INTEGER}, #{orderId,jdbcType=INTEGER}, #{courseId,jdbcType=INTEGER}, 
       #{classId,jdbcType=INTEGER}, #{theType,jdbcType=TINYINT}, #{itemType,jdbcType=TINYINT}, 
       #{number,jdbcType=INTEGER}, #{price,jdbcType=DECIMAL}, #{discount,jdbcType=DECIMAL}, 
       #{sellPrice,jdbcType=DECIMAL}, #{total,jdbcType=INTEGER}, #{subtractPrice,jdbcType=DECIMAL}
       )
   </insert>
-
-  <insert id="batchInsert" parameterType="com.laky.edu.reception.bean.StudentOrderDetail" useGeneratedKeys="true" keyProperty="id"
-          keyColumn="id">
-    insert into laky_reception_student_order_detail (order_id, course_id,
-    class_id, the_type, item_type,
-    number, price, discount,
-    sell_price, total, subtract_price
-    )
-    values
-    <foreach collection="list" item="item" index="index" separator="," >
-      (#{item.orderId,jdbcType=INTEGER}, #{item.courseId,jdbcType=INTEGER},
-      #{item.classId,jdbcType=INTEGER}, #{item.theType,jdbcType=TINYINT}, #{item.itemType,jdbcType=TINYINT},
-      #{item.number,jdbcType=INTEGER}, #{item.price,jdbcType=DECIMAL}, #{item.discount,jdbcType=DECIMAL},
-      #{item.sellPrice,jdbcType=DECIMAL}, #{item.total,jdbcType=INTEGER}, #{item.subtractPrice,jdbcType=DECIMAL}
-      )
-    </foreach>
-
-  </insert>
-
   <update id="updateByPrimaryKeySelective" parameterType="com.laky.edu.reception.bean.StudentOrderDetail" >
     update laky_reception_student_order_detail
     <set >

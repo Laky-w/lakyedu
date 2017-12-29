@@ -5,8 +5,12 @@ import org.springframework.stereotype.Component;
 
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+
 @Component
 public interface GoodsRecordDao {
+
+    int insertGoodsRecord(List<Map> chargeStandardList);
 
     int insert(GoodsRecord goodsRecord);
 

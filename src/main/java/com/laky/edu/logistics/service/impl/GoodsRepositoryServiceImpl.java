@@ -7,6 +7,7 @@ import com.laky.edu.logistics.dao.GoodsRepositoryDao;
 import com.laky.edu.logistics.service.GoodsRepositoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.LinkedHashMap;
 @Service
@@ -21,6 +22,7 @@ public class GoodsRepositoryServiceImpl implements GoodsRepositoryService {
      * @return
      * @throws Exception
      */
+    @Transactional
     @Override
     public GoodsRepository addRepository(GoodsRepository goodsRepository) throws Exception {
         int rows = goodsRepositoryDao.insert(goodsRepository);

@@ -15,67 +15,20 @@
     id, student_id, class_id, the_status, class_status, create_time, order_id, school_zone_id
   </sql>
   <select id="selectByParameterMap" resultType="java.util.Map">
-   SELECT s.id,st.name as studentName,c.name as courseName,s.class_status as classStatus,s.create_time as createTime,sc.name as className,sz.name as schoolName
-    from laky_reception_student_class s
-    RIGHT JOIN laky_organization_school_zone sz ON s.school_zone_id=sz.id AND sz.the_status!=0
-    LEFT JOIN laky_reception_student st on s.student_id = st.id and st.the_status !=0
-    LEFT JOIN laky_teach_course c on s.course_id = c.id
-    LEFT JOIN laky_teach_school_class sc on s.class_id = sc.id
-    where s.the_status !=0 AND
-    s.school_zone_id IN
-    <foreach collection="schoolZoneId" item="schoolId" index="index"
-             open="(" close=")" separator=",">
-      #{schoolId}
-    </foreach>
-    <if test="schoolZoneId2 != null">
-      <if test="schoolZoneId2 instanceof String">
-        AND s.school_zone_id = #{schoolZoneId2,jdbcType=INTEGER}
-      </if>
-      <if test="!(schoolZoneId2 instanceof String)">
-        AND s.school_zone_id IN
-        <foreach collection="schoolZoneId2" item="schoolId" index="index"
-                 open="(" close=")" separator=",">
-          #{schoolId}
-        </foreach>
-      </if>
-    </if>
-    <if test="name !=null">
-      AND (
-      st.`name` LIKE CONCAT('%',#{name,jdbcType=VARCHAR},'%')
-      OR st.pinyin LIKE CONCAT('%',#{name,jdbcType=VARCHAR},'%')
-      OR st.phone LIKE CONCAT('%',#{name,jdbcType=CHAR},'%')
-      )
-    </if>
-    <if test="courseId !=null">
-      AND s.course_id = #{courseId,jdbcType=INTEGER}
-    </if>
-    <if test="createTime != null">
-      AND s.create_time &gt;= #{createTime[0],jdbcType=TIMESTAMP}
-      AND s.create_time &lt;= #{createTime[1],jdbcType=TIMESTAMP}
-    </if>
+    select 
+    <include refid="Base_Column_List" />
+    from laky_reception_student_class
+    where id = #{id,jdbcType=INTEGER}
   </select>
 
   <insert id="insert" parameterType="com.laky.edu.reception.bean.StudentClass" useGeneratedKeys="true" keyProperty="id"
-          keyColumn="id">
-    insert into laky_reception_student_class (student_id, class_id,
+          keyColumn="id" >
+    insert into laky_reception_student_class (id, student_id, class_id, 
       the_status, class_status, create_time, 
       order_id, school_zone_id)
-    values ( #{studentId,jdbcType=INTEGER}, #{classId,jdbcType=INTEGER},
+    values (#{id,jdbcType=INTEGER}, #{studentId,jdbcType=INTEGER}, #{classId,jdbcType=INTEGER}, 
       #{theStatus,jdbcType=TINYINT}, #{classStatus,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP}, 
       #{orderId,jdbcType=INTEGER}, #{schoolZoneId,jdbcType=INTEGER})
-  </insert>
-  <insert id="batchInsert" parameterType="com.laky.edu.reception.bean.StudentClass" useGeneratedKeys="true" keyProperty="id"
-          keyColumn="id">
-    insert into laky_reception_student_class (student_id, class_id,
-    the_status, class_status, create_time,
-    order_id, school_zone_id,course_id)
-    values
-    <foreach collection="list" item="item" index="index" separator="," >
-      (#{item.studentId,jdbcType=INTEGER}, #{item.classId,jdbcType=INTEGER},
-      #{item.theStatus,jdbcType=TINYINT}, #{item.classStatus,jdbcType=TINYINT}, #{item.createTime,jdbcType=TIMESTAMP},
-      #{item.orderId,jdbcType=INTEGER}, #{item.schoolZoneId,jdbcType=INTEGER},#{item.courseId,jdbcType=INTEGER})
-    </foreach>
-
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.laky.edu.reception.bean.StudentClass" >
     update laky_reception_student_class

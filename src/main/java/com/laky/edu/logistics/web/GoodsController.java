@@ -1,5 +1,6 @@
 package com.laky.edu.logistics.web;
 
+import com.alibaba.fastjson.JSON;
 import com.laky.edu.core.BaseController;
 import com.laky.edu.logistics.bean.Goods;
 import com.laky.edu.logistics.bean.GoodsRecord;
@@ -10,6 +11,7 @@ import com.laky.edu.logistics.service.GoodsService;
 import com.laky.edu.organization.OrganizationConst;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -71,9 +73,10 @@ private GoodsRecordService goodsRecordService;
     @PostMapping("/createRecord")
     public Map createRecord(HttpServletRequest request, GoodsRecord goodsRecord){
         try {
-            LinkedHashMap parameterMap = new LinkedHashMap();
             goodsRecord.setSchoolZoneId(super.getCurrentUser(request).getSchoolZoneId());
-            goodsRecordService.addRecord(goodsRecord);
+            String goodsList = request.getParameter("goodsId");
+            if (StringUtils.isEmpty(goodsList))goodsList="[]";
+            goodsRecord = goodsRecordService.addRecord(goodsRecord,request.getParameterValues("goodsId"),JSON.parseArray(goodsList));
             super.handleOperate("添加库存记录", OrganizationConst.OPERATE_ADD,"添加库存记录人【"+ goodsRecord.getUserId()+"】,其他记录人:"+ goodsRecord.getOtherName(),request);
             return super.doWrappingData(goodsRecord);
         } catch (Exception e) {
@@ -103,7 +106,6 @@ private GoodsRecordService goodsRecordService;
     @PostMapping("/createRepository")
     public Map createRepository(HttpServletRequest request, GoodsRepository goodsRepository) {
         try {
-            LinkedHashMap parameterMap = new LinkedHashMap();
             goodsRepository.setSchoolZoneId(super.getCurrentUser(request).getSchoolZoneId());
             goodsRepositoryService.addRepository(goodsRepository);
             super.handleOperate("添加库存", OrganizationConst.OPERATE_ADD, "添加库存物品【" + goodsRepository.getGoodsId() + "】,添加库存校区:" + goodsRepository.getSchoolZoneId(), request);

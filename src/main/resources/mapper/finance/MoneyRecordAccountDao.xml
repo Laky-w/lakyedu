@@ -18,21 +18,10 @@
   </select>
   <insert id="insert" parameterType="com.laky.edu.finance.bean.MoneyRecordAccount" useGeneratedKeys="true" keyProperty="id"
           keyColumn="id">
-    insert into laky_finance_money_record_account (record_id, account_id,
+    insert into laky_finance_money_record_account (id, record_id, account_id, 
       money)
-    values ( #{recordId,jdbcType=INTEGER}, #{accountId,jdbcType=INTEGER},
+    values (#{id,jdbcType=INTEGER}, #{recordId,jdbcType=INTEGER}, #{accountId,jdbcType=INTEGER}, 
       #{money,jdbcType=DECIMAL})
-  </insert>
-  <insert id="batchInsert" parameterType="com.laky.edu.finance.bean.MoneyRecordAccount" useGeneratedKeys="true" keyProperty="id"
-          keyColumn="id">
-    insert into laky_finance_money_record_account (record_id, account_id,
-    money)
-    values
-    <foreach collection="list" item="item" index="index" separator="," >
-      ( #{item.recordId,jdbcType=INTEGER}, #{item.accountId,jdbcType=INTEGER},
-      #{item.money,jdbcType=DECIMAL})
-    </foreach>
-
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.laky.edu.finance.bean.MoneyRecordAccount" >
     update laky_finance_money_record_account
