@@ -7,7 +7,7 @@ import com.laky.edu.organization.OrganizationConst;
 import com.laky.edu.reception.bean.Student;
 import com.laky.edu.reception.bean.StudentOrder;
 import com.laky.edu.reception.bean.StudentOrderDetail;
-import com.laky.edu.reception.form.StudentApplyForm;
+import com.laky.edu.reception.web.form.StudentApplyForm;
 import com.laky.edu.reception.service.StudentService;
 import com.laky.edu.supply.bean.Customer;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;

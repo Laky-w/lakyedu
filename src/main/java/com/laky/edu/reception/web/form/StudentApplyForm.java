@@ -1,4 +1,4 @@
-package com.laky.edu.reception.form;
+package com.laky.edu.reception.web.form;
 
 import com.laky.edu.finance.bean.MoneyRecordAccount;
 import com.laky.edu.reception.bean.StudentOrder;
@@ -22,7 +22,7 @@ public class StudentApplyForm {
         this.bill = bill;
     }
 
-        public List<StudentOrderDetail> getChargeDetails() {
+    public List<StudentOrderDetail> getChargeDetails() {
         return chargeDetails;
     }
 

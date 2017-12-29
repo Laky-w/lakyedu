@@ -2,29 +2,27 @@ package com.laky.edu.logistics.web;
 
 import com.alibaba.fastjson.JSON;
 import com.laky.edu.core.BaseController;
+import com.laky.edu.logistics.web.form.GoodsRecordForm;
 import com.laky.edu.logistics.bean.Goods;
-import com.laky.edu.logistics.bean.GoodsRecord;
-import com.laky.edu.logistics.bean.GoodsRepository;
-import com.laky.edu.logistics.service.GoodsRecordService;
-import com.laky.edu.logistics.service.GoodsRepositoryService;
-import com.laky.edu.logistics.service.GoodsService;
+import com.laky.edu.logistics.bean.GoodsRecord;;
+import com.laky.edu.logistics.service.LogisticsService;
 import com.laky.edu.organization.OrganizationConst;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 @RestController
 @RequestMapping("/logistics")
 public class GoodsController extends BaseController {
 
     @Autowired
-    private GoodsService goodsService;
+    private LogisticsService logisticsService;
 
     @PostMapping("/getGoodsList/{pageNum}/{pageSize}")
     public Map getGoodsList(HttpServletRequest request, @PathVariable int pageNum, @PathVariable int pageSize){
@@ -34,7 +32,7 @@ public class GoodsController extends BaseController {
             parameterMap.put("pageNum",pageNum);
             parameterMap.put("pageSize",pageSize);
             parameterMap = super.doWrappingFormParameter(request,parameterMap);
-            return super.doWrappingData(goodsService.findGoodsAll(parameterMap));
+            return super.doWrappingData(logisticsService.findGoodsAll(parameterMap));
         } catch (Exception e) {
             return  super.doWrappingErrorData(e);
         }
@@ -44,17 +42,13 @@ public class GoodsController extends BaseController {
     public Map createGoods(HttpServletRequest request, Goods goods){
         try {
             goods.setBranchId(super.getCurrentUser(request).getBranchId());
-            goodsService.addGoods(goods);
+            logisticsService.createGoods(goods);
             super.handleOperate("添加物品管理", OrganizationConst.OPERATE_ADD,"物品名称【"+goods.getName()+"】",request);
             return super.doWrappingData(goods);
         } catch (Exception e) {
             return  super.doWrappingErrorData(e);
         }
     }
-
-//    ==================================
-@Autowired
-private GoodsRecordService goodsRecordService;
 
     @PostMapping("/getRecordList/{pageNum}/{pageSize}")
     public Map getRecordList(HttpServletRequest request, @PathVariable int pageNum, @PathVariable int pageSize){
@@ -64,52 +58,40 @@ private GoodsRecordService goodsRecordService;
             parameterMap.put("pageNum",pageNum);
             parameterMap.put("pageSize",pageSize);
             parameterMap = super.doWrappingFormParameter(request,parameterMap);
-            return super.doWrappingData(goodsRecordService.findRecordAll(parameterMap));
+            return super.doWrappingData(logisticsService.findGoodsRecordAll(parameterMap));
         } catch (Exception e) {
             return  super.doWrappingErrorData(e);
         }
     }
 
-    @PostMapping("/createRecord")
-    public Map createRecord(HttpServletRequest request, GoodsRecord goodsRecord){
+    @PostMapping("/createGoodsRecord")
+    public Map createGoodsRecord(HttpServletRequest request, String goodsRecordJson){
         try {
-            goodsRecord.setSchoolZoneId(super.getCurrentUser(request).getSchoolZoneId());
-            String goodsList = request.getParameter("goodsId");
-            if (StringUtils.isEmpty(goodsList))goodsList="[]";
-            goodsRecord = goodsRecordService.addRecord(goodsRecord,request.getParameterValues("goodsId"),JSON.parseArray(goodsList));
-            super.handleOperate("添加库存记录", OrganizationConst.OPERATE_ADD,"添加库存记录人【"+ goodsRecord.getUserId()+"】,其他记录人:"+ goodsRecord.getOtherName(),request);
-            return super.doWrappingData(goodsRecord);
+            GoodsRecordForm recordForm = JSON.parseObject(goodsRecordJson,GoodsRecordForm.class);
+            List<GoodsRecord> goodsRecordList= recordForm.getGoodsList();
+            for (GoodsRecord goodsRecord : goodsRecordList){
+                goodsRecord.setUserId(getCurrentUser(request).getId());
+                goodsRecord.setCreateTime(recordForm.getCreateTime());
+                goodsRecord.setSchoolZoneId(getCurrentUser(request).getSchoolZoneId());
+                goodsRecord.setSupplierId(recordForm.getSupplierId());
+            }
+            goodsRecordList = logisticsService.createGoodsRecord(goodsRecordList);
+            super.handleOperate("添加库存记录", OrganizationConst.OPERATE_ADD,"库存列表...",request);
+            return super.doWrappingData(goodsRecordList);
         } catch (Exception e) {
             return  super.doWrappingErrorData(e);
         }
     }
-
-//=====================================
-
-    @Autowired
-    private GoodsRepositoryService goodsRepositoryService;
 
     @PostMapping("/getRepositoryList/{pageNum}/{pageSize}")
     public Map getRepositoryList(HttpServletRequest request, @PathVariable int pageNum, @PathVariable int pageSize) {
         try {
             LinkedHashMap parameterMap = new LinkedHashMap();
-            parameterMap.put("schoolIds", super.getSchoolIds(request));
+            parameterMap.put("schoolZoneId", super.getSchoolIds(request));
             parameterMap.put("pageNum", pageNum);
             parameterMap.put("pageSize", pageSize);
             parameterMap = super.doWrappingFormParameter(request, parameterMap);
-            return super.doWrappingData(goodsRepositoryService.findRepositoryAll(parameterMap));
-        } catch (Exception e) {
-            return super.doWrappingErrorData(e);
-        }
-    }
-
-    @PostMapping("/createRepository")
-    public Map createRepository(HttpServletRequest request, GoodsRepository goodsRepository) {
-        try {
-            goodsRepository.setSchoolZoneId(super.getCurrentUser(request).getSchoolZoneId());
-            goodsRepositoryService.addRepository(goodsRepository);
-            super.handleOperate("添加库存", OrganizationConst.OPERATE_ADD, "添加库存物品【" + goodsRepository.getGoodsId() + "】,添加库存校区:" + goodsRepository.getSchoolZoneId(), request);
-            return super.doWrappingData(goodsRepository);
+            return super.doWrappingData(logisticsService.findRepositoryAll(parameterMap));
         } catch (Exception e) {
             return super.doWrappingErrorData(e);
         }

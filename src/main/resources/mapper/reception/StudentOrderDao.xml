@@ -57,11 +57,11 @@
   </select>
   <insert id="insert" parameterType="com.laky.edu.reception.bean.StudentOrder" useGeneratedKeys="true" keyProperty="id"
           keyColumn="id" >
-    insert into laky_reception_student_order (id, student_id, the_status, 
+    insert into laky_reception_student_order (student_id, the_status,
       user_id, create_time, school_zone_id, 
       total, receivable, subtract_money, 
       the_type, cost_status)
-    values (#{id,jdbcType=INTEGER}, #{studentId,jdbcType=INTEGER}, #{theStatus,jdbcType=TINYINT}, 
+    values ( #{studentId,jdbcType=INTEGER}, #{theStatus,jdbcType=TINYINT},
       #{userId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{schoolZoneId,jdbcType=INTEGER}, 
       #{total,jdbcType=DECIMAL}, #{receivable,jdbcType=DECIMAL}, #{subtractMoney,jdbcType=DECIMAL}, 
       #{theType,jdbcType=TINYINT}, #{costStatus,jdbcType=TINYINT})

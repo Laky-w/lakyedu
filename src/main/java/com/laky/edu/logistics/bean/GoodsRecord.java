@@ -23,6 +23,8 @@ public class GoodsRecord implements Serializable {
 
     private String otherName;
 
+    private Integer supplierId;
+
     private static final long serialVersionUID = 1L;
 
     public Integer getId() {
@@ -73,11 +75,11 @@ public class GoodsRecord implements Serializable {
         this.userId = userId;
     }
 
-    public Date getcreateTime() {
+    public Date getCreateTime() {
         return createTime;
     }
 
-    public void setcreateTime(Date createTime) {
+    public void setCreateTime(Date createTime) {
         this.createTime = createTime;
     }
 
@@ -97,4 +99,11 @@ public class GoodsRecord implements Serializable {
         this.otherName = otherName == null ? null : otherName.trim();
     }
 
+    public Integer getSupplierId() {
+        return supplierId;
+    }
+
+    public void setSupplierId(Integer supplierId) {
+        this.supplierId = supplierId;
+    }
 }

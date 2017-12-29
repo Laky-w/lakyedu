@@ -10,9 +10,11 @@ import java.util.Map;
 @Component
 public interface GoodsRecordDao {
 
-    int insertGoodsRecord(List<Map> chargeStandardList);
+
 
     int insert(GoodsRecord goodsRecord);
+
+    int batchInsert(List<GoodsRecord> goodsRecordList);
 
     List<GoodsRecord> selectByParameterMap(LinkedHashMap parameterMap);
 
