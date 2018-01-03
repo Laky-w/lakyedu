@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.laky.edu.core.PageBean;
 import com.laky.edu.teach.bean.Course;
 import com.laky.edu.teach.bean.Room;
+import com.laky.edu.teach.bean.ScheduleStandard;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -59,4 +60,18 @@ public interface TeachService {
      * @return 类目=》类别=》课程 三级树
      */
     List<Map> findCourseTreeByBranch(LinkedHashMap parameterMap);
+
+    /**
+     * 查询排课标准
+     * @param parameterMap
+     * @return
+     */
+    PageBean<ScheduleStandard> findScheduleStandardAll(LinkedHashMap parameterMap);
+
+    /**
+     * 创建上课时间段标准
+     * @param scheduleStandard
+     * @return
+     */
+    ScheduleStandard createScheduleStandard(ScheduleStandard scheduleStandard) throws Exception;
 }

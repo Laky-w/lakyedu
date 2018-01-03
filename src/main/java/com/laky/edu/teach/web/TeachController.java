@@ -5,6 +5,7 @@ import com.laky.edu.core.BaseController;
 import com.laky.edu.organization.OrganizationConst;
 import com.laky.edu.teach.bean.Course;
 import com.laky.edu.teach.bean.Room;
+import com.laky.edu.teach.bean.ScheduleStandard;
 import com.laky.edu.teach.service.TeachService;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,23 +39,13 @@ public class TeachController extends BaseController{
             return  super.doWrappingErrorData(e);
         }
     }
-    @GetMapping("/getChargeStandard/{courseId}")
-    public Map getChargeStandard(HttpServletRequest request,@PathVariable Integer courseId){
-        try {
-            LinkedHashMap parameterMap = new LinkedHashMap();
-//            parameterMap.put("branchId",super.getCurrentUser(request).getBranchId());
-            if(StringUtils.isEmpty(courseId)) throw new Exception("课程必填");
-            parameterMap.put("courseId",courseId);
-            return super.doWrappingData(teachService.findChargeStandardByCourseId(parameterMap));
-        } catch (Exception e) {
-            return  super.doWrappingErrorData(e);
-        }
-    }
+
     @GetMapping("/getCourseTreeList")
     public Map getCourseTreeList(HttpServletRequest request){
         try {
             LinkedHashMap parameterMap = new LinkedHashMap();
             parameterMap.put("branchId",super.getCurrentUser(request).getBranchId());
+            parameterMap.put("schoolZoneId",new Integer[]{super.getCurrentUser(request).getSchoolZoneId()});
             return super.doWrappingData(teachService.findCourseTreeByBranch(parameterMap));
         } catch (Exception e) {
             return  super.doWrappingErrorData(e);
@@ -76,12 +67,54 @@ public class TeachController extends BaseController{
         }
     }
 
+    @GetMapping("/getChargeStandard/{courseId}")
+    public Map getChargeStandard(HttpServletRequest request,@PathVariable Integer courseId){
+        try {
+            LinkedHashMap parameterMap = new LinkedHashMap();
+//            parameterMap.put("branchId",super.getCurrentUser(request).getBranchId());
+            if(StringUtils.isEmpty(courseId)) throw new Exception("课程必填");
+            parameterMap.put("courseId",courseId);
+            return super.doWrappingData(teachService.findChargeStandardByCourseId(parameterMap));
+        } catch (Exception e) {
+            return  super.doWrappingErrorData(e);
+        }
+    }
+
+    @PostMapping("/createScheduleStandard")
+    public Map createScheduleStandard(HttpServletRequest request, ScheduleStandard scheduleStandard,String [] time){
+        try {
+            if(null !=time){
+                scheduleStandard.setStartTime(time[0]);
+                scheduleStandard.setEndTime(time[1]);
+            }
+            scheduleStandard=teachService.createScheduleStandard(scheduleStandard); //上课时间段
+            super.handleOperate("添加校区上课段", OrganizationConst.OPERATE_ADD,"添加校区上课段【"+scheduleStandard.getName()+"】",request);
+            return  super.doWrappingData(scheduleStandard);
+        } catch (Exception e) {
+            return  super.doWrappingErrorData(e);
+        }
+    }
+
+    @PostMapping("/getScheduleStandard/{pageNum}/{pageSize}")
+    public Map getScheduleStandard(HttpServletRequest request,@PathVariable int pageNum, @PathVariable int pageSize){
+        try {
+            LinkedHashMap parameterMap = new LinkedHashMap();
+//            parameterMap.put("branchId",super.getCurrentUser(request).getBranchId());
+            parameterMap.put("schoolZoneId",super.getSchoolIds(request,parameterMap.get("theType"),parameterMap.get("parentSchoolId")));
+            parameterMap.put("pageNum",pageNum);
+            parameterMap.put("pageSize",pageSize);
+            return super.doWrappingData(teachService.findScheduleStandardAll(parameterMap));
+        } catch (Exception e) {
+            return  super.doWrappingErrorData(e);
+        }
+    }
+
     @PostMapping("/getRoomList/{pageNum}/{pageSize}")
     public Map getRoomList(HttpServletRequest request, @PathVariable int pageNum, @PathVariable int pageSize){
         try {
             LinkedHashMap parameterMap = new LinkedHashMap();
             parameterMap = super.doWrappingFormParameter(request,parameterMap);
-            parameterMap.put("schoolIds",super.getSchoolIds(request,parameterMap.get("theType"),parameterMap.get("parentSchoolId")));
+            parameterMap.put("schoolZoneId",super.getSchoolIds(request,parameterMap.get("theType"),parameterMap.get("parentSchoolId")));
             parameterMap.put("pageNum",pageNum);
             parameterMap.put("pageSize",pageSize);
 
@@ -94,7 +127,6 @@ public class TeachController extends BaseController{
     @PostMapping("/createRoom")
     public Map createRoom(HttpServletRequest request, Room room){
         try {
-            LinkedHashMap parameterMap = new LinkedHashMap();
             room=teachService.createRoom(room); //
             super.handleOperate("添加教室", OrganizationConst.OPERATE_ADD,"添加教室【"+room.getName()+"】",request);
             return  super.doWrappingData(room);
