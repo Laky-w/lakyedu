@@ -12,6 +12,10 @@ public class GoodsRecordForm {
    private Date createTime;
    private Integer supplierId;
    private List<GoodsRecord> goodsList;
+   private String otherName;
+   private Date returnDate;
+   private Integer returnStatus;
+
 
     public Date getCreateTime() {
         return createTime;
@@ -36,4 +40,30 @@ public class GoodsRecordForm {
     public void setGoodsList(List<GoodsRecord> goodsList) {
         this.goodsList = goodsList;
     }
+
+    public String getOtherName() {
+        return otherName;
+    }
+
+    public void setOtherName(String otherName) {
+        this.otherName = otherName;
+    }
+
+    public Date getReturnDate() {
+        return returnDate;
+    }
+
+    public void setReturnDate(Date returnDate) {
+        this.returnDate = returnDate;
+    }
+
+    public Integer getReturnStatus() {
+        return returnStatus;
+    }
+
+    public void setReturnStatus(Integer returnStatus) {
+        this.returnStatus = returnStatus;
+    }
+
+
 }

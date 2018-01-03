@@ -13,7 +13,7 @@ public class GoodsRecord implements Serializable {
 
     private Integer theType;
 
-    private BigDecimal amount;
+    private Integer amount;
 
     private Integer userId;
 
@@ -24,6 +24,10 @@ public class GoodsRecord implements Serializable {
     private String otherName;
 
     private Integer supplierId;
+
+    private Date returnDate;
+
+    private Integer returnStatus;
 
     private static final long serialVersionUID = 1L;
 
@@ -59,11 +63,11 @@ public class GoodsRecord implements Serializable {
         this.theType = theType;
     }
 
-    public BigDecimal getAmount() {
+    public Integer getAmount() {
         return amount;
     }
 
-    public void setAmount(BigDecimal amount) {
+    public void setAmount(Integer amount) {
         this.amount = amount;
     }
 
@@ -105,5 +109,21 @@ public class GoodsRecord implements Serializable {
 
     public void setSupplierId(Integer supplierId) {
         this.supplierId = supplierId;
+    }
+
+    public Date getReturnDate() {
+        return returnDate;
+    }
+
+    public void setReturnDate(Date returnDate) {
+        this.returnDate = returnDate;
+    }
+
+    public Integer getReturnStatus() {
+        return returnStatus;
+    }
+
+    public void setReturnStatus(Integer returnStatus) {
+        this.returnStatus = returnStatus;
     }
 }

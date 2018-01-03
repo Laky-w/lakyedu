@@ -16,7 +16,7 @@
     select
     <include refid="Base_Column_List" />
     from laky_logistics_goods_repository
-    where id = #{id,jdbcType=INTEGER} AND school_zone_id = #{schoolZoneId,jdbcType=INTEGER}
+    where goods_id = #{id,jdbcType=INTEGER} AND school_zone_id = #{schoolZoneId,jdbcType=INTEGER}
   </select>
 
   <select id="selectByParameterMap" resultType="java.util.Map" >
@@ -89,16 +89,16 @@
     <foreach collection="list" item="item" index="index" open="" close="" separator=";">
       update laky_logistics_goods_repository
       <set>
-        <if test="goodsId != null" >
+        <if test="item.goodsId != null" >
           goods_id = #{item.goodsId,jdbcType=INTEGER},
         </if>
-        <if test="schoolZoneId != null" >
+        <if test="item.schoolZoneId != null" >
           school_zone_id = #{item.schoolZoneId,jdbcType=INTEGER},
         </if>
-        <if test="lastAmount != null" >
+        <if test="item.lastAmount != null" >
           last_amount = #{item.lastAmount,jdbcType=INTEGER},
         </if>
-        <if test="consumeAmount != null" >
+        <if test="item.consumeAmount != null" >
           consume_amount = #{item.consumeAmount,jdbcType=INTEGER},
         </if>
       </set>

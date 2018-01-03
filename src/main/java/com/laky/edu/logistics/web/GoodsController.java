@@ -73,8 +73,12 @@ public class GoodsController extends BaseController {
                 goodsRecord.setUserId(getCurrentUser(request).getId());
                 goodsRecord.setCreateTime(recordForm.getCreateTime());
                 goodsRecord.setSchoolZoneId(getCurrentUser(request).getSchoolZoneId());
+                goodsRecord.setOtherName(recordForm.getOtherName());
                 goodsRecord.setSupplierId(recordForm.getSupplierId());
-            }
+                goodsRecord.setReturnDate(recordForm.getReturnDate());
+
+
+             }
             goodsRecordList = logisticsService.createGoodsRecord(goodsRecordList);
             super.handleOperate("添加库存记录", OrganizationConst.OPERATE_ADD,"库存列表...",request);
             return super.doWrappingData(goodsRecordList);

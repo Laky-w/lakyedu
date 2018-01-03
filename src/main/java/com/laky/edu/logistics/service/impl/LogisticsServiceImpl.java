@@ -23,8 +23,10 @@ import java.util.List;
  */
 @Service
 public class LogisticsServiceImpl implements LogisticsService{
+
     @Autowired
     private GoodsRecordDao goodsRecordDao;
+
     @Autowired
     private GoodsRepositoryDao goodsRepositoryDao;
 
@@ -68,12 +70,38 @@ public class LogisticsServiceImpl implements LogisticsService{
                 repository = new GoodsRepository();
                 repository.setSchoolZoneId(goodsRecord.getSchoolZoneId());
                 repository.setGoodsId(goodsRecord.getGoodsId());
-                repository.setLastAmount(goodsRecord.getAmount().intValue()); //计算库存数量
+               // repository.setLastAmount(goodsRecord.getAmount().intValue()); //计算库存数量
                 repository.setConsumeAmount(0);
+                repository.setLastAmount(0);
                 insertGoodsRepositoryList.add(repository);
             } else {
-                repository.setLastAmount(repository.getLastAmount()+goodsRecord.getAmount().intValue()); //计算库存数量
+
                 updateGoodsRepositoryList.add(repository);
+            }
+            switch (goodsRecord.getTheType()){
+                case 1: //进货
+                    repository.setLastAmount(repository.getLastAmount()+goodsRecord.getAmount()); //计算库存数量
+                    break;
+                case 2: //退货
+                    repository.setLastAmount(repository.getLastAmount()-goodsRecord.getAmount());
+                    break;
+                case 3://销售
+                    repository.setConsumeAmount(goodsRecord.getAmount());
+                    break;
+                case 4://领用
+                    repository.setLastAmount(repository.getLastAmount()-goodsRecord.getAmount());
+                    break;
+                case 5://图书借阅
+//                    goodsRecord.setReturnStatus(1);
+                    repository.setLastAmount(repository.getLastAmount()-goodsRecord.getAmount());
+                    break;
+                case 6://调拨
+                    repository.setLastAmount(repository.getLastAmount()-goodsRecord.getAmount());
+                    break;
+                case 7://库存调整
+                    repository.setLastAmount(repository.getLastAmount());
+                break;
+
             }
         }
         if(insertGoodsRepositoryList.size()>0){
