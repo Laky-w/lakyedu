@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.laky.edu.teach.dao.ScheduleDao" >
+  <resultMap id="BaseResultMap" type="com.laky.edu.teach.bean.Schedule" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="school_zone_id" property="schoolZoneId" jdbcType="INTEGER" />
+    <result column="start_time" property="startTime" jdbcType="TIMESTAMP" />
+    <result column="end_time" property="endTime" jdbcType="TIMESTAMP" />
+    <result column="the_status" property="theStatus" jdbcType="TINYINT" />
+    <result column="teach_id" property="teachId" jdbcType="INTEGER" />
+    <result column="room_id" property="roomId" jdbcType="INTEGER" />
+    <result column="hour" property="hour" jdbcType="DECIMAL" />
+    <result column="attendance_status" property="attendanceStatus" jdbcType="TINYINT" />
+    <result column="class_id" property="classId" jdbcType="CHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, school_zone_id, start_time, end_time, the_status, teach_id, room_id, hour, attendance_status, 
+    class_id
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+  select
+  <include refid="Base_Column_List" />
+  from laky_teach_schedule
+  where id = #{id,jdbcType=INTEGER}
+</select>
+  <select id="selectByParameterMap" resultType="java.util.Map">
+    SELECT s.id,s.start_time AS startTime,s.end_time AS endTime,s.attendance_status AS attendanceStatus,r.`name` AS roomName,sc.`name` AS schoolClassName,s.`hour`,
+	u.`name` AS teachName,sz.name as schoolZoneName,(SELECT group_concat(u. NAME) FROM laky_teach_schedule_teacher st LEFT JOIN laky_organization_user u ON st.user_id = u.id AND u.the_status != 0
+		WHERE st.schedule_id = s.id
+	) AS headTeachName
+    FROM laky_teach_schedule s
+    RIGHT JOIN laky_organization_school_zone sz on s.school_zone_id = sz.id and sz.the_status !=0
+    LEFT JOIN laky_teach_room r ON s.room_id = r.id
+    AND r.the_status != 0
+    LEFT JOIN laky_teach_school_class sc ON s.class_id = sc.id
+    AND sc.the_status != 0
+    LEFT JOIN laky_organization_user u ON s.teach_id = u.id
+    AND u.the_status != 0
+    where s.the_status !=0
+    <if test="schoolZoneId != null">
+      AND s.school_zone_id IN
+      <foreach collection="schoolZoneId" item="schoolId" index="index"
+               open="(" close=")" separator=",">
+        #{schoolId}
+      </foreach>
+    </if>
+    <if test="className !=null">
+      AND sc.`name` LIKE  CONCAT('%',#{className,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="schoolZoneId2 != null">
+      <if test="schoolZoneId2 instanceof String">
+        AND s.school_zone_id = #{schoolZoneId2,jdbcType=INTEGER}
+      </if>
+      <if test="!(schoolZoneId2 instanceof String)">
+        AND s.school_zone_id IN
+        <foreach collection="schoolZoneId2" item="schoolId" index="index"
+                 open="(" close=")" separator=",">
+          #{schoolId}
+        </foreach>
+      </if>
+    </if>
+    <if test="startTime != null">
+      AND s.start_time &gt;= #{startTime[0],jdbcType=TIMESTAMP}
+      AND s.start_time &lt;= #{startTime[1],jdbcType=TIMESTAMP}
+    </if>
+    ORDER BY s.start_time
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from laky_teach_schedule
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.laky.edu.teach.bean.Schedule" >
+    insert into laky_teach_schedule (id, school_zone_id, start_time, 
+      end_time, the_status, teach_id, 
+      room_id, hour, attendance_status, 
+      class_id)
+    values (#{id,jdbcType=INTEGER}, #{schoolZoneId,jdbcType=INTEGER}, #{startTime,jdbcType=TIMESTAMP}, 
+      #{endTime,jdbcType=TIMESTAMP}, #{theStatus,jdbcType=TINYINT}, #{teachId,jdbcType=INTEGER}, 
+      #{roomId,jdbcType=INTEGER}, #{hour,jdbcType=DECIMAL}, #{attendanceStatus,jdbcType=TINYINT}, 
+      #{classId,jdbcType=CHAR})
+  </insert>
+  <insert id="batchInsert"  useGeneratedKeys="true" keyProperty="id"
+          keyColumn="id">
+    insert into laky_teach_schedule (school_zone_id, start_time,
+    end_time, the_status, teach_id,
+    room_id, hour, attendance_status,
+    class_id)
+    values
+    <foreach collection="list" item="item" index="index" separator=",">
+    ( #{item.schoolZoneId,jdbcType=INTEGER}, #{item.startTime,jdbcType=TIMESTAMP},
+    #{item.endTime,jdbcType=TIMESTAMP}, #{item.theStatus,jdbcType=TINYINT}, #{item.teachId,jdbcType=INTEGER},
+    #{item.roomId,jdbcType=INTEGER}, #{item.hour,jdbcType=DECIMAL}, #{item.attendanceStatus,jdbcType=TINYINT},
+    #{item.classId,jdbcType=INTEGER})
+    </foreach>
+  </insert>
+  <insert id="batchHelpTeachInsert" useGeneratedKeys="true" keyProperty="id"
+          keyColumn="id">
+    insert into laky_teach_schedule_teacher (schedule_id,user_id)
+    values
+    <foreach collection="list" item="item" index="index" separator=",">
+      ( #{item.scheduleId,jdbcType=INTEGER}, #{item.teachId,jdbcType=INTEGER})
+    </foreach>
+  </insert>
+  <insert id="insertSelective" parameterType="com.laky.edu.teach.bean.Schedule" >
+    insert into laky_teach_schedule
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="schoolZoneId != null" >
+        school_zone_id,
+      </if>
+      <if test="startTime != null" >
+        start_time,
+      </if>
+      <if test="endTime != null" >
+        end_time,
+      </if>
+      <if test="theStatus != null" >
+        the_status,
+      </if>
+      <if test="teachId != null" >
+        teach_id,
+      </if>
+      <if test="roomId != null" >
+        room_id,
+      </if>
+      <if test="hour != null" >
+        hour,
+      </if>
+      <if test="attendanceStatus != null" >
+        attendance_status,
+      </if>
+      <if test="classId != null" >
+        class_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="schoolZoneId != null" >
+        #{schoolZoneId,jdbcType=INTEGER},
+      </if>
+      <if test="startTime != null" >
+        #{startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null" >
+        #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="theStatus != null" >
+        #{theStatus,jdbcType=TINYINT},
+      </if>
+      <if test="teachId != null" >
+        #{teachId,jdbcType=INTEGER},
+      </if>
+      <if test="roomId != null" >
+        #{roomId,jdbcType=INTEGER},
+      </if>
+      <if test="hour != null" >
+        #{hour,jdbcType=DECIMAL},
+      </if>
+      <if test="attendanceStatus != null" >
+        #{attendanceStatus,jdbcType=TINYINT},
+      </if>
+      <if test="classId != null" >
+        #{classId,jdbcType=CHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.laky.edu.teach.bean.Schedule" >
+    update laky_teach_schedule
+    <set >
+      <if test="schoolZoneId != null" >
+        school_zone_id = #{schoolZoneId,jdbcType=INTEGER},
+      </if>
+      <if test="startTime != null" >
+        start_time = #{startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null" >
+        end_time = #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="theStatus != null" >
+        the_status = #{theStatus,jdbcType=TINYINT},
+      </if>
+      <if test="teachId != null" >
+        teach_id = #{teachId,jdbcType=INTEGER},
+      </if>
+      <if test="roomId != null" >
+        room_id = #{roomId,jdbcType=INTEGER},
+      </if>
+      <if test="hour != null" >
+        hour = #{hour,jdbcType=DECIMAL},
+      </if>
+      <if test="attendanceStatus != null" >
+        attendance_status = #{attendanceStatus,jdbcType=TINYINT},
+      </if>
+      <if test="classId != null" >
+        class_id = #{classId,jdbcType=CHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.laky.edu.teach.bean.Schedule" >
+    update laky_teach_schedule
+    set school_zone_id = #{schoolZoneId,jdbcType=INTEGER},
+      start_time = #{startTime,jdbcType=TIMESTAMP},
+      end_time = #{endTime,jdbcType=TIMESTAMP},
+      the_status = #{theStatus,jdbcType=TINYINT},
+      teach_id = #{teachId,jdbcType=INTEGER},
+      room_id = #{roomId,jdbcType=INTEGER},
+      hour = #{hour,jdbcType=DECIMAL},
+      attendance_status = #{attendanceStatus,jdbcType=TINYINT},
+      class_id = #{classId,jdbcType=CHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.laky.edu.teach.dao.ScheduleStandardDao" >
+  <resultMap id="BaseResultMap" type="com.laky.edu.teach.bean.ScheduleStandard" >
+    <id column="di" property="di" jdbcType="INTEGER" />
+    <result column="school_zone_id" property="schoolZoneId" jdbcType="INTEGER" />
+    <result column="start_time" property="startTime" jdbcType="CHAR" />
+    <result column="end_time" property="endTime" jdbcType="CHAR" />
+    <result column="course_hour" property="courseHour" jdbcType="DOUBLE" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="the_status" property="theStatus" jdbcType="TINYINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    di, school_zone_id, start_time, end_time, course_hour, name, the_status
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from laky_teach_schedule_standard
+    where di = #{di,jdbcType=INTEGER}
+  </select>
+
+  <select id="selectByParameterMap" resultType="java.util.Map" >
+    select
+    s.id,s.name ,s.start_time as startTime,s.end_time as endTime,s.course_hour as courseHour,sz.name as schoolName
+    from laky_teach_schedule_standard s
+    RIGHT JOIN laky_organization_school_zone sz on s.school_zone_id = sz.id and sz.the_status !=0
+    where s.the_status !=0
+    <if test="name != null">
+      AND s.`name` LIKE CONCAT('%',#{name,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="schoolZoneId != null">
+      AND s.school_zone_id IN
+      <foreach collection="schoolZoneId" item="schoolId" index="index"
+               open="(" close=")" separator=",">
+        #{schoolId}
+      </foreach>
+    </if>
+    <if test="schoolZoneId2 != null">
+      <if test="schoolZoneId2 instanceof String">
+        AND s.school_zone_id = #{schoolZoneId2,jdbcType=INTEGER}
+      </if>
+      <if test="!(schoolZoneId2 instanceof String)">
+        AND s.school_zone_id IN
+        <foreach collection="schoolZoneId2" item="schoolId" index="index"
+                 open="(" close=")" separator=",">
+          #{schoolId}
+        </foreach>
+      </if>
+    </if>
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from laky_teach_schedule_standard
+    where di = #{di,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.laky.edu.teach.bean.ScheduleStandard" keyColumn="id" keyProperty="id" useGeneratedKeys="true">
+    insert into laky_teach_schedule_standard (school_zone_id, start_time,
+      end_time, course_hour, name, 
+      the_status)
+    values ( #{schoolZoneId,jdbcType=INTEGER}, #{startTime,jdbcType=CHAR},
+      #{endTime,jdbcType=CHAR}, #{courseHour,jdbcType=DOUBLE}, #{name,jdbcType=VARCHAR},
+      #{theStatus,jdbcType=TINYINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.laky.edu.teach.bean.ScheduleStandard" >
+    insert into laky_teach_schedule_standard
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="di != null" >
+        di,
+      </if>
+      <if test="schoolZoneId != null" >
+        school_zone_id,
+      </if>
+      <if test="startTime != null" >
+        start_time,
+      </if>
+      <if test="endTime != null" >
+        end_time,
+      </if>
+      <if test="courseHour != null" >
+        course_hour,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="theStatus != null" >
+        the_status,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="di != null" >
+        #{di,jdbcType=INTEGER},
+      </if>
+      <if test="schoolZoneId != null" >
+        #{schoolZoneId,jdbcType=INTEGER},
+      </if>
+      <if test="startTime != null" >
+        #{startTime,jdbcType=CHAR},
+      </if>
+      <if test="endTime != null" >
+        #{endTime,jdbcType=CHAR},
+      </if>
+      <if test="courseHour != null" >
+        #{courseHour,jdbcType=INTEGER},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="theStatus != null" >
+        #{theStatus,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.laky.edu.teach.bean.ScheduleStandard" >
+    update laky_teach_schedule_standard
+    <set >
+      <if test="schoolZoneId != null" >
+        school_zone_id = #{schoolZoneId,jdbcType=INTEGER},
+      </if>
+      <if test="startTime != null" >
+        start_time = #{startTime,jdbcType=CHAR},
+      </if>
+      <if test="endTime != null" >
+        end_time = #{endTime,jdbcType=CHAR},
+      </if>
+      <if test="courseHour != null" >
+        course_hour = #{courseHour,jdbcType=INTEGER},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="theStatus != null" >
+        the_status = #{theStatus,jdbcType=TINYINT},
+      </if>
+    </set>
+    where di = #{di,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.laky.edu.teach.bean.ScheduleStandard" >
+    update laky_teach_schedule_standard
+    set school_zone_id = #{schoolZoneId,jdbcType=INTEGER},
+      start_time = #{startTime,jdbcType=CHAR},
+      end_time = #{endTime,jdbcType=CHAR},
+      course_hour = #{courseHour,jdbcType=INTEGER},
+      name = #{name,jdbcType=VARCHAR},
+      the_status = #{theStatus,jdbcType=TINYINT}
+    where di = #{di,jdbcType=INTEGER}
+  </update>
+</mapper>

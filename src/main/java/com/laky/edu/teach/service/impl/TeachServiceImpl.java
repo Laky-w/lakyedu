@@ -7,8 +7,10 @@ import com.github.pagehelper.PageHelper;
 import com.laky.edu.core.PageBean;
 import com.laky.edu.teach.bean.Course;
 import com.laky.edu.teach.bean.Room;
+import com.laky.edu.teach.bean.ScheduleStandard;
 import com.laky.edu.teach.dao.CourseDao;
 import com.laky.edu.teach.dao.RoomDao;
+import com.laky.edu.teach.dao.ScheduleStandardDao;
 import com.laky.edu.teach.service.TeachService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,6 +28,9 @@ public class TeachServiceImpl implements TeachService{
 
     @Autowired
     private RoomDao roomDao;
+
+    @Autowired
+    private ScheduleStandardDao scheduleStandardDao;
 
     @Override
     public PageBean<Course> findCourseByBranch(LinkedHashMap parameterMap) {
@@ -125,5 +130,22 @@ public class TeachServiceImpl implements TeachService{
             returnList.add(dataMap);
         }
         return returnList;
+    }
+
+    @Override
+    public PageBean<ScheduleStandard> findScheduleStandardAll(LinkedHashMap parameterMap) {
+        PageHelper.startPage((int)parameterMap.get("pageNum"),(int)parameterMap.get("pageSize"));
+        return new PageBean<>(scheduleStandardDao.selectByParameterMap(parameterMap));
+    }
+
+    @Transactional
+    @Override
+    public ScheduleStandard createScheduleStandard(ScheduleStandard scheduleStandard) throws Exception {
+        scheduleStandard.setTheStatus(1);
+        int rowCount=scheduleStandardDao.insert(scheduleStandard);
+        if(rowCount==0){
+            throw new Exception("创建校区上课时间段失败！");
+        }
+        return scheduleStandard;
     }
 }

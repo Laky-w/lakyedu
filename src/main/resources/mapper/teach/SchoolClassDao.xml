@@ -27,8 +27,8 @@
   </select>
 
   <select id="selectByParameterMap" resultType="java.util.Map">
-    SELECT s.id AS id,s.end_date AS endDate,s.start_date AS startDate,s.name AS name,s.create_time AS createTime,s.remarks AS remarks,
-    r.`name` AS roomName, c.`name` AS courseName,u1.name AS mainTeacherName,u.`name` AS teacherName,sz.name as schoolZoneName
+    SELECT s.id AS id,s.end_date AS endDate,s.start_date AS startDate,s.name AS name,s.create_time AS createTime,s.remarks AS remarks,r.id as roomId,
+    r.`name` AS roomName, c.`name` AS courseName,u1.id as mainTeacherId,u1.name AS mainTeacherName,u.`name` AS teacherName,sz.name as schoolZoneName
     from laky_teach_school_class s
     RIGHT JOIN laky_organization_school_zone sz on s.school_zone_id = sz.id and sz.the_status !=0
     LEFT JOIN laky_teach_room r ON s.room_id=r.id AND r.the_status !=0
