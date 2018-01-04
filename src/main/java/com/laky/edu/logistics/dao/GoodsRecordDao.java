@@ -16,6 +16,8 @@ public interface GoodsRecordDao {
 
     int batchInsert(List<GoodsRecord> goodsRecordList);
 
+    GoodsRecord selectById(Integer id);
+
     List<GoodsRecord> selectByParameterMap(LinkedHashMap parameterMap);
 
     int updateByPrimaryKeySelective(GoodsRecord goodsRecord);

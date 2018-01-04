@@ -15,11 +15,15 @@
     <sql id="Base_Column_List">
         id, goods_id, school_zone_id, the_type, amount, user_id, create_time, price, other_name
     </sql>
+    <select id="selectById" parameterType="java.lang.Integer" resultType="com.laky.edu.logistics.bean.GoodsRecord">
+        SELECT  * FROM laky_logistics_goods_record WHERE id =#{id,jdbcType=INTEGER}
+    </select>
     <select id="selectByParameterMap" resultType="java.util.Map">
-        select r.id,r.the_type AS theType,r.amount,r.create_time AS createTime,r.price,r.other_name AS otherName,
-        s.name AS schoolZoneName,g.name AS goodsName,u.name AS userName,v.name as supplierName
+        select r.id,r.the_type AS theType,r.amount,r.create_time AS createTime,r.price,r.other_name AS otherName,r.return_status AS returnStatus,r.return_date as returnDate,
+        s.name AS schoolZoneName,s1.name AS schoolZoneNameIn,g.name AS goodsName,u.name AS userName,v.name as supplierName
         from laky_logistics_goods_record r
-        RIGHT JOIN laky_organization_school_zone s ON r.school_zone_id = s.id AND s.the_status!=0
+        RIGHT JOIN laky_organization_school_zone s ON r.school_zone_id = s.id AND s.the_status !=0
+        LEFT JOIN laky_organization_school_zone s1 on r.school_zone_id_in = s1.id AND s1.the_status !=0
         LEFT JOIN laky_logistics_goods g ON r.goods_id = g.id AND g.the_status!=0
         LEFT JOIN laky_organization_parameter_value v ON r.supplier_id= v.id
         LEFT JOIN laky_organization_user u ON r.user_id = u.id AND u.the_status!=0
@@ -53,13 +57,14 @@
     </select>
     <insert id="batchInsert"  useGeneratedKeys="true" keyColumn="id"
             keyProperty="id">
-        INSERT INTO laky_logistics_goods_record (goods_id, school_zone_id,the_type, amount, user_id,create_time, price, other_name,supplier_id
+        INSERT INTO laky_logistics_goods_record (goods_id, school_zone_id,the_type, amount, user_id,create_time, price, other_name,supplier_id,school_zone_id_in,return_status
         )
         VALUES
             <foreach collection="list" index="index"  item="item" separator=",">
-                ( #{item.goodsId,jdbcType=INTEGER}, #{item.schoolZoneId,jdbcType=INTEGER},
-                #{item.theType,jdbcType=TINYINT}, #{item.amount,jdbcType=DECIMAL}, #{item.userId,jdbcType=INTEGER},
-                #{item.createTime,jdbcType=TIMESTAMP}, #{item.price,jdbcType=DECIMAL}, #{item.otherName,jdbcType=VARCHAR},#{item.supplierId,jdbcType=INTEGER}
+                ( #{item.goodsId,jdbcType=INTEGER}, #{item.schoolZoneId,jdbcType=INTEGER}, #{item.theType,jdbcType=TINYINT},
+                #{item.amount,jdbcType=DECIMAL}, #{item.userId,jdbcType=INTEGER},#{item.createTime,jdbcType=TIMESTAMP},
+                 #{item.price,jdbcType=DECIMAL}, #{item.otherName,jdbcType=VARCHAR},#{item.supplierId,jdbcType=INTEGER},
+                #{item.schoolZoneIdIn,jdbcType=INTEGER},#{item.returnStatus,jdbcType=TINYINT}
                 )
             </foreach>
     </insert>
@@ -98,6 +103,12 @@
             </if>
             <if test="otherName != null">
                 other_name = #{otherName,jdbcType=VARCHAR},
+            </if>
+            <if test="returnStatus != null">
+                return_status = #{returnStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="returnDate != null">
+                return_date = #{returnDate,jdbcType=VARCHAR},
             </if>
         </set>
         where id = #{id,jdbcType=INTEGER}

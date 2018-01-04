@@ -9,11 +9,9 @@ import com.laky.edu.logistics.service.LogisticsService;
 import com.laky.edu.organization.OrganizationConst;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,6 +29,7 @@ public class GoodsController extends BaseController {
             parameterMap.put("branchId",super.getCurrentUser(request).getBranchId());
             parameterMap.put("pageNum",pageNum);
             parameterMap.put("pageSize",pageSize);
+            parameterMap.put("schoolZoneId2",new Integer[]{super.getCurrentUser(request).getSchoolZoneId()});
             parameterMap = super.doWrappingFormParameter(request,parameterMap);
             return super.doWrappingData(logisticsService.findGoodsAll(parameterMap));
         } catch (Exception e) {
@@ -72,12 +71,14 @@ public class GoodsController extends BaseController {
             for (GoodsRecord goodsRecord : goodsRecordList){
                 goodsRecord.setUserId(getCurrentUser(request).getId());
                 goodsRecord.setCreateTime(recordForm.getCreateTime());
+                goodsRecord.setSchoolZoneIdIn(recordForm.getSchoolZoneId());//转入校区
                 goodsRecord.setSchoolZoneId(getCurrentUser(request).getSchoolZoneId());
                 goodsRecord.setOtherName(recordForm.getOtherName());
                 goodsRecord.setSupplierId(recordForm.getSupplierId());
                 goodsRecord.setReturnDate(recordForm.getReturnDate());
-
-
+                if (goodsRecord.getTheType()==5 ){
+                    goodsRecord.setReturnStatus(1);
+                }
              }
             goodsRecordList = logisticsService.createGoodsRecord(goodsRecordList);
             super.handleOperate("添加库存记录", OrganizationConst.OPERATE_ADD,"库存列表...",request);
@@ -101,4 +102,16 @@ public class GoodsController extends BaseController {
         }
     }
 
+    @PutMapping("/returnLibrary/{goodsRecordId}")
+    public Map returnLibrary(HttpServletRequest request,@PathVariable Integer goodsRecordId){
+        try {
+            GoodsRecord goodsRecord = new GoodsRecord();
+            goodsRecord.setId(goodsRecordId);
+            logisticsService.doReturnLibrary(goodsRecord);
+            super.handleOperate("归还图书", OrganizationConst.OPERATE_UPDATE,"库存列表...",request);
+            return super.doWrappingData(goodsRecord);
+        } catch (Exception e) {
+            return  super.doWrappingErrorData(e);
+        }
+    }
 }

@@ -11,6 +11,8 @@ public class GoodsRecord implements Serializable {
 
     private Integer schoolZoneId;
 
+    private Integer schoolZoneIdIn;//转入校区
+
     private Integer theType;
 
     private Integer amount;
@@ -125,5 +127,13 @@ public class GoodsRecord implements Serializable {
 
     public void setReturnStatus(Integer returnStatus) {
         this.returnStatus = returnStatus;
+    }
+
+    public Integer getSchoolZoneIdIn() {
+        return schoolZoneIdIn;
+    }
+
+    public void setSchoolZoneIdIn(Integer schoolZoneIdIn) {
+        this.schoolZoneIdIn = schoolZoneIdIn;
     }
 }

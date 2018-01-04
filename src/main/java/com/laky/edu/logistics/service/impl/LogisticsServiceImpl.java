@@ -61,47 +61,29 @@ public class LogisticsServiceImpl implements LogisticsService{
     public List<GoodsRecord> createGoodsRecord(List<GoodsRecord> goodsRecords) throws Exception {
         int rowCount =goodsRecordDao.batchInsert(goodsRecords);
         if(rowCount==0)throw  new Exception("创建库存记录失败");
-        //更新库存
-        List<GoodsRepository> insertGoodsRepositoryList = new ArrayList<>();
-        List<GoodsRepository> updateGoodsRepositoryList = new ArrayList<>();
+        List<GoodsRepository> insertGoodsRepositoryList = new ArrayList<>(); //插入库存
+        List<GoodsRepository> updateGoodsRepositoryList = new ArrayList<>(); //更新库存
         for (GoodsRecord goodsRecord:goodsRecords){
-            GoodsRepository repository = goodsRepositoryDao.selectByPrimaryKey(goodsRecord.getGoodsId(),goodsRecord.getSchoolZoneId());
-            if(repository == null){
-                repository = new GoodsRepository();
-                repository.setSchoolZoneId(goodsRecord.getSchoolZoneId());
-                repository.setGoodsId(goodsRecord.getGoodsId());
-               // repository.setLastAmount(goodsRecord.getAmount().intValue()); //计算库存数量
-                repository.setConsumeAmount(0);
-                repository.setLastAmount(0);
+            GoodsRepository repository =null;
+            if(goodsRecord.getTheType() == 1 ){  //1 进货
+                repository = getGoodsRepository(goodsRecord.getGoodsId(),goodsRecord.getSchoolZoneId(),1,goodsRecord.getAmount());
+            } else if (goodsRecord.getTheType() ==2 || goodsRecord.getTheType() ==3 || goodsRecord.getTheType() ==4 || goodsRecord.getTheType() ==5){ // 2 退货、3 销售、4 领用、5 图片借阅
+                repository = getGoodsRepository(goodsRecord.getGoodsId(),goodsRecord.getSchoolZoneId(),2,goodsRecord.getAmount());
+            } else  if(goodsRecord.getTheType() ==6){
+                repository = getGoodsRepository(goodsRecord.getGoodsId(),goodsRecord.getSchoolZoneId(),2,goodsRecord.getAmount());//当前校区减少库存
+                GoodsRepository repositoryIn = getGoodsRepository(goodsRecord.getGoodsId(),goodsRecord.getSchoolZoneIdIn(),1,goodsRecord.getAmount()); //调拨校区增加库存
+                if(repositoryIn.getId() ==null) {
+                    insertGoodsRepositoryList.add(repositoryIn);
+                } else {
+                    updateGoodsRepositoryList.add(repositoryIn);
+                }
+            } else { //默认调整
+                repository = getGoodsRepository(goodsRecord.getGoodsId(),goodsRecord.getSchoolZoneId(),3,goodsRecord.getAmount());
+            }
+            if(repository.getId() == null){
                 insertGoodsRepositoryList.add(repository);
             } else {
-
                 updateGoodsRepositoryList.add(repository);
-            }
-            switch (goodsRecord.getTheType()){
-                case 1: //进货
-                    repository.setLastAmount(repository.getLastAmount()+goodsRecord.getAmount()); //计算库存数量
-                    break;
-                case 2: //退货
-                    repository.setLastAmount(repository.getLastAmount()-goodsRecord.getAmount());
-                    break;
-                case 3://销售
-                    repository.setConsumeAmount(goodsRecord.getAmount());
-                    break;
-                case 4://领用
-                    repository.setLastAmount(repository.getLastAmount()-goodsRecord.getAmount());
-                    break;
-                case 5://图书借阅
-//                    goodsRecord.setReturnStatus(1);
-                    repository.setLastAmount(repository.getLastAmount()-goodsRecord.getAmount());
-                    break;
-                case 6://调拨
-                    repository.setLastAmount(repository.getLastAmount()-goodsRecord.getAmount());
-                    break;
-                case 7://库存调整
-                    repository.setLastAmount(repository.getLastAmount());
-                break;
-
             }
         }
         if(insertGoodsRepositoryList.size()>0){
@@ -118,4 +100,47 @@ public class LogisticsServiceImpl implements LogisticsService{
         PageHelper.startPage((int)parameterMap.get("pageNum"),(int)parameterMap.get("pageSize"));
         return new PageBean<>(goodsRecordDao.selectByParameterMap(parameterMap));
     }
+
+    @Transactional
+    @Override
+    public GoodsRecord doReturnLibrary(GoodsRecord goodsRecord) throws Exception {
+        //归还图书
+        goodsRecord = goodsRecordDao.selectById(goodsRecord.getId());
+        goodsRecord.setReturnStatus(2);
+        goodsRecord.setReturnDate(new Date());
+        int rowCount = goodsRecordDao.updateByPrimaryKeySelective(goodsRecord);
+        if(rowCount ==0) {
+            throw  new Exception("归还图书失败");
+        }
+        GoodsRepository repository = getGoodsRepository(goodsRecord.getGoodsId(),goodsRecord.getSchoolZoneId(),1,goodsRecord.getAmount());
+        goodsRepositoryDao.updateByPrimaryKeySelective(repository);
+       // go
+        //回归库存
+        return goodsRecord;
+    }
+
+    private GoodsRepository getGoodsRepository(Integer goodsId,Integer schoolZoneId,int theType,Integer amount){
+        GoodsRepository repository = goodsRepositoryDao.selectByPrimaryKey(goodsId,schoolZoneId);
+        if(repository == null){
+            repository = new GoodsRepository();
+            repository.setSchoolZoneId(schoolZoneId);
+            repository.setGoodsId(goodsId);
+            repository.setConsumeAmount(0);
+            repository.setLastAmount(0);
+        }
+        switch (amount){
+            case 1: //增加库存
+                repository.setLastAmount(repository.getLastAmount()+amount);
+                break;
+            case 2: //减少库存,增加消耗
+                repository.setLastAmount(repository.getLastAmount()-amount);
+                repository.setConsumeAmount(repository.getConsumeAmount() + amount);
+                break;
+            case 3:
+                repository.setLastAmount(amount);
+                break;
+        }
+        return repository;
+    }
+
 }

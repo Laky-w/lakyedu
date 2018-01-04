@@ -14,6 +14,7 @@ public class GoodsRecordForm {
    private List<GoodsRecord> goodsList;
    private String otherName;
    private Date returnDate;
+   private Integer schoolZoneId;
    private Integer returnStatus;
 
 
@@ -66,4 +67,11 @@ public class GoodsRecordForm {
     }
 
 
+    public Integer getSchoolZoneId() {
+        return schoolZoneId;
+    }
+
+    public void setSchoolZoneId(Integer schoolZoneId) {
+        this.schoolZoneId = schoolZoneId;
+    }
 }

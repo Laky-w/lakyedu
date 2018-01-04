@@ -52,4 +52,12 @@ public interface LogisticsService {
      * @throws Exception
      */
     PageBean<GoodsRecord> findGoodsRecordAll(LinkedHashMap parameterMap)throws Exception;
+
+    /**
+     * 归还图书
+     * @param goodsRecord
+     * @return
+     * @throws Exception
+     */
+    GoodsRecord doReturnLibrary(GoodsRecord goodsRecord)throws Exception;
 }
