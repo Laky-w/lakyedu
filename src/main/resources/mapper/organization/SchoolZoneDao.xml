@@ -12,8 +12,8 @@
     <select id="querySchoolZoneAllByBranchId" resultType="com.laky.edu.organization.bean.SchoolZone" parameterType="Integer">
         SELECT * from laky_organization_school_zone where branch_id =#{branchId,jdbcType=INTEGER};
     </select>
-    <select id="querySchoolZoneDaoById" resultType="com.laky.edu.organization.bean.SchoolZone" parameterType="Integer">
-        SELECT  * FROM  laky_organization_school_zone where id =#{branchId,jdbcType=INTEGER} AND  the_status != 0
+    <select id="querySchoolZone" resultType="com.laky.edu.organization.bean.SchoolZone" parameterType="Integer">
+        SELECT *  FROM  laky_organization_school_zone where id =#{id,jdbcType=INTEGER} AND  the_status != 0 AND branch_id =#{branchId,jdbcType=INTEGER}
     </select>
     <update id="updateSchoolZone" parameterType="com.laky.edu.organization.bean.SchoolZone">
         UPDATE laky_organization_school_zone

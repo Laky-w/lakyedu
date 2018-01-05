@@ -22,7 +22,3 @@ mybatis:
   config-location:  mybatis-config.xml
   mapper-locations: mapper/*/**.xml
   type-aliases-package: com.laky.edu.bean
-
-
-
-

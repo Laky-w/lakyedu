@@ -3,6 +3,7 @@ package com.laky.edu.organization.dao;
 import com.laky.edu.organization.bean.SchoolZone;
 import org.springframework.stereotype.Component;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 
 /**
@@ -26,10 +27,10 @@ public interface SchoolZoneDao {
 
     /**
      * 查询某个校区根据ID
-     * @param id
+     * @param parameterMap
      * @return
      */
-    SchoolZone querySchoolZoneDaoById(Integer id);
+    SchoolZone querySchoolZone(LinkedHashMap parameterMap);
 
     /**
      * 修改校区信息

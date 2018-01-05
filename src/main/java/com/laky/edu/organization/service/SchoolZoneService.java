@@ -2,6 +2,7 @@ package com.laky.edu.organization.service;
 
 import com.laky.edu.organization.bean.SchoolZone;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 
 /**
@@ -23,6 +24,14 @@ public interface SchoolZoneService {
     List<SchoolZone> querySchoolZoneAllByBranchId(Integer branchId) throws Exception;
 
     /**
+     * 查询校区详情
+     * @param parameterMap
+     * @return
+     * @throws Exception
+     */
+    SchoolZone findSchoolZone(LinkedHashMap parameterMap) throws Exception;
+
+    /**
      * 查询校区下的全部校区
      * @param branchId
      * @param schoolZoneId
@@ -32,12 +41,7 @@ public interface SchoolZoneService {
      */
     SchoolZone querySchoolZoneAllBySchoolZoneId(Integer branchId,Integer schoolZoneId,Integer theType) throws Exception;
 
-    /**
-     * 查询某个校区根据ID
-     * @param id
-     * @return
-     */
-    SchoolZone querySchoolZoneDaoById(Integer id) throws Exception;
+
 
     /**
      * 修改校区信息

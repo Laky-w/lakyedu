@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -38,6 +39,18 @@ public class SchoolZoneController extends BaseController {
         }
     }
 
+    @GetMapping(value = "/getSchoolZoneView/{id}")
+    public Map createSchoolZone(HttpServletRequest request,@PathVariable Integer id) {
+        try {
+            LinkedHashMap parameterMap = new LinkedHashMap();
+            parameterMap.put("id",id);
+            parameterMap.put("branchId",getCurrentUser(request).getBranchId());
+            return super.doWrappingData( schoolZoneService.findSchoolZone(parameterMap));
+        } catch (Exception e){
+            return  super.doWrappingErrorData(e);
+        }
+    }
+
     @GetMapping(value = "/findSchoolZoneAll/{theType}")
     public Map findSchoolZoneAllByBranchId(HttpServletRequest request,@PathVariable  Integer theType) {
         try {
@@ -62,15 +75,6 @@ public class SchoolZoneController extends BaseController {
         }
     }
 
-    @GetMapping(value = "/findSchoolZoneDaoById/{id}")
-    public Map findSchoolZoneDaoById(@PathVariable Integer id) throws Exception {
-        try {
-            SchoolZone schoolZone = schoolZoneService.querySchoolZoneDaoById(id);
-            return  super.doWrappingData(schoolZone);
-        } catch (Exception e){
-            return  super.doWrappingErrorData(e);
-        }
-    }
 
     @PutMapping(value = "/updateSchoolZone")
     public Map updateSchoolZone(SchoolZone schoolZone) throws Exception {

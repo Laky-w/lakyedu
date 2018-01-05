@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 /**
@@ -33,6 +34,11 @@ public class SchoolZoneServiceImpl implements SchoolZoneService{
         }
         schoolZone.setCreateDatetime(new Date());
         return schoolZoneDao.insertSchoolZoneDao(schoolZone);
+    }
+
+    @Override
+    public SchoolZone findSchoolZone(LinkedHashMap parameterMap) throws Exception {
+        return schoolZoneDao.querySchoolZone(parameterMap);
     }
 
     @Override
@@ -78,10 +84,7 @@ public class SchoolZoneServiceImpl implements SchoolZoneService{
         return newSchoolZoneList;
     }
 
-    @Override
-    public SchoolZone querySchoolZoneDaoById(Integer id) throws Exception {
-        return schoolZoneDao.querySchoolZoneDaoById(id);
-    }
+
 
     @Override
     public int updateSchoolZone(SchoolZone schoolZone) throws Exception {
