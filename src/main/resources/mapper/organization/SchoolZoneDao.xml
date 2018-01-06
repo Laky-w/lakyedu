@@ -9,11 +9,17 @@
         VALUES (#{name},#{theStatus},#{theType},#{createDatetime},#{serial},#{address},#{phone},#{fatherId},#{branch.id},#{remarks},#{owner})
     </insert>
     <!--resultType 返回值类型  参数类型 -->
-    <select id="querySchoolZoneAllByBranchId" resultType="com.laky.edu.organization.bean.SchoolZone" parameterType="Integer">
-        SELECT * from laky_organization_school_zone where branch_id =#{branchId,jdbcType=INTEGER};
+    <select id="querySchoolZoneAllByBranchId" resultType="com.laky.edu.organization.bean.SchoolZone"
+            parameterType="Integer">
+        SELECT * from laky_organization_school_zone where branch_id =#{branchId,jdbcType=INTEGER} and the_status !=0;
     </select>
-    <select id="querySchoolZone" resultType="com.laky.edu.organization.bean.SchoolZone" parameterType="Integer">
-        SELECT *  FROM  laky_organization_school_zone where id =#{id,jdbcType=INTEGER} AND  the_status != 0 AND branch_id =#{branchId,jdbcType=INTEGER}
+    <select id="querySchoolZone" resultType="java.util.Map">
+        SELECT s.id,s.`name`,s.the_type as theType,s.create_datetime as createTime,s.serial,s.address,s.phone,s.remarks,s.`owner`,s.the_status as theStatus,
+          (SELECT f.`name` from laky_organization_school_zone f where id=s.father_id) as fatherName,
+          (SELECT count(1) from laky_organization_user u where u.school_zone_id = s.id and u.the_status !=0) as userNumber,
+          (SELECT count(1) from laky_supply_student st where st.school_zone_id = s.id and s.the_status !=0) as studentNumber,
+          (SELECT count(1) from laky_reception_student rs where rs.school_zone_id = s.id and rs.the_status !=0) as customerNumber
+           FROM laky_organization_school_zone s where s.id =#{id,jdbcType=INTEGER} AND  s.the_status != 0 AND s.branch_id =#{branchId,jdbcType=INTEGER}
     </select>
     <update id="updateSchoolZone" parameterType="com.laky.edu.organization.bean.SchoolZone">
         UPDATE laky_organization_school_zone
@@ -26,5 +32,14 @@
             <if test="phone!=null">phone=#{phone}</if>
         </set>
         where id=#{id,jdbcType=INTEGER}
+    </update>
+    <update id="batchStatusSchoolZone" >
+        <foreach collection="list" item="item" index="index" open="" close="" separator=";">
+            update laky_organization_school_zone
+            <set>
+                the_status=#{status,jdbcType=INTEGER}
+            </set>
+            where id = #{item.id,jdbcType=INTEGER}
+        </foreach>
     </update>
 </mapper>

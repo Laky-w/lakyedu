@@ -4,6 +4,7 @@ import com.laky.edu.organization.bean.SchoolZone;
 
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by 95 on 2017/11/20.
@@ -29,7 +30,7 @@ public interface SchoolZoneService {
      * @return
      * @throws Exception
      */
-    SchoolZone findSchoolZone(LinkedHashMap parameterMap) throws Exception;
+    Map findSchoolZone(LinkedHashMap parameterMap) throws Exception;
 
     /**
      * 查询校区下的全部校区
@@ -41,6 +42,29 @@ public interface SchoolZoneService {
      */
     SchoolZone querySchoolZoneAllBySchoolZoneId(Integer branchId,Integer schoolZoneId,Integer theType) throws Exception;
 
+    /**
+     * 删除校区及下级校区和部门
+     * @param schoolId
+     * @return
+     * @throws Exception
+     */
+    String deleteSchoolZone(Integer schoolId,Integer branchId)throws  Exception;
+
+    /**
+     * 封存校区及下级校区和部门
+     * @param schoolId
+     * @return
+     * @throws Exception
+     */
+    String sealUpSchoolZone(Integer schoolId,Integer branchId)throws  Exception;
+
+    /**
+     * 启动校区及下级校区和部门
+     * @param schoolId
+     * @return
+     * @throws Exception
+     */
+    String normalSchoolZone(Integer schoolId,Integer branchId)throws  Exception;
 
 
     /**

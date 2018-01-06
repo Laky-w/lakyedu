@@ -46,7 +46,7 @@
     </select>
     <select id="queryUserBySchoolId"   resultType="com.laky.edu.organization.bean.User" resultMap="BaseResultMap">
        SELECT s.*,sz.`name` as sz_name  from laky_organization_user s
-       LEFT JOIN laky_organization_school_zone sz on sz.id =s.school_zone_id and sz.the_status =1 where s.the_status !=0
+       RIGHT JOIN laky_organization_school_zone sz on sz.id =s.school_zone_id and sz.the_status =1 where s.the_status !=0
         <if test="userName != null">
             AND s.`user_name` LIKE CONCAT('%',#{userName,jdbcType=VARCHAR},'%')
         </if>

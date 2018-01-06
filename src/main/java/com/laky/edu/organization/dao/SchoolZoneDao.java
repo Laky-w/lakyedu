@@ -1,10 +1,12 @@
 package com.laky.edu.organization.dao;
 
 import com.laky.edu.organization.bean.SchoolZone;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Component;
 
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by 95 on 2017/11/20.
@@ -30,7 +32,7 @@ public interface SchoolZoneDao {
      * @param parameterMap
      * @return
      */
-    SchoolZone querySchoolZone(LinkedHashMap parameterMap);
+    Map querySchoolZone(LinkedHashMap parameterMap);
 
     /**
      * 修改校区信息
@@ -38,6 +40,13 @@ public interface SchoolZoneDao {
      * @return
      */
     int updateSchoolZone(SchoolZone schoolZone);
+
+    /**
+     * 批量删除校区
+     * @param schoolZoneList
+     * @return
+     */
+    int batchStatusSchoolZone(@Param(value = "list") List<SchoolZone> schoolZoneList,@Param(value = "status") Integer status);
 
 
 

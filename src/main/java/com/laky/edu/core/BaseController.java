@@ -142,16 +142,33 @@ public class BaseController {
                 theType == null ?0:Integer.parseInt(theType.toString()));
         Integer [] ids ;
         if(schoolZone.getChildrenList() != null && schoolZone.getChildrenList().size()>0) {
-            ids = new Integer[schoolZone.getChildrenList().size()+1];
+            String idStr = getChildSchoolIds(schoolZone.getChildrenList());
+            String [] idsStr = idStr.split(",");
+            ids = new Integer[idsStr.length+1];
             ids[0] = schoolZone.getId();
-            for (int i=0;i<schoolZone.getChildrenList().size();i++){
-                SchoolZone tempSchoolZone = schoolZone.getChildrenList().get(i);
-                ids[i+1]=tempSchoolZone.getId();
+            for(int i =0;i<idsStr.length;i++){
+                ids[i+1]=new Integer(idsStr[i]);
             }
         } else {
             ids = new Integer[]{schoolZone.getId()};
         }
         return  ids;
+    }
+
+    /**
+     * 递归获取子节点id
+     * @param childList
+     * @return
+     */
+    private String  getChildSchoolIds(List<SchoolZone> childList){
+        StringBuilder id = new StringBuilder();
+        for (SchoolZone schoolZone : childList){
+            id.append(schoolZone.getId()+",");
+            if(schoolZone.getChildrenList() !=null && schoolZone.getChildrenList().size()>0){
+                id.append(getChildSchoolIds(schoolZone.getChildrenList()));
+            }
+        }
+        return id.toString();
     }
 
 

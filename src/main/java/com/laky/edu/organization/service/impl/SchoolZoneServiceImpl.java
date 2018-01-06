@@ -8,10 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.LinkedHashMap;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by 95 on 2017/11/20.
@@ -37,7 +34,7 @@ public class SchoolZoneServiceImpl implements SchoolZoneService{
     }
 
     @Override
-    public SchoolZone findSchoolZone(LinkedHashMap parameterMap) throws Exception {
+    public Map findSchoolZone(LinkedHashMap parameterMap) throws Exception {
         return schoolZoneDao.querySchoolZone(parameterMap);
     }
 
@@ -59,9 +56,70 @@ public class SchoolZoneServiceImpl implements SchoolZoneService{
         if(newSchoolZoneList.size()>0)
             return newSchoolZoneList.get(0);
         else
-            return new SchoolZone();
+            return null;
     }
 
+    @Transactional
+    @Override
+    public String deleteSchoolZone(Integer schoolId,Integer branchId) throws Exception {
+        SchoolZone schoolZone = querySchoolZoneAllBySchoolZoneId(branchId,schoolId,0);
+        List<SchoolZone> childrenList = schoolZone.getChildrenList();
+        List<SchoolZone> dataList = new ArrayList<>();
+        dataList.add(schoolZone);
+        if(childrenList!=null && childrenList.size()>0){
+            List tempList=getSubList(schoolZone.getId(),schoolZone.getChildrenList(),0);
+            if(tempList !=null)dataList.addAll(tempList);
+        }
+        String log="删除校区【"+schoolZone.getName()+"】,下级校区数量："+(dataList.size()-1);
+        schoolZoneDao.batchStatusSchoolZone(dataList,0);
+        return log;
+    }
+
+    @Override
+    public String sealUpSchoolZone(Integer schoolId, Integer branchId) throws Exception {
+        SchoolZone schoolZone = querySchoolZoneAllBySchoolZoneId(branchId,schoolId,0);
+        List<SchoolZone> childrenList = schoolZone.getChildrenList();
+        List<SchoolZone> dataList = new ArrayList<>();
+        dataList.add(schoolZone);
+        if(childrenList!=null && childrenList.size()>0){
+            List tempList=getSubList(schoolZone.getId(),schoolZone.getChildrenList(),0);
+            if(tempList !=null)dataList.addAll(tempList);
+        }
+        String log="封存校区【"+schoolZone.getName()+"】,下级校区数量："+(dataList.size()-1);
+        schoolZoneDao.batchStatusSchoolZone(dataList,2);
+        return log;
+    }
+
+    @Override
+    public String normalSchoolZone(Integer schoolId, Integer branchId) throws Exception {
+        SchoolZone schoolZone = querySchoolZoneAllBySchoolZoneId(branchId,schoolId,0);
+        List<SchoolZone> dataList = new ArrayList<>();
+        dataList.add(schoolZone);
+        String log="启用校区【"+schoolZone.getName()+"】";
+        schoolZoneDao.batchStatusSchoolZone(dataList,1);
+        return log;
+    }
+
+    /**
+     * 查找子校区
+     * @param id
+     * @param schoolZoneList
+     * @return
+     */
+    private List<SchoolZone> getSubList(Integer id,List<SchoolZone> schoolZoneList,int theType){
+        List<SchoolZone> newSchoolZoneList = new ArrayList<>();
+        schoolZoneList.forEach(item->{
+            if(item.getFatherId() == id ){
+                if((theType ==0) || (item.getTheType() == theType)) {
+                    newSchoolZoneList.add(item);
+                    List tempList=getSubList(item.getId(),schoolZoneList,theType);
+                    if(tempList !=null)newSchoolZoneList.addAll(tempList);
+                }
+            }
+        });
+        if (newSchoolZoneList.size() == 0) return  null;
+        return newSchoolZoneList;
+    }
 
     /**
      * 查找子校区
