@@ -67,6 +67,19 @@ public class TeachController extends BaseController{
         }
     }
 
+    @GetMapping("/getCourseView/{id}")
+    public Map getCourseView(HttpServletRequest request,@PathVariable Integer id){
+        try {
+            LinkedHashMap parameterMap = new LinkedHashMap();
+            parameterMap.put("id",id);
+            parameterMap.put("branchId",getCurrentUser(request).getBranchId());
+            return super.doWrappingData(teachService.queryCourse(parameterMap));
+        } catch (Exception e) {
+            return  super.doWrappingErrorData(e);
+        }
+    }
+
+
     @GetMapping("/getChargeStandard/{courseId}")
     public Map getChargeStandard(HttpServletRequest request,@PathVariable Integer courseId){
         try {

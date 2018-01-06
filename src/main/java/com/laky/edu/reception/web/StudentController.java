@@ -12,10 +12,7 @@ import com.laky.edu.reception.service.StudentService;
 import com.laky.edu.supply.bean.Customer;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -73,6 +70,18 @@ public class StudentController extends BaseController{
             order = studentService.studentApply(studentId,order,chargeDetails,financeAccount,getCurrentUser(request).getId());
             super.handleOperate("学员报名", OrganizationConst.OPERATE_ADD,"报名课程：....",request);
             return super.doWrappingData(order);
+        } catch (Exception e) {
+            return  super.doWrappingErrorData(e);
+        }
+    }
+
+    @GetMapping("/getStudentView/{id}")
+    public Map getStudentView(HttpServletRequest request, @PathVariable Integer id){
+        try {
+            LinkedHashMap parameterMap = new LinkedHashMap();
+            parameterMap.put("id",id);
+            parameterMap.put("schoolZoneId",getSchoolIds(request,2));
+            return super.doWrappingData(studentService.queryStudent(parameterMap));
         } catch (Exception e) {
             return  super.doWrappingErrorData(e);
         }

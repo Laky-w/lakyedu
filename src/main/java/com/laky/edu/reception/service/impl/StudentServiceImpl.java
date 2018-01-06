@@ -32,10 +32,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.LinkedHashMap;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by 湖之教育工作室·laky on 2017/12/23.
@@ -128,9 +125,14 @@ public class StudentServiceImpl implements StudentService{
             studentClassDao.batchInsert(studentClassList);
         }
         doMoneyRecord(order,userId,financeAccount);
-        customer.setTheType(SupplyConst.CUSTOMER_TYPE_STUDENT);
+        customer.setTheType(SupplyConst.CUSTOMER_TYPE_STUDENT);//更新生源类型为正式学员
         customerDao.updateByPrimaryKeySelective(customer);
         return order;
+    }
+
+    @Override
+    public Map queryStudent(LinkedHashMap parameterMap) throws Exception {
+        return studentDao.selectStudent(parameterMap);
     }
 
     /**

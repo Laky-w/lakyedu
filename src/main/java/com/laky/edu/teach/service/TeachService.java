@@ -40,6 +40,12 @@ public interface TeachService {
     Course createCourse(Course course, String[] schoolIds, JSONArray chargeStandards) throws Exception;
 
     /**
+     * 课程详情页
+     * @param parameterMap
+     * @return
+     */
+    Course queryCourse(LinkedHashMap parameterMap)throws Exception;
+    /**
      * 查询校区教室
      * @param parameterMap
      * @return

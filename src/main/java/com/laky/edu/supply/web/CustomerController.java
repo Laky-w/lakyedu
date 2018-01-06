@@ -9,10 +9,7 @@ import com.laky.edu.teach.bean.Room;
 import com.laky.edu.teach.service.TeachService;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -50,6 +47,18 @@ public class CustomerController extends BaseController{
             customer=customerService.createCustomer(customer,intentionId);
             super.handleOperate("添加生源", OrganizationConst.OPERATE_ADD,"添加生源【"+customer.getName()+"】",request);
             return super.doWrappingData(customer);
+        } catch (Exception e) {
+            return  super.doWrappingErrorData(e);
+        }
+    }
+
+    @GetMapping("/getCustomerView/{id}")
+    public Map getCustomerView(HttpServletRequest request,@PathVariable Integer  id ){
+        try {
+            LinkedHashMap parameterMap = new LinkedHashMap();
+            parameterMap.put("id",id);
+            parameterMap.put("schoolZoneId",getSchoolIds(request,2));
+            return super.doWrappingData(customerService.findCustomer(parameterMap));
         } catch (Exception e) {
             return  super.doWrappingErrorData(e);
         }

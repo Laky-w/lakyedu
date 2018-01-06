@@ -11,6 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.LinkedHashMap;
+import java.util.Map;
+
 @Service
 public class SupplyServiceImpl implements SupplyService {
 
@@ -31,6 +33,11 @@ public class SupplyServiceImpl implements SupplyService {
     public PageBean<Activity> findActivityAll(LinkedHashMap parameterMap) throws Exception {
         PageHelper.startPage((int)parameterMap.get("pageNum"),(int)parameterMap.get("pageSize"));
         return new PageBean<>(activityDao.selectByParameterMap(parameterMap));
+    }
+
+    @Override
+    public Map queryActivity(LinkedHashMap parameterMap) throws Exception {
+        return activityDao.selectActivity(parameterMap);
     }
 
 }

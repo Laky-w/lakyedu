@@ -75,6 +75,11 @@ public class TeachServiceImpl implements TeachService{
     }
 
     @Override
+    public Course queryCourse(LinkedHashMap parameterMap) throws Exception {
+        return courseDao.selectCourse(parameterMap);
+    }
+
+    @Override
     public PageBean<Room> findRoomAll(LinkedHashMap parameterMap) {
         PageHelper.startPage((int)parameterMap.get("pageNum"),(int)parameterMap.get("pageSize"));
         return new PageBean<>(roomDao.selectByParameterMap(parameterMap));

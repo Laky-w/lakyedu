@@ -21,6 +21,13 @@
   <sql id="Blob_Column_List" >
     remarks
   </sql>
+  <select id="selectCourse" resultMap="ResultMapWithBLOBs">
+    select
+    s.*,p.name as clazz_name
+    from laky_teach_course s
+    LEFT JOIN laky_organization_parameter_value p on s.clazz_id = p.id and p.the_status !=0
+    where s.id =#{id,jdbcType=INTEGER} AND s.the_status !=0 AND s.branch_id =#{branchId,jdbcType=INTEGER}
+  </select>
   <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />

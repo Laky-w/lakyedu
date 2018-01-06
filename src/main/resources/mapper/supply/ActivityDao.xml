@@ -25,6 +25,21 @@
     from laky_supply_market_activity
     where id = #{id,jdbcType=INTEGER}
   </select>
+  <select id="selectActivity" resultType="java.util.Map">
+    SELECT s.id AS id, s.name  AS name, s.create_time AS createTime, s.end_date AS endDate, s.start_date AS startDate,s.the_type as theType, s.cost AS  cost,s.target_number AS targetNumber, sz.name AS schoolZoneName,u.name AS userName,p.name as cateGoryName
+    FROM laky_supply_market_activity s
+    RIGHT JOIN laky_organization_school_zone sz ON s.school_zone_id=sz.id AND sz.the_status!=0
+    LEFT JOIN laky_organization_user u ON s.user_id = u.id AND u.the_status!=0
+    LEFT  JOIN   laky_organization_parameter_value p ON s.category_id = p.id
+    WHERE s.id=#{id,jdbcType=INTEGER} AND s.the_status!=0
+    <if test="schoolZoneId != null">
+      AND s.school_zone_id IN
+      <foreach collection="schoolZoneId" item="schoolId" index="index"
+               open="(" close=")" separator=",">
+        #{schoolId}
+      </foreach>
+    </if>
+  </select>
   <select id="selectByParameterMap" resultType="java.util.Map">
     SELECT s.id AS id, s.name  AS name, s.create_time AS createTime, s.end_date AS endDate, s.start_date AS startDate,
     s.the_type as theType, s.cost AS  cost,s.target_number AS targetNumber, sz.name AS schoolZoneName,u.name AS userName,p.name as cateGoryName

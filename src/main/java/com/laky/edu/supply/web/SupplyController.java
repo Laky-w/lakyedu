@@ -6,10 +6,7 @@ import com.laky.edu.supply.bean.Activity;
 import com.laky.edu.supply.service.SupplyService;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -53,5 +50,17 @@ public class SupplyController extends BaseController{
     }
 
 
+    @GetMapping("/getMarketActivityView/{id}")
+    public Map getMarketActivityView(HttpServletRequest request,@PathVariable Integer id){
+        try {
+            LinkedHashMap parameterMap = new LinkedHashMap();
+            parameterMap.put("id",id);
+            parameterMap.put("schoolZoneId",getSchoolIds(request,2));
+
+            return super.doWrappingData(supplyService.queryActivity(parameterMap));
+        } catch (Exception e) {
+            return  super.doWrappingErrorData(e);
+        }
+    }
 
 }

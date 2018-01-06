@@ -9,6 +9,7 @@ import com.laky.edu.supply.bean.Customer;
 
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by 湖之教育工作室·laky on 2017/12/23.
@@ -41,4 +42,12 @@ public interface StudentService {
      */
     StudentOrder studentApply(Integer studentId, StudentOrder order, List<StudentOrderDetail> orderDetails,
                       List<MoneyRecordAccount> financeAccount,Integer userId) throws Exception;
+
+    /**
+     * 查询正式学员记录
+     * @param parameterMap
+     * @return
+     * @throws Exception
+     */
+    Map queryStudent(LinkedHashMap parameterMap)throws Exception;
 }

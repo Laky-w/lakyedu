@@ -53,6 +53,11 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
+    public Map findCustomer(LinkedHashMap parameterMap) throws Exception {
+        return customerDao.selectCustomer(parameterMap);
+    }
+
+    @Override
     public PageBean<Customer> findCustomerAll(LinkedHashMap parameterMap) throws Exception {
         PageHelper.startPage((int)parameterMap.get("pageNum"),(int)parameterMap.get("pageSize"));
         return new PageBean<>(customerDao.selectByParameterMap(parameterMap));

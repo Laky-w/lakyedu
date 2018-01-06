@@ -5,6 +5,7 @@ import com.laky.edu.supply.bean.Customer;
 
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 public interface CustomerService {
     int deleteByPrimaryKey(Integer id)throws Exception;
@@ -19,6 +20,14 @@ public interface CustomerService {
     Customer createCustomer(Customer customer,Integer [] intentionIds)throws Exception;
 
     Customer createSelective(Customer customer)throws Exception;
+
+    /**
+     * 生源详情页
+     * @param parameterMap
+     * @return
+     * @throws Exception
+     */
+    Map findCustomer(LinkedHashMap parameterMap)throws Exception;
 
     PageBean<Customer> findCustomerAll(LinkedHashMap parameterMap)throws Exception;
 

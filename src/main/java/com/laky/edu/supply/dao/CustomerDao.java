@@ -22,6 +22,8 @@ public interface CustomerDao {
 
     Customer selectByPrimaryKey(Integer id);
 
+    Map selectCustomer(LinkedHashMap parameterMap);
+
     List<Customer> selectByParameterMap(LinkedHashMap parameterMap);
 
     int updateByPrimaryKeySelective(Customer record);

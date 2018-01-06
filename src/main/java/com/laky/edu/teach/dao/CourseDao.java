@@ -13,24 +13,15 @@ public interface CourseDao {
 
     int insert(Course record);
 
-    /**
-     * 授权校区
-     * @param courseSchoolList
-     * @return
-     */
     int insertCourseSchool(List<Map> courseSchoolList);
 
-
-    /**
-     * 授权收费标准
-     * @param chargeStandardList
-     * @return
-     */
     int insertCourseChargeStandard(List<Map> chargeStandardList);
 
     List<Map> selectCourseChargeStandard(LinkedHashMap parameterMap);
 
     Course selectByPrimaryKey(Integer id);
+
+    Course selectCourse(LinkedHashMap parameterMap);
 
     List<Course> selectByParameterMap(LinkedHashMap parameterMap);
 

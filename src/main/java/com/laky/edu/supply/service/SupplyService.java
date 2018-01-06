@@ -4,6 +4,7 @@ import com.laky.edu.core.PageBean;
 import com.laky.edu.supply.bean.Activity;
 
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 public interface SupplyService {
     /**
@@ -23,4 +24,11 @@ public interface SupplyService {
     PageBean<Activity> findActivityAll(LinkedHashMap parameterMap)throws Exception;
 
 
+    /**
+     * 查询市场活动详情页
+     * @param parameterMap
+     * @return
+     * @throws Exception
+     */
+    Map queryActivity(LinkedHashMap parameterMap)throws Exception;
 }
