@@ -17,8 +17,8 @@
         SELECT s.id,s.`name`,s.the_type as theType,s.create_datetime as createTime,s.serial,s.address,s.phone,s.remarks,s.`owner`,s.the_status as theStatus,
           (SELECT f.`name` from laky_organization_school_zone f where id=s.father_id) as fatherName,
           (SELECT count(1) from laky_organization_user u where u.school_zone_id = s.id and u.the_status !=0) as userNumber,
-          (SELECT count(1) from laky_supply_student st where st.school_zone_id = s.id and s.the_status !=0) as studentNumber,
-          (SELECT count(1) from laky_reception_student rs where rs.school_zone_id = s.id and rs.the_status !=0) as customerNumber
+          (SELECT count(1) from laky_supply_student st where st.school_zone_id = s.id and s.the_status !=0 and st.the_type!=9) as customerNumber,
+          (SELECT count(1) from laky_reception_student rs where rs.school_zone_id = s.id and rs.the_status !=0) as studentNumber
            FROM laky_organization_school_zone s where s.id =#{id,jdbcType=INTEGER} AND  s.the_status != 0 AND s.branch_id =#{branchId,jdbcType=INTEGER}
     </select>
     <update id="updateSchoolZone" parameterType="com.laky.edu.organization.bean.SchoolZone">
