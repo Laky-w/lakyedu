@@ -32,7 +32,7 @@
     RIGHT JOIN laky_teach_course c ON i.course_id = c.id AND c.the_status!=0
     WHERE i.student_id=s.id ) AS intentionCourseName
     from laky_supply_student s
-    RIGHT JOIN laky_organization_school_zone sz on s.school_zone_id = sz.id and sz.the_status !=0
+    RIGHT JOIN laky_organization_school_zone sz on s.school_zone_id = sz.id and sz.the_status =1
     LEFT JOIN laky_organization_parameter_value v ON s.contact_id = v.id AND v.the_status!=0
     LEFT JOIN laky_organization_user u ON s.owner_id = u.id AND  u.the_status!=0
     LEFT JOIN laky_supply_market_activity a ON s.source_id = a.id AND a.the_status!=0
@@ -59,7 +59,7 @@
     RIGHT JOIN laky_teach_course c ON i.course_id = c.id AND c.the_status!=0
     WHERE i.student_id=s.id ) AS intentionCourseName
     from laky_supply_student s
-    RIGHT JOIN laky_organization_school_zone sz on s.school_zone_id = sz.id and sz.the_status !=0
+    RIGHT JOIN laky_organization_school_zone sz on s.school_zone_id = sz.id and sz.the_status =1
     LEFT JOIN laky_organization_parameter_value v ON s.contact_id = v.id AND v.the_status!=0
     LEFT JOIN laky_organization_user u ON s.owner_id = u.id AND  u.the_status!=0
     LEFT JOIN laky_supply_market_activity a ON s.source_id = a.id AND a.the_status!=0

@@ -23,7 +23,7 @@
     select gr.id,gr.consume_amount AS consumeAmount,gr.last_amount AS lastAmount,v.name as clazzName,
     s.name AS schoolZoneId,g.name AS goodsName
     from laky_logistics_goods_repository gr
-    RIGHT JOIN laky_organization_school_zone s ON gr.school_zone_id = s.id AND s.the_status!=0
+    RIGHT JOIN laky_organization_school_zone s ON gr.school_zone_id = s.id AND s.the_status=1
     LEFT JOIN laky_logistics_goods g ON gr.goods_id = g.id AND g.the_status!=0
     LEFT JOIN laky_organization_parameter_value v ON g.clazz_id= v.id
     where

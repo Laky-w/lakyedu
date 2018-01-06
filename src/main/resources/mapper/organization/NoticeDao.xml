@@ -33,7 +33,7 @@
     <if test="userName != null">
       AND u.`name` LIKE CONCAT('%',#{userName,jdbcType=VARCHAR},'%')
     </if>
-    LEFT JOIN laky_organization_school_zone sz on s.school_zone_id = sz.id and sz.the_status !=0
+    LEFT JOIN laky_organization_school_zone sz on s.school_zone_id = sz.id and sz.the_status =1
     <where>
       1=1 AND s.the_type!= 3
       <if test="userId != null">

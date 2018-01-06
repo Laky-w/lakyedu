@@ -20,7 +20,7 @@
   </select>
   <select id="selectByParameterMap" resultMap="BaseResultMap" >
     SELECT s.*,sz.name as school_zone_name from laky_teach_room s
-    RIGHT JOIN laky_organization_school_zone sz on s.school_zone_id = sz.id and sz.the_status !=0
+    RIGHT JOIN laky_organization_school_zone sz on s.school_zone_id = sz.id and sz.the_status =1
      where s.the_status !=0
     <if test="name != null">
       AND s.`name` LIKE CONCAT('%',#{name,jdbcType=VARCHAR},'%')

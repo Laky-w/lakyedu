@@ -21,7 +21,7 @@
     s.id,s.check_status AS checkStatus,s.create_time as createTime,s.money,
     s.salesman_id AS salesmanId,u.name as salesmanName,s.the_type as theType,s.order_id AS orderId,sz.name as schoolName
     from laky_finance_money_record s
-    RIGHT JOIN laky_organization_school_zone sz ON s.school_zone_id=sz.id AND sz.the_status!=0
+    RIGHT JOIN laky_organization_school_zone sz ON s.school_zone_id=sz.id AND sz.the_status=1
     LEFT JOIN laky_organization_user u ON s.salesman_id = u.id AND  u.the_status!=0
     where s.the_status !=0 and
     s.school_zone_id IN

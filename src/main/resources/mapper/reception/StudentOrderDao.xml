@@ -22,7 +22,7 @@
     SELECT s.id,u.name as userName,st.name as studentName,s.create_time as createTime,s.total,s.receivable,s.cost_status as costStatus,
     s.subtract_money AS subtractMoney,sz.name AS schoolZoneName
     from laky_reception_student_order s
-    RIGHT JOIN laky_organization_school_zone sz ON s.school_zone_id=sz.id AND sz.the_status!=0
+    RIGHT JOIN laky_organization_school_zone sz ON s.school_zone_id=sz.id AND sz.the_status=1
     LEFT JOIN laky_reception_student st on s.student_id = st.id
     LEFT JOIN laky_organization_user u on s.user_id = u.id
     where s.the_status !=0 AND

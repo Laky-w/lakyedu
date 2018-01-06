@@ -25,7 +25,7 @@
     select
     s.id,s.`name`,s.the_public AS thePublic,s.the_type as theType,s.the_open as theOpen,s.money,s.remarks,sz.`name` AS schoolZoneName
     from laky_finance_account s
-    RIGHT JOIN laky_organization_school_zone sz ON s.school_zone_id=sz.id AND sz.the_status!=0
+    RIGHT JOIN laky_organization_school_zone sz ON s.school_zone_id=sz.id AND sz.the_status =1
     where s.the_status !=0 AND
     ((s.branch_id = #{branchId,jdbcType=INTEGER} AND s.the_open =2) OR (
     s.school_zone_id IN

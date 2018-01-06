@@ -29,7 +29,7 @@
 		WHERE st.schedule_id = s.id
 	) AS headTeachName
     FROM laky_teach_schedule s
-    RIGHT JOIN laky_organization_school_zone sz on s.school_zone_id = sz.id and sz.the_status !=0
+    RIGHT JOIN laky_organization_school_zone sz on s.school_zone_id = sz.id and sz.the_status =1
     LEFT JOIN laky_teach_room r ON s.room_id = r.id
     AND r.the_status != 0
     LEFT JOIN laky_teach_school_class sc ON s.class_id = sc.id
