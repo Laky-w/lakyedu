@@ -27,6 +27,12 @@ public interface SchoolClassService {
     SchoolClass createSchoolClass(SchoolClass schoolClass) throws Exception;
 
     /**
+     * 班级详情
+     * @param parameterMap
+     * @return
+     */
+    Map findSchoolClassById(LinkedHashMap parameterMap)throws Exception;
+    /**
      * 查询待分班学员
      * @param parameterMap
      * @return

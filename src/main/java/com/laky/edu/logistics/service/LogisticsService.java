@@ -8,6 +8,7 @@ import com.laky.edu.logistics.bean.GoodsRepository;
 
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by 湖之教育工作室·laky on 2017/12/29.
@@ -21,6 +22,12 @@ public interface LogisticsService {
      */
     Goods createGoods(Goods goods)throws Exception;
 
+    /**
+     *查询物品详情
+     * @param parameterMap
+     * @return
+     */
+    Map findGoodsById(LinkedHashMap parameterMap)throws Exception;
     /**
      * 查询商品
      * @param parameterMap

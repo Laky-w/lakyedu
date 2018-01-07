@@ -15,7 +15,7 @@ public interface SchoolClassDao {
 
     int insertSelective(SchoolClass record);
 
-    SchoolClass selectByPrimaryKey(Integer id);
+    Map selectSchoolClassById(LinkedHashMap parameterMap);
 
     List<Map> selectByParameterMap(LinkedHashMap parameterMap);
 

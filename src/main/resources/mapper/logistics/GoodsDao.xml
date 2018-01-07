@@ -15,6 +15,29 @@
   <sql id="Base_Column_List" >
     id, name, price, sell_price, clazz_id, the_status, create_time, the_type, branch_id
   </sql>
+
+  <select id="selectGoodsById" resultType="java.util.Map">
+    select g.id,g.name,g.price,g.sell_price AS sellPrice,g.the_status AS theStatus,(CASE WHEN gr.last_amount IS NULL THEN 0 ELSE gr.last_amount END) AS lastAmount,g.create_time AS createTime,g.the_type AS theType,b.branch_name AS branchId, v.name AS clazzId
+    from laky_logistics_goods g
+    LEFT JOIN laky_organization_branch b ON g.branch_id=b.id AND b.the_status!=0
+    LEFT JOIN laky_organization_parameter_value v ON g.clazz_id =v.id AND v.the_status!=0
+    LEFT JOIN laky_organization_parameter_value p ON g.the_type = p.id AND p.the_status!=0
+    LEFT JOIN  laky_logistics_goods_repository gr ON  gr.goods_id = g.id
+    <if test="schoolZoneId2 != null">
+      <if test="schoolZoneId2 instanceof String">
+        AND gr.school_zone_id = #{schoolZoneId2,jdbcType=INTEGER}
+      </if>
+      <if test="!(schoolZoneId2 instanceof String)">
+        AND gr.school_zone_id IN
+        <foreach collection="schoolZoneId2" item="schoolId" index="index"
+                 open="(" close=")" separator=",">
+          #{schoolId}
+        </foreach>
+      </if>
+    </if>
+    where g.id = #{id,jdbcType=INTEGER} AND g.the_status!=0 AND g.branch_id = #{branchId,jdbcType=INTEGER}
+  </select>
+
   <select id="selectByParameterMap" resultType="java.util.Map" >
     select g.id,g.name,g.price,g.sell_price AS sellPrice,g.the_status AS theStatus,(CASE WHEN gr.last_amount IS NULL THEN 0 ELSE gr.last_amount END) AS lastAmount,
     g.create_time AS createTime,g.the_type AS theType,b.branch_name AS branchId, v.name AS clazzId

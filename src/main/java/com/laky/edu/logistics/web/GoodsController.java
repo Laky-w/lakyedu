@@ -49,6 +49,19 @@ public class GoodsController extends BaseController {
         }
     }
 
+    @GetMapping("/getGoodsView/{id}")
+    public Map getGoodsView(HttpServletRequest request,@PathVariable Integer id){
+        try {
+            LinkedHashMap parameterMap = new LinkedHashMap();
+            parameterMap.put("id",id);
+            parameterMap.put("branchId",getCurrentUser(request).getBranchId());
+            parameterMap.put("schoolZoneId2",new Integer[]{getCurrentUser(request).getSchoolZoneId()});
+            return super.doWrappingData(logisticsService.findGoodsById(parameterMap));
+        } catch (Exception e) {
+            return  super.doWrappingErrorData(e);
+        }
+    }
+
     @PostMapping("/getRecordList/{pageNum}/{pageSize}")
     public Map getRecordList(HttpServletRequest request, @PathVariable int pageNum, @PathVariable int pageSize){
         try {

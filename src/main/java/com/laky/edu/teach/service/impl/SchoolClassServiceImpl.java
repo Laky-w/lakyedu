@@ -39,6 +39,11 @@ public class SchoolClassServiceImpl implements SchoolClassService{
     }
 
     @Override
+    public Map findSchoolClassById(LinkedHashMap parameterMap) throws Exception {
+        return schoolClassDao.selectSchoolClassById(parameterMap);
+    }
+
+    @Override
     public PageBean<Map> findWaitStudentAll(LinkedHashMap parameterMap) {
         PageHelper.startPage((int)parameterMap.get("pageNum"),(int)parameterMap.get("pageSize"));
         return new PageBean<>(studentClassDao.selectByParameterMap(parameterMap));

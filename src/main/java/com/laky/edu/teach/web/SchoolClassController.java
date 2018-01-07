@@ -10,10 +10,7 @@ import com.laky.edu.teach.service.SchoolClassService;
 import com.laky.edu.teach.service.TeachService;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -50,6 +47,18 @@ public class SchoolClassController extends BaseController{
             schoolClass=schoolClassService.createSchoolClass(schoolClass); //
             super.handleOperate("添加班级", OrganizationConst.OPERATE_ADD,"添加班级【"+schoolClass.getName()+"】",request);
             return  super.doWrappingData(schoolClass);
+        } catch (Exception e) {
+            return  super.doWrappingErrorData(e);
+        }
+    }
+
+    @GetMapping("/getSchoolClassView/{id}")
+    public Map getSchoolClassView(HttpServletRequest request, @PathVariable Integer id){
+        try {
+            LinkedHashMap parameterMap = new LinkedHashMap();
+            parameterMap.put("id",id);
+            parameterMap.put("schoolZoneId",getSchoolIds(request,2));
+            return  super.doWrappingData(schoolClassService.findSchoolClassById(parameterMap));
         } catch (Exception e) {
             return  super.doWrappingErrorData(e);
         }

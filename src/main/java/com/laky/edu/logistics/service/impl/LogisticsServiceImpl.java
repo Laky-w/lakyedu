@@ -13,10 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.LinkedHashMap;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by 湖之教育工作室·laky on 2017/12/29.
@@ -42,6 +39,11 @@ public class LogisticsServiceImpl implements LogisticsService{
         int rows = goodsDao.insert(goods);
         if (rows==0) throw new Exception("创建物品管理失败");
         return goods;
+    }
+
+    @Override
+    public Map findGoodsById(LinkedHashMap parameterMap) throws Exception {
+        return goodsDao.selectGoodsById(parameterMap);
     }
 
     @Override
