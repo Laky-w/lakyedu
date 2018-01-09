@@ -27,15 +27,16 @@
   <select id="selectCustomer" resultType="java.util.Map">
     SELECT s.id , s.name ,s.sex ,s.birthday AS birthday,s.phone,
     s.the_type AS theType, s.remarks ,s.create_time AS createTime,
-    sz.name as schoolZoneName, v.name AS contactId, u.name AS ownerId, a.name AS sourceId,
-    (SELECT group_concat(c.name) FROM laky_supply_intention_course i
-    RIGHT JOIN laky_teach_course c ON i.course_id = c.id AND c.the_status!=0
-    WHERE i.student_id=s.id ) AS intentionCourseName
+    sz.name as schoolZoneName,sz.id as schoolZoneId, v.name AS contactName,v.id as contactName, u.name AS ownerName,u.id as ownerId, a.name AS sourceName,
+    a.id AS sourceId,
+    i.intentionCourseName,i.intentionCourseId
     from laky_supply_student s
     RIGHT JOIN laky_organization_school_zone sz on s.school_zone_id = sz.id and sz.the_status =1
     LEFT JOIN laky_organization_parameter_value v ON s.contact_id = v.id AND v.the_status!=0
     LEFT JOIN laky_organization_user u ON s.owner_id = u.id AND  u.the_status!=0
     LEFT JOIN laky_supply_market_activity a ON s.source_id = a.id AND a.the_status!=0
+    LEFT JOIN (SELECT group_concat(c.name) as intentionCourseName,group_concat(i.course_id) as intentionCourseId,i.student_id FROM laky_supply_intention_course i
+    LEFT  JOIN laky_teach_course c ON i.course_id = c.id AND c.the_status!=0 GROUP BY i.student_id) i ON i.student_id = s.id
     where s.id =#{id,jdbcType=INTEGER} AND  s.the_status != 0 AND s.the_type !=9
     <if test="schoolZoneId != null">
       AND s.school_zone_id IN
@@ -108,18 +109,21 @@
     delete from laky_supply_student
     where id = #{id,jdbcType=INTEGER}
   </delete>
+  <delete id="deleteIntentionCourseByStudentId"  parameterType="Integer">
+    DELETE FROM laky_supply_intention_course WHERE student_id = #{studentId,jdbcType=INTEGER};
+  </delete>
   <insert id="insertCustomer" parameterType="com.laky.edu.supply.bean.Customer" useGeneratedKeys="true" keyProperty="id"
           keyColumn="id">
     insert into laky_supply_student (id, name, sex, 
       birthday, phone, source_id,
       school_zone_id, introducer_id, owner_id, 
-      the_status, the_type, remarks, create_time, contact_id,pinyin
+      the_status, the_type, remarks, create_time, contact_id,pinyin,invite_status,allot_status,contact_status
       )
     values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{sex,jdbcType=TINYINT}, 
       #{birthday,jdbcType=DATE}, #{phone,jdbcType=CHAR}, #{sourceId,jdbcType=INTEGER},
       #{schoolZoneId,jdbcType=INTEGER}, #{introducerId,jdbcType=INTEGER}, #{ownerId,jdbcType=INTEGER}, 
       #{theStatus,jdbcType=TINYINT}, #{theType,jdbcType=TINYINT}, #{remarks,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{contactId,jdbcType=INTEGER},
-      #{pinyin,jdbcType=VARCHAR}
+      #{pinyin,jdbcType=VARCHAR},#{inviteStatus,jdbcType=TINYINT},#{allotStatus,jdbcType=TINYINT},#{contactStatus,jdbcType=TINYINT}
       )
   </insert>
 

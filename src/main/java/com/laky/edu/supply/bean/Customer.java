@@ -14,19 +14,19 @@ public class Customer implements Serializable {
 
     private String phone;
 
-    private Integer sourceId;
+    private Integer sourceId; //来源
 
     private Integer schoolZoneId;
 
     private String schoolZoneName;
 
-   private Integer introducerId;
+   private Integer introducerId;//介绍人
 
-    private Integer ownerId;
+    private Integer ownerId;//负责人
 
     private Integer theStatus;
 
-    private Integer theType;
+    private Integer theType;//学生类型 1 生源，9正式学员
 
     private String remarks;
 
@@ -35,6 +35,12 @@ public class Customer implements Serializable {
     private Integer contactId;
 
     private String pinyin;
+
+    private Integer allotStatus; //分配状态 1 未分配 2 已分配
+
+    private Integer inviteStatus;//邀约状态 1 未邀约 2 已邀约
+
+    private Integer contactStatus;//跟进状态 1 已跟进 2 未跟进
 
     private static final long serialVersionUID = 1L;
 
@@ -167,5 +173,29 @@ public class Customer implements Serializable {
 
     public void setPinyin(String pinyin) {
         this.pinyin = pinyin;
+    }
+
+    public Integer getContactStatus() {
+        return contactStatus;
+    }
+
+    public void setContactStatus(Integer contactStatus) {
+        this.contactStatus = contactStatus;
+    }
+
+    public Integer getAllotStatus() {
+        return allotStatus;
+    }
+
+    public void setAllotStatus(Integer allotStatus) {
+        this.allotStatus = allotStatus;
+    }
+
+    public Integer getInviteStatus() {
+        return inviteStatus;
+    }
+
+    public void setInviteStatus(Integer inviteStatus) {
+        this.inviteStatus = inviteStatus;
     }
 }

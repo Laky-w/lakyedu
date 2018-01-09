@@ -42,10 +42,13 @@ public class CustomerController extends BaseController{
     @PostMapping("/createCustomer")
     public Map createCustomer(HttpServletRequest request, Customer customer,Integer [] intentionId ){
         try {
-            LinkedHashMap parameterMap = new LinkedHashMap();
-            customer.setSchoolZoneId(super.getCurrentUser(request).getSchoolZoneId());
-            customer=customerService.createCustomer(customer,intentionId);
-            super.handleOperate("添加生源", OrganizationConst.OPERATE_ADD,"添加生源【"+customer.getName()+"】",request);
+            if(customer.getId() == null ){ //添加
+                customer=customerService.createCustomer(customer,intentionId);
+                super.handleOperate("添加生源", OrganizationConst.OPERATE_ADD,"添加生源【"+customer.getName()+"】",request);
+            } else {
+                customer=customerService.updateCustomer(customer,intentionId);
+                super.handleOperate("添加生源", OrganizationConst.OPERATE_ADD,"添加生源【"+customer.getName()+"】",request);
+            }
             return super.doWrappingData(customer);
         } catch (Exception e) {
             return  super.doWrappingErrorData(e);

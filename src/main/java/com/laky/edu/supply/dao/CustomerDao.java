@@ -20,6 +20,13 @@ public interface CustomerDao {
      */
     int insertIntentionCourse(List<Map> intentionCourseList);
 
+    /**
+     * 删除意向课程
+     * @param studentId
+     * @return
+     */
+    int deleteIntentionCourseByStudentId(Integer studentId);
+
     Customer selectByPrimaryKey(Integer id);
 
     Map selectCustomer(LinkedHashMap parameterMap);

@@ -19,7 +19,14 @@ public interface CustomerService {
      */
     Customer createCustomer(Customer customer,Integer [] intentionIds)throws Exception;
 
-    Customer createSelective(Customer customer)throws Exception;
+    /**
+     * 修改生源
+     * @param customer
+     * @param intentionIds
+     * @return
+     * @throws Exception
+     */
+    Customer updateCustomer(Customer customer,Integer [] intentionIds)throws Exception;
 
     /**
      * 生源详情页

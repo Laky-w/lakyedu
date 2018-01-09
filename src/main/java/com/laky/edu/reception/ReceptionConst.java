@@ -5,6 +5,13 @@ package com.laky.edu.reception;
  */
 public class ReceptionConst {
     /**
+     * 客户类型
+     */
+    public static int CUSTOMER_TYPE_YES=1; //未分配
+    public static int CUSTOMER_TYPE_NO=2; //已分配
+//    public static int CUSTOMER_TYPE_STATUS_NO=1; //未更近
+
+    /**
      * 学生报班状态
      */
     public static int STUDENT_CLASS_STATUS_NO=1; //未报班
