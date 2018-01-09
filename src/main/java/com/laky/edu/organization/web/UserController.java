@@ -206,7 +206,7 @@ public class UserController extends BaseController{
             if(user.getQuitStatus() == 2){//离职
                 user.setQuitDate(new Date());
                 logTitle = "离职";
-                logContent = "员工【\"+user.getName()+\"】离职职";
+                logContent = "员工【"+user.getName()+"】离职";
             }
             user=userService.updateUser(user,null);
             super.handleOperate(logTitle,OrganizationConst.OPERATE_UPDATE,logContent,request);

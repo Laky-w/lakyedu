@@ -32,6 +32,9 @@ public class DataSourceConfiguration {
         dataSource.setPassword(password);
         dataSource.setMaxPoolSize(60);
         dataSource.setMinPoolSize(10);
+        //
+        dataSource.setTestConnectionOnCheckin(false);
+        dataSource.setTestConnectionOnCheckout(true);
         //数据库链接关闭后不自动提交
         dataSource.setAutoCommitOnClose(false);
         //数据库链接超时时间

@@ -14,7 +14,7 @@ spring:
     time-zone: GMT+8
 jdbc:
   datasource:
-    url: jdbc:mysql://39.104.88.65:3306/edu_laky?useUnicode=true&characterEncoding=utf8&allowMultiQueries=true
+    url: jdbc:mysql://39.104.88.65:3306/edu_laky?useUnicode=true&characterEncoding=utf8&allowMultiQueries=true&autoReconnect=true
 #    url: jdbc:mysql://127.0.0.1:3306/edu_laky?useUnicode=true&characterEncoding=utf8&allowMultiQueries=true
     username: root
     password: Laky@123456

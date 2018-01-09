@@ -6,10 +6,7 @@ import com.laky.edu.supply.bean.Customer;
 import com.laky.edu.supply.service.ContactService;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -37,7 +34,6 @@ public class ContactController extends BaseController{
     @PostMapping("/createContact")
     public Map createContact(HttpServletRequest request, Contact contact){
         try {
-            LinkedHashMap parameterMap = new LinkedHashMap();
             contactService.createContact(contact);
             super.handleOperate("添加联系人", OrganizationConst.OPERATE_ADD,"添加联系人【"+getCurrentUser(request).getName()+"】",request);
             return super.doWrappingData(contact);

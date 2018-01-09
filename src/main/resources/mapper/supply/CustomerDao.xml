@@ -27,7 +27,7 @@
   <select id="selectCustomer" resultType="java.util.Map">
     SELECT s.id , s.name ,s.sex ,s.birthday AS birthday,s.phone,
     s.the_type AS theType, s.remarks ,s.create_time AS createTime,
-    sz.name as schoolZoneName,sz.id as schoolZoneId, v.name AS contactName,v.id as contactName, u.name AS ownerName,u.id as ownerId, a.name AS sourceName,
+    sz.name as schoolZoneName,sz.id as schoolZoneId, v.name AS contactName,v.id as contactId, u.name AS ownerName,u.id as ownerId, a.name AS sourceName,
     a.id AS sourceId,
     i.intentionCourseName,i.intentionCourseId
     from laky_supply_student s
@@ -58,7 +58,7 @@
     sz.name as schoolZoneName, v.name AS contactId, u.name AS ownerId, a.name AS sourceId,
     (SELECT group_concat(c.name) FROM laky_supply_intention_course i
     RIGHT JOIN laky_teach_course c ON i.course_id = c.id AND c.the_status!=0
-    WHERE i.student_id=s.id ) AS intentionCourseName
+    WHERE i.student_id=s.id ) AS intentionCourseName,s.allot_status AS allotStatus,s.invite_status AS inviteStatus,s.contact_status as contactStatus
     from laky_supply_student s
     RIGHT JOIN laky_organization_school_zone sz on s.school_zone_id = sz.id and sz.the_status =1
     LEFT JOIN laky_organization_parameter_value v ON s.contact_id = v.id AND v.the_status!=0
@@ -103,7 +103,7 @@
         </foreach>
       </if>
     </if>
-    ORDER BY s.create_time DESC
+    ORDER BY s.create_time DESC,s.id
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from laky_supply_student
@@ -142,6 +142,9 @@
       <if test="name != null" >
         name = #{name,jdbcType=VARCHAR},
       </if>
+      <if test="allotStatus != null" >
+        allot_status = #{allotStatus,jdbcType=TINYINT},
+      </if>
       <if test="sex != null" >
         sex = #{sex,jdbcType=TINYINT},
       </if>
@@ -150,6 +153,9 @@
       </if>
       <if test="phone != null" >
         phone = #{phone,jdbcType=CHAR},
+      </if>
+      <if test="contactId != null" >
+        contact_id = #{contactId,jdbcType=INTEGER},
       </if>
       <if test="sourceId != null" >
         source_id = #{sourceId,jdbcType=INTEGER},

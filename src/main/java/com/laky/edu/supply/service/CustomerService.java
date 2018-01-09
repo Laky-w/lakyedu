@@ -29,6 +29,14 @@ public interface CustomerService {
     Customer updateCustomer(Customer customer,Integer [] intentionIds)throws Exception;
 
     /**
+     * 删除生源
+     * @param customerId
+     * @return
+     * @throws Exception
+     */
+    boolean deleteCustomer(Integer customerId)throws Exception;
+
+    /**
      * 生源详情页
      * @param parameterMap
      * @return
@@ -37,8 +45,4 @@ public interface CustomerService {
     Map findCustomer(LinkedHashMap parameterMap)throws Exception;
 
     PageBean<Customer> findCustomerAll(LinkedHashMap parameterMap)throws Exception;
-
-    int updateByPrimaryKeySelective(Customer reccustomerord)throws Exception;
-
-    int updateByPrimaryKey(Customer customer)throws Exception;
 }

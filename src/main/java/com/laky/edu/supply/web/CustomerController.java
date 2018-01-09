@@ -47,7 +47,7 @@ public class CustomerController extends BaseController{
                 super.handleOperate("添加生源", OrganizationConst.OPERATE_ADD,"添加生源【"+customer.getName()+"】",request);
             } else {
                 customer=customerService.updateCustomer(customer,intentionId);
-                super.handleOperate("添加生源", OrganizationConst.OPERATE_ADD,"添加生源【"+customer.getName()+"】",request);
+                super.handleOperate("修改生源", OrganizationConst.OPERATE_UPDATE,"修改生源【"+customer.getName()+"】",request);
             }
             return super.doWrappingData(customer);
         } catch (Exception e) {
@@ -62,6 +62,21 @@ public class CustomerController extends BaseController{
             parameterMap.put("id",id);
             parameterMap.put("schoolZoneId",getSchoolIds(request,2));
             return super.doWrappingData(customerService.findCustomer(parameterMap));
+        } catch (Exception e) {
+            return  super.doWrappingErrorData(e);
+        }
+    }
+    @DeleteMapping("/deleteCustomer/{id}")
+    public Map deleteCustomer(HttpServletRequest request,@PathVariable Integer  id ){
+        try {
+            LinkedHashMap parameterMap = new LinkedHashMap();
+            parameterMap.put("id",id);
+            Map map = customerService.findCustomer(parameterMap);
+            boolean flag = customerService.deleteCustomer(id);
+            if(flag){
+                super.handleOperate("删除生源",OrganizationConst.OPERATE_DELETE,"删除生源【"+map.get("name")+"】",request);
+            }
+            return super.doWrappingData("删除成功");
         } catch (Exception e) {
             return  super.doWrappingErrorData(e);
         }

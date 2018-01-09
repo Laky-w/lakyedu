@@ -52,10 +52,10 @@ public class CustomerServiceImpl implements CustomerService {
     @Transactional
     @Override
     public Customer updateCustomer(Customer customer, Integer[] intentionIds) throws Exception {
-        if(!StringUtils.isEmpty(customer.getOwnerId())){ //已分配
-            customer.setTheType(1);
+        if(!StringUtils.isEmpty(customer.getOwnerId())){
+            customer.setAllotStatus(2);//已分配
         } else {
-            customer.setTheType(2);//未分配
+            customer.setAllotStatus(1);//未分配
         }
         customer.setPinyin(PinYinUtil.parsePinYin(customer.getName()));
         int rows=customerDao.updateByPrimaryKeySelective(customer);
@@ -68,7 +68,17 @@ public class CustomerServiceImpl implements CustomerService {
         return customer;
     }
 
-    private  List<Map> getIntentionCourseList(Integer[] intentionIds,Integer customerId){
+    @Transactional
+    @Override
+    public boolean deleteCustomer(Integer customerId) throws Exception {
+        Customer customer = new Customer();
+        customer.setId(customerId);
+        customer.setTheStatus(0);
+        int rowCount = customerDao.updateByPrimaryKeySelective(customer);
+        return !(rowCount==0);
+    }
+
+    private  List<Map> getIntentionCourseList(Integer[] intentionIds, Integer customerId){
         List<Map> intentionCourseList = new ArrayList<>();
         for (Integer intentionId: intentionIds) {
             Map map = new HashMap<>();
@@ -90,13 +100,7 @@ public class CustomerServiceImpl implements CustomerService {
         return new PageBean<>(customerDao.selectByParameterMap(parameterMap));
     }
 
-    @Override
-    public int updateByPrimaryKeySelective(Customer reccustomerord) throws Exception {
-        return 0;
-    }
 
-    @Override
-    public int updateByPrimaryKey(Customer customer) throws Exception {
-        return 0;
-    }
+
+
 }
