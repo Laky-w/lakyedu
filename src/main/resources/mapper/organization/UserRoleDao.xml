@@ -10,4 +10,7 @@
       (#{item.roleId,jdbcType=INTEGER}, #{item.userId,jdbcType=INTEGER})
     </foreach>
   </insert>
+  <delete id="deleteUserRole"  parameterType="Integer">
+    DELETE FROM laky_organization_user_role WHERE user_id = #{uesrId,jdbcType=INTEGER};
+  </delete>
 </mapper>

@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by 湖之教育工作室·laky on 2017/11/21.
@@ -19,6 +20,13 @@ public interface UserDao {
     int insertUser(User user);
 
     /**
+     * 更新用户信息
+     * @param user
+     * @return
+     */
+    int updateUser(User user);
+
+    /**
      * 根据机构用户名查询
      * @param parameter 参数
      * @return
@@ -31,4 +39,11 @@ public interface UserDao {
      * @return
      */
     List<User> queryUserBySchoolId(LinkedHashMap parameter);
+
+    /**
+     * 查询用户
+     * @param parameter 参数
+     * @return
+     */
+    Map queryUserById(LinkedHashMap parameter);
 }

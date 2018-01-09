@@ -25,6 +25,9 @@ public class User {
     private Date birthday;//生日
     private Integer isSuper;//是否超级管理员 1是 2 否
     private String idCard; //身份证
+    private Integer quitStatus;//离职状态 1 在职 2离职
+    private Date quitDate;//离职状态
+    private String quitRemarks;//离职原因
     private List<UserRole> userRoleList;
 
     public Integer getId() {
@@ -178,5 +181,29 @@ public class User {
 
     public void setUserRoleList(List<UserRole> userRoleList) {
         this.userRoleList = userRoleList;
+    }
+
+    public Integer getQuitStatus() {
+        return quitStatus;
+    }
+
+    public void setQuitStatus(Integer quitStatus) {
+        this.quitStatus = quitStatus;
+    }
+
+    public Date getQuitDate() {
+        return quitDate;
+    }
+
+    public void setQuitDate(Date quitDate) {
+        this.quitDate = quitDate;
+    }
+
+    public String getQuitRemarks() {
+        return quitRemarks;
+    }
+
+    public void setQuitRemarks(String quitRemarks) {
+        this.quitRemarks = quitRemarks;
     }
 }

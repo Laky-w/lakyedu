@@ -10,6 +10,6 @@ public interface UserRoleDao {
 
     int insertUserRoleBatch(List<UserRole> roles);
 
-
+    int deleteUserRole(Integer userId);
 
 }

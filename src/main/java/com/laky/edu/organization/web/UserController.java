@@ -5,6 +5,7 @@ import com.laky.edu.core.BaseController;
 import com.laky.edu.core.PageBean;
 import com.laky.edu.log.bean.LoginLog;
 import com.laky.edu.log.service.LoginLogService;
+import com.laky.edu.organization.OrganizationConst;
 import com.laky.edu.organization.bean.Branch;
 import com.laky.edu.organization.bean.Menu;
 import com.laky.edu.organization.bean.SchoolZone;
@@ -108,6 +109,19 @@ public class UserController extends BaseController{
         }
     }
 
+    @PostMapping("/getUserView/{id}")
+    public Map getUserView(HttpServletRequest request,@PathVariable int id){
+        try {
+            LinkedHashMap parameterMap = new LinkedHashMap();
+            parameterMap = super.doWrappingFormParameter(request,parameterMap);
+            parameterMap.put("schoolZoneId",super.getSchoolIds(request,0));//获取当前用户所在校区的id和下级校区的数组
+            parameterMap.put("id",id);
+            return super.doWrappingData(userService.findUserById(parameterMap));
+        } catch (Exception e) {
+            return  super.doWrappingErrorData(e);
+        }
+    }
+
     @PostMapping("/getRoleList/{pageNum}/{pageSize}")
     public Map getRoleList(HttpServletRequest request,@PathVariable int pageNum, @PathVariable int pageSize){
         try {
@@ -145,11 +159,61 @@ public class UserController extends BaseController{
     @PostMapping("/createUser")
     public Map createUser(HttpServletRequest request,User user,Integer [] roles){
         try {
-            user.setBranchId(getCurrentUser(request).getBranchId());
-
-            return super.doWrappingData(userService.createUser(user,roles));
+            if(user.getId()==null){//保存
+                user.setBranchId(getCurrentUser(request).getBranchId());
+                user =userService.createUser(user,roles);
+                super.handleOperate("创建员工", OrganizationConst.OPERATE_ADD,"员工姓名【"+user.getName()+"】",request);
+            } else {
+                user = userService.updateUser(user,roles);
+                super.handleOperate("修改员工", OrganizationConst.OPERATE_UPDATE,"员工姓名【"+user.getName()+"】",request);
+            }
+            return super.doWrappingData(user);
         } catch (Exception e) {
             return  super.doWrappingErrorData(e);
         }
     }
+
+    /**
+     * 删除用户
+     * @param request
+     * @param id
+     * @return
+     */
+    @DeleteMapping("/deleteUser/{id}")
+    public Map deleteUser(HttpServletRequest request,@PathVariable(required = true) Integer id){
+        try {
+            LinkedHashMap parameterMap = new LinkedHashMap();
+            parameterMap.put("id",id);
+            Map map = userService.findUserById(parameterMap);
+            userService.doDeleteUser(id);
+            super.handleOperate("删除用户",OrganizationConst.OPERATE_DELETE,"删除用户【"+map.get("name")+"】",request);
+            return super.doWrappingData("操作成功");
+        } catch (Exception e) {
+            return  super.doWrappingErrorData(e);
+        }
+    }
+
+    /**
+     * 修改用户在职离职状态
+     * @param request
+     * @return
+     */
+    @PutMapping("/updateUserQuitStatus")
+    public Map updateUserQuitStatus(HttpServletRequest request,User user){
+        try {
+            String logTitle = "恢复入职";
+            String logContent = "员工【"+user.getName()+"】恢复入职";
+            if(user.getQuitStatus() == 2){//离职
+                user.setQuitDate(new Date());
+                logTitle = "离职";
+                logContent = "员工【\"+user.getName()+\"】离职职";
+            }
+            user=userService.updateUser(user,null);
+            super.handleOperate(logTitle,OrganizationConst.OPERATE_UPDATE,logContent,request);
+            return super.doWrappingData(user);
+        } catch (Exception e) {
+            return  super.doWrappingErrorData(e);
+        }
+    }
+
 }

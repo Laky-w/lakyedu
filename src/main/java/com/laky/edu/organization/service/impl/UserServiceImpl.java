@@ -17,10 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.LinkedHashMap;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by 湖之教育工作室·laky on 2017/11/21.
@@ -124,6 +121,11 @@ public class UserServiceImpl implements UserService {
         return new PageBean<>(userDao.queryUserBySchoolId(parameterMap));
     }
 
+    @Override
+    public Map findUserById(LinkedHashMap parameterMap) throws Exception {
+        return userDao.queryUserById(parameterMap);
+    }
+
     @Transactional
     @Override
     public User createUser(User user,Integer [] roles) throws Exception {
@@ -133,16 +135,51 @@ public class UserServiceImpl implements UserService {
         user.setPassword(MD5.getMd5("123456"));
         int row= userDao.insertUser(user);
         if(row==0) throw new Exception("用户创建失败");
-        List<UserRole> dataList = new ArrayList<>();
-        for(Integer role:roles){
-            UserRole userRole = new UserRole();
-            userRole.setUserId(user.getId());
-            userRole.setRoleId(role);
-            dataList.add(userRole);
-        }
+        List<UserRole> dataList = getUserRoleList(user.getId(),roles);
         userRoleDao.insertUserRoleBatch(dataList);
         user.setUserRoleList(dataList);
         return user;
     }
+
+    @Transactional
+    @Override
+    public User updateUser(User user, Integer[] roles) throws Exception {
+        userDao.updateUser(user);
+        if(roles!=null){
+            userRoleDao.deleteUserRole(user.getId());//删除用户权限
+            List<UserRole> dataList = getUserRoleList(user.getId(),roles);
+            userRoleDao.insertUserRoleBatch(dataList);
+            user.setUserRoleList(dataList);
+        }
+        return user;
+    }
+
+    @Transactional
+    @Override
+    public int doDeleteUser(Integer userId) throws Exception {
+        User user = new User();
+        user.setId(userId);
+        user.setTheStatus(0);
+        return userDao.updateUser(user);
+    }
+
+    /**
+     * 封装用户权限
+     * @param userId
+     * @param roles
+     * @return
+     */
+    private  List<UserRole> getUserRoleList(Integer userId,Integer[] roles){
+        List<UserRole> dataList = new ArrayList<>();
+        for(Integer role:roles){
+            UserRole userRole = new UserRole();
+            userRole.setUserId(userId);
+            userRole.setRoleId(role);
+            dataList.add(userRole);
+        }
+        return  dataList;
+    }
+
+
 }
 

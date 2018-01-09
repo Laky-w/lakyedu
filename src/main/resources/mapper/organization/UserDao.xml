@@ -39,13 +39,70 @@
       #{theStatus},#{branchId},#{schoolZoneId},#{createDatetime},#{phone},
       #{email},#{sex},#{birthday},#{isSuper},#{idCard})
     </insert>
+    <update id="updateUser">
+        UPDATE laky_organization_user
+        <set>
+            <if test="userName !=null">
+                user_name =#{userName},
+            </if>
+            <if test="theStatus !=null">
+                the_status =#{theStatus},
+            </if>
+            <if test="nickName !=null">
+                nick_name =#{nickName},
+            </if>
+            <if test="name !=null">
+                `name` =#{name},
+            </if>
+            <if test="password !=null">
+                password =#{password},
+            </if>
+            <if test="headLogo !=null">
+                head_logo =#{headLogo},
+            </if>
+            <if test="schoolZoneId !=null">
+                school_zone_id =#{schoolZoneId},
+            </if>
+            <if test="phone !=null">
+                phone =#{phone},
+            </if>
+            <if test="email !=null">
+                email =#{email},
+            </if>
+            <if test="sex !=null">
+                sex =#{sex},
+            </if>
+            <if test="birthday !=null">
+                birthday =#{birthday},
+            </if>
+            <if test="isSuper !=null">
+                is_super =#{isSuper},
+            </if>
+            <if test="idCard !=null">
+                id_card =#{idCard},
+            </if>
+            <if test="quitStatus !=null">
+                quit_status =#{quitStatus},
+            </if>
+            <if test="quitDate !=null">
+                quit_date =#{quitDate},
+            </if>
+            <if test="quitRemarks !=null">
+                quit_remarks =#{quitRemarks},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
     <select id="queryUserByUserName"   resultMap="BaseResultMap">
       SELECT  u.*,sz.`name` as sz_name,b.branch_name  FROM laky_organization_user u LEFT JOIN  laky_organization_branch b on u.branch_id = b.id and b.the_status =1 LEFT JOIN  laky_organization_school_zone sz on sz.id =u.school_zone_id and sz.the_status =1
       WHERE (u.user_name = #{userName} or u.email = #{userName} or u.phone = #{userName}) and u.the_status != 0 and b.serial = #{serial} and b.the_status =1
-
     </select>
-    <select id="queryUserBySchoolId"   resultType="com.laky.edu.organization.bean.User" resultMap="BaseResultMap">
-       SELECT s.*,sz.`name` as sz_name  from laky_organization_user s
+    <select id="queryUserBySchoolId"   resultType="java.util.Map" >
+       SELECT s.id,s.birthday,s.create_datetime as createTime,s.email,s.sex,s.`name`,s.user_name as userName,s.email,s.phone, sz.`name`as schoolName,s.is_super as isSuper,
+        s.quit_status quitStatus,
+        (SELECT GROUP_CONCAT(r.`name`) from laky_organization_user_role ur
+        LEFT JOIN laky_organization_role r on ur.role_id = r.id
+        where ur.user_id = s.id) as roleName from laky_organization_user s
        RIGHT JOIN laky_organization_school_zone sz on sz.id =s.school_zone_id and sz.the_status =1 where s.the_status !=0
         <if test="userName != null">
             AND s.`user_name` LIKE CONCAT('%',#{userName,jdbcType=VARCHAR},'%')
@@ -60,7 +117,7 @@
         <if test="schoolZoneId2 != null">
             <if test="schoolZoneId2 instanceof String">
             AND s.school_zone_id = #{schoolZoneId2,jdbcType=INTEGER}
-        </if>
+            </if>
             <if test="!(schoolZoneId2 instanceof String)">
                 AND s.school_zone_id IN
                 <foreach collection="schoolZoneId2" item="schoolId" index="index"
@@ -69,7 +126,33 @@
                 </foreach>
             </if>
         </if>
+        <if test="quitStatus!=null">
+            AND s.quit_status = #{quitStatus,jdbcType=INTEGER}
+        </if>
     </select>
+
+    <select id="queryUserById"   resultType="java.util.Map" >
+        SELECT s.id,s.birthday,s.create_datetime as createTime,s.email,s.sex,s.`name`,s.user_name as userName,s.email,s.phone, sz.`name`as schoolName,s.is_super as isSuper,
+        s.quit_status quitStatus,s.quit_date as quitDate,s.quit_remarks as quitRemarks,
+        s.id_card as idCard,r.*,s.school_zone_id as schoolZoneId
+        from laky_organization_user s
+        RIGHT JOIN laky_organization_school_zone sz on sz.id =s.school_zone_id and sz.the_status =1
+        LEFT JOIN ( SELECT GROUP_CONCAT(r.id) AS roleId, GROUP_CONCAT(r.name) AS roleName,ur.user_id FROM
+          laky_organization_user_role ur
+          LEFT JOIN laky_organization_role r ON ur.role_id = r.id
+          GROUP BY ur.user_id
+        ) r on r.user_id = s.id
+        where s.the_status !=0
+        AND s.id = #{id,jdbcType=INTEGER}
+        <if test="schoolZoneId != null">
+            AND s.school_zone_id IN
+            <foreach collection="schoolZoneId" item="schoolId" index="index"
+                     open="(" close=")" separator=",">
+                #{schoolId}
+            </foreach>
+        </if>
+    </select>
+
     <!--<resultMap type="com.laky.edu.organization.bean.User" id="userResultMap">
 
         <association property="branch" javaType="com.laky.edu.organization.bean.Branch">
