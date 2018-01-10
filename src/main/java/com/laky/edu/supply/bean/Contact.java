@@ -18,6 +18,11 @@ public class Contact implements Serializable {
 
     private String content;
 
+    private Date lastContactTime;
+
+    private String intentionLevel;
+//    private
+
     private static final long serialVersionUID = 1L;
 
     public Integer getId() {
@@ -76,5 +81,19 @@ public class Contact implements Serializable {
         this.content = content == null ? null : content.trim();
     }
 
+    public Date getLastContactTime() {
+        return lastContactTime;
+    }
 
+    public void setLastContactTime(Date lastContactTime) {
+        this.lastContactTime = lastContactTime;
+    }
+
+    public String getIntentionLevel() {
+        return intentionLevel;
+    }
+
+    public void setIntentionLevel(String intentionLevel) {
+        this.intentionLevel = intentionLevel;
+    }
 }

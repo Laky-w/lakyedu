@@ -3,8 +3,10 @@ package com.laky.edu.config.dao;
 import com.mchange.v2.c3p0.ComboPooledDataSource;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 
 import java.beans.PropertyVetoException;
 
@@ -23,7 +25,9 @@ public class DataSourceConfiguration {
     @Value("${jdbc.datasource.password}")
     private String password;
 
+    @Primary
     @Bean("dataSource")
+    @ConfigurationProperties(prefix="spring.datasource")
     public ComboPooledDataSource createDataSource() throws PropertyVetoException{
         ComboPooledDataSource dataSource = new ComboPooledDataSource();
         dataSource.setDriverClass(driverClassName);

@@ -46,9 +46,9 @@
       </foreach>
     </if>
   </select>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+  <select id="selectByPrimaryKey" resultType="com.laky.edu.supply.bean.Customer" parameterType="java.lang.Integer" >
     select 
-    <include refid="Base_Column_List" />
+    *
     from laky_supply_student
     where id = #{id,jdbcType=INTEGER}
   </select>
@@ -56,6 +56,7 @@
     SELECT s.id , s.name ,s.sex ,s.birthday AS birthday,s.phone,
     s.the_type AS theType, s.remarks ,s.create_time AS createTime,
     sz.name as schoolZoneName, v.name AS contactId, u.name AS ownerId, a.name AS sourceId,
+    (SELECT count(1) FROM laky_supply_contact t where t.student_id=s.id ) as contactNumber,s.intention_level as intentionLevel,
     (SELECT group_concat(c.name) FROM laky_supply_intention_course i
     RIGHT JOIN laky_teach_course c ON i.course_id = c.id AND c.the_status!=0
     WHERE i.student_id=s.id ) AS intentionCourseName,s.allot_status AS allotStatus,s.invite_status AS inviteStatus,s.contact_status as contactStatus
@@ -177,6 +178,18 @@
       </if>
       <if test="remarks != null" >
         remarks = #{remarks,jdbcType=VARCHAR},
+      </if>
+      <if test="inviteStatus">
+        invite_status= #{inviteStatus,jdbcType=INTEGER},
+      </if>
+      <if test="contactStatus">
+        contact_status= #{contactStatus,jdbcType=INTEGER},
+      </if>
+      <if test="intentionLevel !=null">
+        intention_level= #{intentionLevel,jdbcType=CHAR},
+      </if>
+      <if test="lastContactTime">
+        last_contact_time= #{lastContactTime,jdbcType=TIMESTAMP},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}

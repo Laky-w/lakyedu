@@ -3,7 +3,9 @@ package com.laky.edu.supply.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.laky.edu.core.PageBean;
 import com.laky.edu.supply.bean.Contact;
+import com.laky.edu.supply.bean.Customer;
 import com.laky.edu.supply.dao.ContactDao;
+import com.laky.edu.supply.dao.CustomerDao;
 import com.laky.edu.supply.service.ContactService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,28 +21,27 @@ public class ContactServiceImpl implements ContactService{
     @Autowired
     private ContactDao contactDao;
 
-    /**
-     * 增加联系人
-     * @param contact
-     * @return
-     * @throws Exception
-     */
+    @Autowired
+    private CustomerDao customerDao;
+
+
     @Transactional
     @Override
     public Contact createContact(Contact contact) throws Exception {
         contact.setTheStatus(1);
         int rows=contactDao.insert(contact);
-        if(rows==0)throw new Exception("创建联系人失败！");
+        if(rows==0)throw new Exception("创建跟进记录失败！");
+        Customer customer=customerDao.selectByPrimaryKey(contact.getStudentId());
+        customer.setLastContactTime(contact.getLastContactTime());
+        customer.setIntentionLevel(contact.getIntentionLevel());
+//        customer.setInviteStatus(2);
+        customer.setContactStatus(2);//沟通状态
+        customerDao.updateByPrimaryKeySelective(customer);
         return contact;
     }
 
 
-    /**
-     *查询所有联系人
-     * @param parameterMap
-     * @return
-     * @throws Exception
-     */
+
     @Override
     public PageBean<Contact> findContactAll(LinkedHashMap parameterMap) throws Exception {
         PageHelper.startPage((int)parameterMap.get("pageNum"),(int)parameterMap.get("pageSize"));
@@ -52,13 +53,5 @@ public class ContactServiceImpl implements ContactService{
         return 0;
     }
 
-    @Override
-    public int updateByPrimaryKeyWithBLOBs(Contact record) throws Exception {
-        return 0;
-    }
 
-    @Override
-    public int updateByPrimaryKey(Contact record) throws Exception {
-        return 0;
-    }
 }

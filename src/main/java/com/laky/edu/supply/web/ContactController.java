@@ -34,8 +34,9 @@ public class ContactController extends BaseController{
     @PostMapping("/createContact")
     public Map createContact(HttpServletRequest request, Contact contact){
         try {
+            contact.setUserId(getCurrentUser(request).getId());
             contactService.createContact(contact);
-            super.handleOperate("添加联系人", OrganizationConst.OPERATE_ADD,"添加联系人【"+getCurrentUser(request).getName()+"】",request);
+            super.handleOperate("添加跟进记录", OrganizationConst.OPERATE_ADD,"添加跟进内容【"+getCurrentUser(request).getName()+"】",request);
             return super.doWrappingData(contact);
         } catch (Exception e) {
             return  super.doWrappingErrorData(e);

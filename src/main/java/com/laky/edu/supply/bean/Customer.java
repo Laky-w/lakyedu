@@ -36,6 +36,10 @@ public class Customer implements Serializable {
 
     private String pinyin;
 
+    private Date lastContactTime; //下次联系时间
+
+    private String intentionLevel;//跟进状态
+
     private Integer allotStatus; //分配状态 1 未分配 2 已分配
 
     private Integer inviteStatus;//邀约状态 1 未邀约 2 已邀约
@@ -197,5 +201,21 @@ public class Customer implements Serializable {
 
     public void setInviteStatus(Integer inviteStatus) {
         this.inviteStatus = inviteStatus;
+    }
+
+    public Date getLastContactTime() {
+        return lastContactTime;
+    }
+
+    public void setLastContactTime(Date lastContactTime) {
+        this.lastContactTime = lastContactTime;
+    }
+
+    public String getIntentionLevel() {
+        return intentionLevel;
+    }
+
+    public void setIntentionLevel(String intentionLevel) {
+        this.intentionLevel = intentionLevel;
     }
 }
