@@ -1,5 +1,7 @@
 package com.laky.edu.core;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.laky.edu.log.bean.OperateLog;
 import com.laky.edu.log.service.OperateLogService;
 import com.laky.edu.organization.OrganizationConst;
@@ -93,6 +95,21 @@ public class BaseController {
                 }
             }else{
                 parameter.put(name,value);
+            }
+        }
+        if(parameter.get("sort")!=null){ //自定义排序
+            JSONObject sort= JSON.parseObject(parameter.get("sort").toString());
+            if(sort!=null){
+                String columnName=sort.get("prop").toString();
+                String columnOrder = sort.get("order").toString();//ascending,descending
+                if(columnOrder.equals("ascending")){
+                    columnOrder="asc";
+                }
+                if(columnOrder.equals("descending")){
+                    columnOrder="desc";
+                }
+                parameter.put("columnName",columnName);
+                parameter.put("columnOrder",columnOrder);
             }
         }
         return parameter;

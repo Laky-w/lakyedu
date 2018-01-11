@@ -11,7 +11,7 @@
     <!--resultType 返回值类型  参数类型 -->
     <select id="querySchoolZoneAllByBranchId" resultType="com.laky.edu.organization.bean.SchoolZone"
             parameterType="Integer">
-        SELECT * from laky_organization_school_zone where branch_id =#{branchId,jdbcType=INTEGER} and the_status !=0;
+        SELECT * from laky_organization_school_zone where branch_id =#{branchId,jdbcType=INTEGER} and the_status !=0
     </select>
     <select id="querySchoolZone" resultType="java.util.Map">
         SELECT s.id,s.`name`,s.the_type as theType,s.create_datetime as createTime,s.serial,s.address,s.phone,s.remarks,s.`owner`,s.the_status as theStatus,

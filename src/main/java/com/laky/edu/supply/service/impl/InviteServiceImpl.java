@@ -2,7 +2,9 @@ package com.laky.edu.supply.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.laky.edu.core.PageBean;
+import com.laky.edu.supply.bean.Customer;
 import com.laky.edu.supply.bean.Invite;
+import com.laky.edu.supply.dao.CustomerDao;
 import com.laky.edu.supply.dao.InviteDao;
 import com.laky.edu.supply.service.InviteService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +18,8 @@ import java.util.List;
 public class InviteServiceImpl implements InviteService {
     @Autowired
     private InviteDao inviteDao;
+    @Autowired
+    private CustomerDao customerDao;
 
     /**
      * 添加邀约参观
@@ -26,12 +30,13 @@ public class InviteServiceImpl implements InviteService {
     @Transactional
     @Override
     public Invite addInvite(Invite invite) throws Exception {
+
         invite.setTheStatus(1);
-        if (invite.getInviteStatus()==null&&(invite.getInviteStatus()!=1 || invite.getInviteStatus()!=2) ){
-            invite.setInviteStatus(1);
-        }
         int rows = inviteDao.insert(invite);
-        if (rows==0) throw new Exception("创建邀约试听失败");
+        if (rows==0) throw new RuntimeException("创建邀约试听失败");
+        Customer customer= customerDao.selectByPrimaryKey(invite.getStudentId());
+        customer.setInviteStatus(2);
+        customerDao.updateByPrimaryKeySelective(customer);
         return invite;
     }
 

@@ -38,8 +38,9 @@ public class InviteController extends BaseController{
     @PostMapping("/createInvite")
     public Map createInvite(HttpServletRequest request, Invite invite){
         try {
-            LinkedHashMap parameterMap = new LinkedHashMap();
             invite.setSchoolZoneId(super.getCurrentUser(request).getSchoolZoneId());
+            invite.setInviteStatus(1);
+            invite.setUserId(super.getCurrentUser(request).getId());
             inviteService.addInvite(invite);
 //
             super.handleOperate("添加邀请试听", OrganizationConst.OPERATE_ADD,"添加邀约参观,参观人【"+invite.getUserId()+"】,参观时间:"+invite.getInviteTime(),request);
