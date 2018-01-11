@@ -30,7 +30,12 @@ public interface GoodsDao {
      */
     List<Goods> selectByParameterMap(LinkedHashMap parameterMap);
 
-    int updateByPrimaryKeySelective(Goods record);
+    /**
+     *修改物品
+     * @param goods
+     * @return
+     */
+    int updateGoods(Goods goods);
 
     int updateByPrimaryKey(Goods record);
 }

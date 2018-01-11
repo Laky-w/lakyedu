@@ -40,9 +40,16 @@ public class GoodsController extends BaseController {
     @PostMapping("/createGoods")
     public Map createGoods(HttpServletRequest request, Goods goods){
         try {
-            goods.setBranchId(super.getCurrentUser(request).getBranchId());
-            logisticsService.createGoods(goods);
-            super.handleOperate("添加物品管理", OrganizationConst.OPERATE_ADD,"物品名称【"+goods.getName()+"】",request);
+
+            if (goods.getId()==null){
+                goods.setBranchId(super.getCurrentUser(request).getBranchId());
+                logisticsService.createGoods(goods);
+                super.handleOperate("添加物品管理", OrganizationConst.OPERATE_ADD,"物品名称【"+goods.getName()+"】",request);
+            }else{
+                logisticsService.updateGoods(goods);
+                super.handleOperate("更新物品管理", OrganizationConst.OPERATE_ADD,"更新物品名称【"+goods.getName()+"】",request);
+            }
+
             return super.doWrappingData(goods);
         } catch (Exception e) {
             return  super.doWrappingErrorData(e);
@@ -61,6 +68,7 @@ public class GoodsController extends BaseController {
             return  super.doWrappingErrorData(e);
         }
     }
+
 
     @PostMapping("/getRecordList/{pageNum}/{pageSize}")
     public Map getRecordList(HttpServletRequest request, @PathVariable int pageNum, @PathVariable int pageSize){
@@ -99,6 +107,19 @@ public class GoodsController extends BaseController {
         } catch (Exception e) {
             return  super.doWrappingErrorData(e);
         }
+    }
+
+    @DeleteMapping("deleteGoods/{id}")
+    public Map deleteGoods(HttpServletRequest request,@PathVariable Integer id){
+        try{
+            Goods goods = new Goods();
+            logisticsService.deleteGoods(id);
+            super.handleOperate("删除物品", OrganizationConst.OPERATE_ADD,"删除物品【"+goods.getName()+"】",request);
+            return super.doWrappingData("操作成功");
+        }catch (Exception e){
+            return  super.doWrappingErrorData(e);
+        }
+
     }
 
     @PostMapping("/getRepositoryList/{pageNum}/{pageSize}")

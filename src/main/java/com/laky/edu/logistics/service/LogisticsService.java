@@ -37,6 +37,20 @@ public interface LogisticsService {
     PageBean<Goods> findGoodsAll(LinkedHashMap parameterMap)throws Exception;
 
     /**
+     * 删除物品
+     * @param id
+     * @return
+     */
+    int deleteGoods(Integer id)throws Exception;
+
+    /**
+     * 更新物品
+     * @param goods
+     * @return
+     */
+    Goods updateGoods(Goods goods)throws Exception;
+
+    /**
      * 查看库存
      * @param parameterMap
      * @return

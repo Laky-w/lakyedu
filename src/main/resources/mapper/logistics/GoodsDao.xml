@@ -17,7 +17,7 @@
   </sql>
 <!--物品详情页查询-->
   <select id="selectGoodsById" resultType="java.util.Map">
-    select g.id,g.name,g.price,g.sell_price AS sellPrice,g.the_status AS theStatus,(CASE WHEN gr.last_amount IS NULL THEN 0 ELSE gr.last_amount END) AS lastAmount,g.create_time AS createTime,g.the_type AS theType,b.branch_name AS branchId, v.name AS clazzId
+    select g.id,g.name,g.price,g.sell_price AS sellPrice,g.the_status AS theStatus,(CASE WHEN gr.last_amount IS NULL THEN 0 ELSE gr.last_amount END) AS lastAmount,g.create_time AS createTime,g.the_type AS theType,b.branch_name AS branchName,b.id AS branchId,v.name AS clazzName ,v.id AS clazzId
     from laky_logistics_goods g
     LEFT JOIN laky_organization_branch b ON g.branch_id=b.id AND b.the_status!=0
     LEFT JOIN laky_organization_parameter_value v ON g.clazz_id =v.id AND v.the_status!=0
@@ -40,7 +40,7 @@
 <!--查询物品-->
   <select id="selectByParameterMap" resultType="java.util.Map" >
     select g.id,g.name,g.price,g.sell_price AS sellPrice,g.the_status AS theStatus,(CASE WHEN gr.last_amount IS NULL THEN 0 ELSE gr.last_amount END) AS lastAmount,
-    g.create_time AS createTime,g.the_type AS theType,b.branch_name AS branchId, v.name AS clazzId
+    g.create_time AS createTime,g.the_type AS theType,b.branch_name AS branchName, v.name AS clazzName
     from laky_logistics_goods g
     LEFT JOIN laky_organization_branch b ON g.branch_id=b.id AND b.the_status!=0
     LEFT JOIN laky_organization_parameter_value v ON g.clazz_id =v.id AND v.the_status!=0
@@ -79,8 +79,8 @@
       #{createTime,jdbcType=TIMESTAMP}, #{theType,jdbcType=TINYINT}, #{branchId,jdbcType=INTEGER}
       )
   </insert>
-
-  <update id="updateByPrimaryKeySelective" parameterType="com.laky.edu.logistics.bean.Goods" >
+<!--修改物品-->
+  <update id="updateGoods" parameterType="com.laky.edu.logistics.bean.Goods" >
     update laky_logistics_goods
     <set >
       <if test="name != null" >
