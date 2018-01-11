@@ -3,6 +3,7 @@ package com.laky.edu.teach.web;
 import com.alibaba.fastjson.JSON;
 import com.laky.edu.core.BaseController;
 import com.laky.edu.organization.OrganizationConst;
+import com.laky.edu.supply.bean.Activity;
 import com.laky.edu.teach.bean.Course;
 import com.laky.edu.teach.bean.Room;
 import com.laky.edu.teach.bean.ScheduleStandard;
@@ -100,9 +101,27 @@ public class TeachController extends BaseController{
                 scheduleStandard.setStartTime(time[0]);
                 scheduleStandard.setEndTime(time[1]);
             }
-            scheduleStandard=teachService.createScheduleStandard(scheduleStandard); //上课时间段
-            super.handleOperate("添加校区上课段", OrganizationConst.OPERATE_ADD,"添加校区上课段【"+scheduleStandard.getName()+"】",request);
+            if (scheduleStandard.getId()==null){
+                scheduleStandard=teachService.createScheduleStandard(scheduleStandard); //上课时间段
+                super.handleOperate("添加校区上课段", OrganizationConst.OPERATE_ADD,"添加校区上课段【"+scheduleStandard.getName()+"】",request);
+            }else {
+                scheduleStandard = teachService.updateScheduleStandard(scheduleStandard);
+                super.handleOperate("修改校区上课段", OrganizationConst.OPERATE_UPDATE,"修改校区上课段【"+scheduleStandard.getName()+"】",request);
+            }
+
             return  super.doWrappingData(scheduleStandard);
+        } catch (Exception e) {
+            return  super.doWrappingErrorData(e);
+        }
+    }
+
+    @GetMapping("/getScheduleStandardView/{id}")
+    public Map getScheduleStandardView(HttpServletRequest request,@PathVariable Integer id){
+        try {
+            LinkedHashMap parameterMap = new LinkedHashMap();
+            parameterMap.put("id",id);
+            parameterMap.put("schoolZoneId",getSchoolIds(request,2));
+            return super.doWrappingData(teachService.findScheduleStandard(parameterMap));
         } catch (Exception e) {
             return  super.doWrappingErrorData(e);
         }
@@ -117,6 +136,18 @@ public class TeachController extends BaseController{
             parameterMap.put("pageNum",pageNum);
             parameterMap.put("pageSize",pageSize);
             return super.doWrappingData(teachService.findScheduleStandardAll(parameterMap));
+        } catch (Exception e) {
+            return  super.doWrappingErrorData(e);
+        }
+    }
+
+    @DeleteMapping("/deleteScheduleStandard/{id}")
+    public Map deleteScheduleStandard(javax.servlet.http.HttpServletRequest request, @PathVariable Integer id){
+        try {
+            ScheduleStandard scheduleStandard = new ScheduleStandard();
+            teachService.deleteScheduleStandardById(id);
+            super.handleOperate("删除上课时间",OrganizationConst.OPERATE_DELETE,"删除上课时间【"+scheduleStandard.getName()+"】",request);
+            return super.doWrappingData("操作成功");
         } catch (Exception e) {
             return  super.doWrappingErrorData(e);
         }
@@ -140,9 +171,39 @@ public class TeachController extends BaseController{
     @PostMapping("/createRoom")
     public Map createRoom(HttpServletRequest request, Room room){
         try {
-            room=teachService.createRoom(room); //
-            super.handleOperate("添加教室", OrganizationConst.OPERATE_ADD,"添加教室【"+room.getName()+"】",request);
+            if (room.getId()==null){
+                room=teachService.createRoom(room); //
+                super.handleOperate("添加教室", OrganizationConst.OPERATE_ADD,"添加教室【"+room.getName()+"】",request);
+            }else {
+                room=teachService.updateRoom(room); //
+                super.handleOperate("修改教室", OrganizationConst.OPERATE_UPDATE,"修改教室【"+room.getName()+"】",request);
+            }
             return  super.doWrappingData(room);
+        } catch (Exception e) {
+            return  super.doWrappingErrorData(e);
+        }
+    }
+
+
+    @DeleteMapping("/deleteRoom/{id}")
+    public Map deleteRoom(javax.servlet.http.HttpServletRequest request, @PathVariable Integer id){
+        try {
+            Room room = new Room();
+            teachService.deleteRoom(id);
+            super.handleOperate("删除教室",OrganizationConst.OPERATE_DELETE,"删除教室【"+room.getName()+"】",request);
+            return super.doWrappingData("操作成功");
+        } catch (Exception e) {
+            return  super.doWrappingErrorData(e);
+        }
+    }
+
+    @GetMapping("/getRoomView/{id}")
+    public Map getRoomView(HttpServletRequest request,@PathVariable Integer id){
+        try {
+            LinkedHashMap parameterMap = new LinkedHashMap();
+            parameterMap.put("id",id);
+            parameterMap.put("schoolZoneId",getSchoolIds(request,2));
+            return super.doWrappingData(teachService.findRoom(parameterMap));
         } catch (Exception e) {
             return  super.doWrappingErrorData(e);
         }

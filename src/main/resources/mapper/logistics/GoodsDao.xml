@@ -15,7 +15,7 @@
   <sql id="Base_Column_List" >
     id, name, price, sell_price, clazz_id, the_status, create_time, the_type, branch_id
   </sql>
-
+<!--物品详情页查询-->
   <select id="selectGoodsById" resultType="java.util.Map">
     select g.id,g.name,g.price,g.sell_price AS sellPrice,g.the_status AS theStatus,(CASE WHEN gr.last_amount IS NULL THEN 0 ELSE gr.last_amount END) AS lastAmount,g.create_time AS createTime,g.the_type AS theType,b.branch_name AS branchId, v.name AS clazzId
     from laky_logistics_goods g
@@ -37,7 +37,7 @@
     </if>
     where g.id = #{id,jdbcType=INTEGER} AND g.the_status!=0 AND g.branch_id = #{branchId,jdbcType=INTEGER}
   </select>
-
+<!--查询物品-->
   <select id="selectByParameterMap" resultType="java.util.Map" >
     select g.id,g.name,g.price,g.sell_price AS sellPrice,g.the_status AS theStatus,(CASE WHEN gr.last_amount IS NULL THEN 0 ELSE gr.last_amount END) AS lastAmount,
     g.create_time AS createTime,g.the_type AS theType,b.branch_name AS branchId, v.name AS clazzId
@@ -68,7 +68,7 @@
 
     ORDER BY g.create_time DESC
   </select>
-
+<!--增加物品-->
   <insert id="insert" parameterType="com.laky.edu.logistics.bean.Goods" useGeneratedKeys="true" keyProperty="id" keyColumn="id" >
     insert into laky_logistics_goods (id, name, price, 
       sell_price, clazz_id, the_status, 

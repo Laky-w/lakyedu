@@ -8,6 +8,7 @@ import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -39,11 +40,39 @@ public class SupplyController extends BaseController{
     @PostMapping("/createActivity")
     public Map createActivity(HttpServletRequest request, Activity activity){
         try {
-            LinkedHashMap parameterMap = new LinkedHashMap();
-            activity.setSchoolZoneId(super.getCurrentUser(request).getSchoolZoneId());
-            supplyService.createActivity(activity);
-            super.handleOperate("添加市场活动", OrganizationConst.OPERATE_ADD,"添加市场活动【"+activity.getName()+"】",request);
+            Date date = new Date();
+            Date startDate = activity.getStartDate();
+            Date endDate  = activity.getEndDate();
+            if (startDate.getTime()>date.getTime()){//计划中
+                activity.setTheType(1);
+            }else if(endDate!=null&&startDate.getTime()<date.getTime() && date.getTime()<endDate.getTime()){//进行中
+                activity.setTheType(2);
+            }else if (endDate!=null&&endDate.getTime()<=date.getTime()){//结束
+                activity.setTheType(3);
+            }
+            if (activity.getId()==null){
+                activity.setSchoolZoneId(super.getCurrentUser(request).getSchoolZoneId());
+                supplyService.createActivity(activity);
+                super.handleOperate("添加市场活动", OrganizationConst.OPERATE_ADD,"添加市场活动【"+activity.getName()+"】",request);
+            }else {
+                supplyService.updateByPrimaryKeySelective(activity);
+                super.handleOperate("修改市场活动", OrganizationConst.OPERATE_ADD,"修改市场活动【"+activity.getName()+"】",request);
+            }
             return super.doWrappingData(activity);
+        } catch (Exception e) {
+            return  super.doWrappingErrorData(e);
+        }
+    }
+
+//    private int
+
+    @DeleteMapping("/deleteActivity/{id}")
+    public Map deleteActivity(javax.servlet.http.HttpServletRequest request, @PathVariable(required = true) Integer id){
+        try {
+            Activity activity = new Activity();
+            supplyService.deleteActivity(id);
+            super.handleOperate("删除市场活动",OrganizationConst.OPERATE_DELETE,"删除市场活动【"+activity.getName()+"】",request);
+            return super.doWrappingData("操作成功");
         } catch (Exception e) {
             return  super.doWrappingErrorData(e);
         }

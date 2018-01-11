@@ -6,20 +6,41 @@ import org.springframework.stereotype.Component;
 
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 @Component
 public interface ScheduleStandardDao {
-    int deleteByPrimaryKey(Integer id);
 
+
+    /**
+     * 增加上课时间
+     * @param record
+     * @return
+     */
     int insert(ScheduleStandard record);
 
     int insertSelective(ScheduleStandard record);
 
-    ScheduleStandard selectByPrimaryKey(Integer id);
+    /**
+     * 查询上课时间详情页
+     * @param parameterMap
+     * @return
+     */
+    Map selectScheduleStandard(LinkedHashMap  parameterMap);
 
+    /**
+     * 查询上课时间
+     * @param parameterMap
+     * @return
+     */
     List<ScheduleStandard> selectByParameterMap(LinkedHashMap parameterMap);
 
-    int updateByPrimaryKeySelective(ScheduleStandard record);
+    /**
+     * 修改上课时间
+     * @param scheduleStandard
+     * @return
+     */
+    int updateScheduleStandard(ScheduleStandard scheduleStandard);
 
     int updateByPrimaryKey(ScheduleStandard record);
 }

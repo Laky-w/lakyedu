@@ -7,19 +7,29 @@
     <result column="max_count" property="maxCount" jdbcType="INTEGER" />
     <result column="sort" property="sort" jdbcType="INTEGER" />
     <result column="school_zone_id" property="schoolZoneId" jdbcType="INTEGER" />
-    <result column="school_zone_name" property="schoolZoneName" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, name, max_count, sort, school_zone_id
   </sql>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
-    select 
-    <include refid="Base_Column_List" />
-    from laky_teach_room
-    where id = #{id,jdbcType=INTEGER}
+<!--教室详情页-->
+  <select id="selectRoom" resultType="java.util.Map">
+    SELECT s.max_count AS  maxCount ,s.id AS  id,s.name AS  name,s.sort AS  sort
+    ,sz.name as schoolZoneName,sz.id AS schoolZoneId
+    from laky_teach_room s
+    RIGHT JOIN laky_organization_school_zone sz on s.school_zone_id = sz.id and sz.the_status =1
+    where s.id =#{id,jdbcType=INTEGER} AND s.the_status !=0
+    <if test="schoolZoneId != null">
+      AND s.school_zone_id IN
+      <foreach collection="schoolZoneId" item="schoolId" index="index"
+               open="(" close=")" separator=",">
+        #{schoolId}
+      </foreach>
+    </if>
   </select>
+  <!--查询教室-->
   <select id="selectByParameterMap" resultMap="BaseResultMap" >
-    SELECT s.*,sz.name as school_zone_name from laky_teach_room s
+    SELECT s.*,sz.name as schoolZoneName,sz.id AS  schoolZoneId
+    from laky_teach_room s
     RIGHT JOIN laky_organization_school_zone sz on s.school_zone_id = sz.id and sz.the_status =1
      where s.the_status !=0
     <if test="name != null">
@@ -47,16 +57,19 @@
 
     ORDER BY s.sort
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+  <!--删除教室-->
+  <delete id="deleteRoom" parameterType="java.lang.Integer" >
     delete from laky_teach_room
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.laky.edu.teach.bean.Room" keyColumn="id" keyProperty="id" useGeneratedKeys="true">
+  <!--增加教室-->
+  <insert id="insertRoom" parameterType="com.laky.edu.teach.bean.Room" keyColumn="id" keyProperty="id" useGeneratedKeys="true">
     insert into laky_teach_room (id, name, max_count, 
       sort, school_zone_id,the_status)
     values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{maxCount,jdbcType=INTEGER}, 
       #{sort,jdbcType=INTEGER}, #{schoolZoneId,jdbcType=INTEGER},#{theStatus,jdbcType=INTEGER})
   </insert>
+  <!--没用到-->
   <insert id="insertSelective" parameterType="com.laky.edu.teach.bean.Room" >
     insert into laky_teach_room
     <trim prefix="(" suffix=")" suffixOverrides="," >
@@ -94,7 +107,8 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.laky.edu.teach.bean.Room" >
+  <!--修改教室-->
+  <update id="updateRoom" parameterType="com.laky.edu.teach.bean.Room" >
     update laky_teach_room
     <set >
       <if test="name != null" >
@@ -106,12 +120,16 @@
       <if test="sort != null" >
         sort = #{sort,jdbcType=INTEGER},
       </if>
+      <if test="theStatus != null" >
+        the_status = #{theStatus,jdbcType=INTEGER},
+      </if>
       <if test="schoolZoneId != null" >
         school_zone_id = #{schoolZoneId,jdbcType=INTEGER},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
+  <!--没用到-->
   <update id="updateByPrimaryKey" parameterType="com.laky.edu.teach.bean.Room" >
     update laky_teach_room
     set name = #{name,jdbcType=VARCHAR},

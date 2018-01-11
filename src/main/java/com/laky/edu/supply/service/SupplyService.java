@@ -16,6 +16,13 @@ public interface SupplyService {
     Activity createActivity(Activity activity)throws Exception;
 
     /**
+     * 更新市场活动
+     * @param activity
+     * @return
+     * @throws Exception
+     */
+    Activity updateByPrimaryKeySelective( Activity activity)throws Exception;
+    /**
      * 分页查询市场全部活动
      * @param parameterMap
      * @return
@@ -31,4 +38,13 @@ public interface SupplyService {
      * @throws Exception
      */
     Map queryActivity(LinkedHashMap parameterMap)throws Exception;
+
+
+    /**
+     * 删除市场活动
+     * @param id
+     * @return
+     * @throws Exception
+     */
+    int deleteActivity(Integer id)throws  Exception;
 }

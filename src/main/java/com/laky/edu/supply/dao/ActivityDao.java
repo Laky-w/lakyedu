@@ -15,13 +15,11 @@ public interface ActivityDao {
 
     int insertSelective(Activity activity);
 
-    Activity selectByPrimaryKey(Integer id);
-
     Map selectActivity(LinkedHashMap parameterMap);
 
     List<Activity> selectByParameterMap(LinkedHashMap parameterMap);
 
-    int updateByPrimaryKeySelective(Activity record);
+    int updateByPrimaryKeySelective(Activity activity);
 
-    int updateByPrimaryKey(Activity record);
+    int updateByPrimaryKey(Activity activity);
 }
