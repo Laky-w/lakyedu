@@ -37,7 +37,7 @@ public class LogisticsServiceImpl implements LogisticsService{
         goods.setCreateTime(new Date());
         goods.setTheType(1);
         int rows = goodsDao.insert(goods);
-        if (rows==0) throw new Exception("创建物品管理失败");
+        if (rows==0) throw new RuntimeException("创建物品管理失败");
         return goods;
     }
 
@@ -51,6 +51,23 @@ public class LogisticsServiceImpl implements LogisticsService{
         PageHelper.startPage((int)parameterMap.get("pageNum"),(int)parameterMap.get("pageSize"));
         return new PageBean<>(goodsDao.selectByParameterMap(parameterMap));
     }
+    @Transactional
+    @Override
+    public int deleteGoods(Integer id) throws Exception {
+        Goods goods = new Goods();
+        goods.setId(id);
+        goods.setTheStatus(0);
+        int rows = goodsDao.updateGoods(goods);
+        if (rows==0) throw new RuntimeException("删除物品失败!");
+        return rows;
+    }
+
+    @Override
+    public Goods updateGoods(Goods goods) throws Exception {
+        int rows = goodsDao.updateGoods(goods);
+        if (rows==0) throw new RuntimeException("更新物品失败!");
+        return goods;
+    }
 
     @Override
     public PageBean<GoodsRepository> findRepositoryAll(LinkedHashMap parameterMap) throws Exception {
@@ -62,7 +79,7 @@ public class LogisticsServiceImpl implements LogisticsService{
     @Override
     public List<GoodsRecord> createGoodsRecord(List<GoodsRecord> goodsRecords) throws Exception {
         int rowCount =goodsRecordDao.batchInsert(goodsRecords);
-        if(rowCount==0)throw  new Exception("创建库存记录失败");
+        if(rowCount==0)throw  new RuntimeException("创建库存记录失败");
         List<GoodsRepository> insertGoodsRepositoryList = new ArrayList<>(); //插入库存
         List<GoodsRepository> updateGoodsRepositoryList = new ArrayList<>(); //更新库存
         for (GoodsRecord goodsRecord:goodsRecords){
@@ -112,7 +129,7 @@ public class LogisticsServiceImpl implements LogisticsService{
         goodsRecord.setReturnDate(new Date());
         int rowCount = goodsRecordDao.updateByPrimaryKeySelective(goodsRecord);
         if(rowCount ==0) {
-            throw  new Exception("归还图书失败");
+            throw  new RuntimeException("归还图书失败");
         }
         GoodsRepository repository = getGoodsRepository(goodsRecord.getGoodsId(),goodsRecord.getSchoolZoneId(),1,goodsRecord.getAmount());
         goodsRepositoryDao.updateByPrimaryKeySelective(repository);
