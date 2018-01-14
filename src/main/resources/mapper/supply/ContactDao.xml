@@ -16,14 +16,34 @@
   </sql>
 
 
+
   <select id="selectByParameterMap" resultType="java.util.Map">
-    SELECT s.id, s.contact_time  AS contactTime, s.content, s.the_status AS theStatus,
-    u.name AS userName, v.name AS studentName, p.name AS contactStyleId
+    SELECT * FROM (SELECT s.id, s.contact_time  AS contactTime, s.content, s.the_status AS theStatus,
+    u.name AS userName, v.name AS studentName,v.id AS studentId, p.name AS contactStyleId
     FROM laky_supply_contact s
     LEFT JOIN laky_organization_user u ON s.user_id = u.id AND u.the_status!=0
     RIGHT JOIN laky_supply_student v ON s.student_id = v.id AND v.the_status!=0
     LEFT JOIN  laky_organization_parameter_value p ON s.contact_style_id=p.id AND p.the_status!=0
     WHERE s.the_status!=0
+    <if test="schoolZoneId != null">
+      AND v.school_zone_id IN
+      <foreach collection="schoolZoneId" item="schoolId" index="index"
+               open="(" close=")" separator=",">
+        #{schoolId}
+      </foreach>
+    </if>
+    <if test="schoolZoneId2 != null">
+      <if test="schoolZoneId2 instanceof String">
+        AND v.school_zone_id = #{schoolZoneId2,jdbcType=INTEGER}
+      </if>
+      <if test="!(schoolZoneId2 instanceof String)">
+        AND v.school_zone_id IN
+        <foreach collection="schoolZoneId2" item="schoolId" index="index"
+                 open="(" close=")" separator=",">
+          #{schoolId}
+        </foreach>
+      </if>
+    </if>
     <if test="content != null">
       AND s.content LIKE CONCAT('%',#{content,jdbcType=LONGVARCHAR},'%')
     </if>
@@ -35,8 +55,21 @@
     <if test="userName!=null">
       AND u.name LIKE CONCAT('%',#{userName,jdbcType=VARCHAR},'%')
     </if>
+    <if test="contactStyleId!=null">
+      AND s.contact_style_id =#{contactStyleId,jdbcType=INTEGER}
+    </if>
     ORDER BY s.contact_time DESC
+    ) t
+    <if test="columnName!=null">
+      ORDER BY t.${columnName} ${columnOrder}
+    </if>
   </select>
+  <select id="selectContactByParameterMap" resultType="com.laky.edu.supply.bean.Contact">
+    SELECT s.*,st.name as studentName,st.contact_status AS contactStatus FROM laky_supply_contact s
+    LEFT JOIN laky_supply_student st ON s.student_id =st.id and st.the_status!=0
+     WHERE s.the_status != 0 AND  s.id = #{id}
+  </select>
+
 
   <insert id="insert"   parameterType="com.laky.edu.supply.bean.Contact" useGeneratedKeys="true" keyProperty="id"
           keyColumn="id">
@@ -47,28 +80,36 @@
       #{content,jdbcType=LONGVARCHAR},#{lastContactTime,jdbcType=TIMESTAMP},#{intentionLevel,jdbcType=CHAR})
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.laky.edu.supply.bean.Contact" >
+    <foreach collection="list" item="item" index="index" open="" close="" separator=";">
     update laky_supply_contact
     <set >
-      <if test="contactTime != null" >
-        contact_time = #{contactTime,jdbcType=TIMESTAMP},
+      <if test="item.contactTime != null" >
+        contact_time = #{item.contactTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="userId != null" >
-        user_id = #{userId,jdbcType=INTEGER},
+      <if test="item.userId != null" >
+        user_id = #{item.userId,jdbcType=INTEGER},
       </if>
-      <if test="studentId != null" >
-        student_id = #{studentId,jdbcType=INTEGER},
+      <if test="item.studentId != null" >
+        student_id = #{item.studentId,jdbcType=INTEGER},
       </if>
-      <if test="contactStyleId != null" >
-        contact_style_id = #{contactStyleId,jdbcType=INTEGER},
+      <if test="item.contactStyleId != null" >
+        contact_style_id = #{item.contactStyleId,jdbcType=INTEGER},
       </if>
-      <if test="theStatus != null" >
-        the_status = #{theStatus,jdbcType=INTEGER},
+      <if test="item.theStatus != null" >
+        the_status = #{item.theStatus,jdbcType=INTEGER},
       </if>
-      <if test="content != null" >
-        content = #{content,jdbcType=LONGVARCHAR},
+      <if test="item.content != null" >
+        content = #{item.content,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="item.lastContactTime != null" >
+        last_contact_time = #{item.lastContactTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="item.intentionLevel != null" >
+        intention_level = #{item.intentionLevel,jdbcType=CHAR},
       </if>
     </set>
-    where id = #{id,jdbcType=INTEGER}
+    where id = #{item.id,jdbcType=INTEGER}
+    </foreach>
   </update>
   <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.laky.edu.supply.bean.Contact" >
     update laky_supply_contact

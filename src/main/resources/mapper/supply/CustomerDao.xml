@@ -37,7 +37,7 @@
     LEFT JOIN laky_supply_market_activity a ON s.source_id = a.id AND a.the_status!=0
     LEFT JOIN (SELECT group_concat(c.name) as intentionCourseName,group_concat(i.course_id) as intentionCourseId,i.student_id FROM laky_supply_intention_course i
     LEFT  JOIN laky_teach_course c ON i.course_id = c.id AND c.the_status!=0 GROUP BY i.student_id) i ON i.student_id = s.id
-    where s.id =#{id,jdbcType=INTEGER} AND  s.the_status != 0 AND s.the_type !=9
+    where s.id =#{id,jdbcType=INTEGER} AND  s.the_status != 0
     <if test="schoolZoneId != null">
       AND s.school_zone_id IN
       <foreach collection="schoolZoneId" item="schoolId" index="index"
@@ -58,7 +58,7 @@
     SELECT * FROM (
     SELECT s.id , s.name ,s.sex ,s.birthday AS birthday,s.phone,
     s.the_type AS theType, s.remarks ,s.create_time AS createTime,
-    sz.name as schoolZoneName, v.name AS contactId, u.name AS ownerId, a.name AS sourceId,
+    sz.name as schoolZoneName, v.name AS contactName, u.name AS ownerName,uc.name as creaetUserName,uc.id as cureateUserId, a.name AS sourceName,
     (SELECT count(1) FROM laky_supply_contact t where t.student_id=s.id ) as contactNumber,s.intention_level as
     intentionLevel,
     (SELECT group_concat(c.name) FROM laky_supply_intention_course i
@@ -69,6 +69,7 @@
     RIGHT JOIN laky_organization_school_zone sz on s.school_zone_id = sz.id and sz.the_status =1
     LEFT JOIN laky_organization_parameter_value v ON s.contact_id = v.id AND v.the_status!=0
     LEFT JOIN laky_organization_user u ON s.owner_id = u.id AND u.the_status!=0
+    LEFT JOIN laky_organization_user uc ON s.create_user_id = uc.id AND uc.the_status!=0
     LEFT JOIN laky_supply_market_activity a ON s.source_id = a.id AND a.the_status!=0
     where s.the_status !=0
     <if test="theType !=null">
@@ -111,6 +112,12 @@
         </foreach>
       </if>
     </if>
+    <if test="ownerId!=null">
+      AND owner_id=#{ownerId,jdbcType=TINYINT}
+    </if>
+    <if test="createUserId">
+      AND create_user_id=#{createUserId,jdbcType=TINYINT}
+    </if>
     <if test="allotStatus!=null">
       AND allot_status=#{allotStatus,jdbcType=TINYINT}
     </if>
@@ -123,7 +130,11 @@
     <if test="intentionLevel!=null and intentionLevel!=0">
       AND intention_level=#{intentionLevel,jdbcType=CHAR}
     </if>
-    ORDER BY s.create_time DESC,s.id
+    <if test="createTime != null">
+      AND s.create_time &gt;= #{createTime[0],jdbcType=TIMESTAMP}
+      AND s.create_time &lt;= #{createTime[1],jdbcType=TIMESTAMP}
+    </if>
+    ORDER BY s.contact_status, s.create_time DESC,s.id
     ) t
     <if test="columnName!=null">
       ORDER BY t.${columnName} ${columnOrder}
@@ -143,12 +154,12 @@
     insert into laky_supply_student (id, name, sex, 
       birthday, phone, source_id,
       school_zone_id, introducer_id, owner_id, 
-      the_status, the_type, remarks, create_time, contact_id,pinyin,invite_status,allot_status,contact_status
+      the_status, the_type, remarks,create_user_id ,create_time, contact_id,pinyin,invite_status,allot_status,contact_status
       )
     values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{sex,jdbcType=TINYINT}, 
       #{birthday,jdbcType=DATE}, #{phone,jdbcType=CHAR}, #{sourceId,jdbcType=INTEGER},
       #{schoolZoneId,jdbcType=INTEGER}, #{introducerId,jdbcType=INTEGER}, #{ownerId,jdbcType=INTEGER}, 
-      #{theStatus,jdbcType=TINYINT}, #{theType,jdbcType=TINYINT}, #{remarks,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{contactId,jdbcType=INTEGER},
+      #{theStatus,jdbcType=TINYINT}, #{theType,jdbcType=TINYINT}, #{remarks,jdbcType=VARCHAR},  #{createUserId,jdbcType=INTEGER},#{createTime,jdbcType=TIMESTAMP}, #{contactId,jdbcType=INTEGER},
       #{pinyin,jdbcType=VARCHAR},#{inviteStatus,jdbcType=TINYINT},#{allotStatus,jdbcType=TINYINT},#{contactStatus,jdbcType=TINYINT}
       )
   </insert>
@@ -163,61 +174,63 @@
   </insert>
 
   <update id="updateByPrimaryKeySelective" parameterType="com.laky.edu.supply.bean.Customer" >
+    <foreach collection="list" item="item" index="index" open="" close="" separator=";">
     update laky_supply_student
     <set >
-      <if test="name != null" >
-        name = #{name,jdbcType=VARCHAR},
+      <if test="item.name != null" >
+        name = #{item.name,jdbcType=VARCHAR},
       </if>
-      <if test="allotStatus != null" >
-        allot_status = #{allotStatus,jdbcType=TINYINT},
+      <if test="item.allotStatus != null" >
+        allot_status = #{item.allotStatus,jdbcType=TINYINT},
       </if>
-      <if test="sex != null" >
-        sex = #{sex,jdbcType=TINYINT},
+      <if test="item.sex != null" >
+        sex = #{item.sex,jdbcType=TINYINT},
       </if>
-      <if test="birthday != null" >
-        birthday = #{birthday,jdbcType=DATE},
+      <if test="item.birthday != null" >
+        birthday = #{item.birthday,jdbcType=DATE},
       </if>
-      <if test="phone != null" >
-        phone = #{phone,jdbcType=CHAR},
+      <if test="item.phone != null" >
+        phone = #{item.phone,jdbcType=CHAR},
       </if>
-      <if test="contactId != null" >
-        contact_id = #{contactId,jdbcType=INTEGER},
+      <if test="item.contactId != null" >
+        contact_id = #{item.contactId,jdbcType=INTEGER},
       </if>
-      <if test="sourceId != null" >
-        source_id = #{sourceId,jdbcType=INTEGER},
+      <if test="item.sourceId != null" >
+        source_id = #{item.sourceId,jdbcType=INTEGER},
       </if>
-      <if test="schoolZoneId != null" >
-        school_zone_id = #{schoolZoneId,jdbcType=INTEGER},
+      <if test="item.schoolZoneId != null" >
+        school_zone_id = #{item.schoolZoneId,jdbcType=INTEGER},
       </if>
-      <if test="introducerId != null" >
-        introducer_id = #{introducerId,jdbcType=INTEGER},
+      <if test="item.introducerId != null" >
+        introducer_id = #{item.introducerId,jdbcType=INTEGER},
       </if>
-      <if test="ownerId != null" >
-        owner_id = #{ownerId,jdbcType=INTEGER},
+      <if test="item.ownerId != null" >
+        owner_id = #{item.ownerId,jdbcType=INTEGER},
       </if>
-      <if test="theStatus != null" >
-        the_status = #{theStatus,jdbcType=TINYINT},
+      <if test="item.theStatus != null" >
+        the_status = #{item.theStatus,jdbcType=TINYINT},
       </if>
-      <if test="theType != null" >
-        the_type = #{theType,jdbcType=TINYINT},
+      <if test="item.theType != null" >
+        the_type = #{item.theType,jdbcType=TINYINT},
       </if>
-      <if test="remarks != null" >
-        remarks = #{remarks,jdbcType=VARCHAR},
+      <if test="item.remarks != null" >
+        remarks = #{item.remarks,jdbcType=VARCHAR},
       </if>
-      <if test="inviteStatus">
-        invite_status= #{inviteStatus,jdbcType=INTEGER},
+      <if test="item.inviteStatus">
+        invite_status= #{item.inviteStatus,jdbcType=INTEGER},
       </if>
-      <if test="contactStatus">
-        contact_status= #{contactStatus,jdbcType=INTEGER},
+      <if test="item.contactStatus">
+        contact_status= #{item.contactStatus,jdbcType=INTEGER},
       </if>
-      <if test="intentionLevel !=null">
-        intention_level= #{intentionLevel,jdbcType=CHAR},
+      <if test="item.intentionLevel !=null">
+        intention_level= #{item.intentionLevel,jdbcType=CHAR},
       </if>
-      <if test="lastContactTime">
-        last_contact_time= #{lastContactTime,jdbcType=TIMESTAMP},
+      <if test="item.lastContactTime">
+        last_contact_time= #{item.lastContactTime,jdbcType=TIMESTAMP},
       </if>
     </set>
-    where id = #{id,jdbcType=INTEGER}
+    where id = #{item.id,jdbcType=INTEGER}
+    </foreach>
   </update>
   <update id="updateByPrimaryKey" parameterType="com.laky.edu.supply.bean.Customer" >
     update laky_supply_student

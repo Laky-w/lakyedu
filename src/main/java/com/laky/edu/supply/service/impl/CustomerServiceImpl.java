@@ -60,7 +60,9 @@ public class CustomerServiceImpl implements CustomerService {
             customer.setAllotStatus(1);//未分配
         }
         customer.setPinyin(PinYinUtil.parsePinYin(customer.getName()));
-        int rows=customerDao.updateByPrimaryKeySelective(customer);
+        List<Customer> customerList = new ArrayList<>();
+        customerList.add(customer);
+        int rows=customerDao.updateByPrimaryKeySelective(customerList);
         if(rows==0) throw new Exception("修改生源失败！");
         if(null !=intentionIds){ //意向课程添加
             //删除历史意向课程
@@ -76,7 +78,9 @@ public class CustomerServiceImpl implements CustomerService {
         Customer customer = new Customer();
         customer.setId(customerId);
         customer.setTheStatus(0);
-        int rowCount = customerDao.updateByPrimaryKeySelective(customer);
+        List<Customer> customerList = new ArrayList<>();
+        customerList.add(customer);
+        int rowCount = customerDao.updateByPrimaryKeySelective(customerList);
         return !(rowCount==0);
     }
 
@@ -103,7 +107,18 @@ public class CustomerServiceImpl implements CustomerService {
         return new PageBean<>(customerDao.selectByParameterMap(parameterMap));
     }
 
+    @Transactional
+    @Override
+    public int updateUserOwner(Integer ownerId, Integer[] students) throws Exception {
+        List<Customer> customerList = new ArrayList<>();
+        for (Integer id:students){
+            Customer customer = new Customer();
+            customer.setId(id);
+            customer.setOwnerId(ownerId);
+            customer.setAllotStatus(2);
+            customerList.add(customer);
+        }
 
-
-
+        return  customerDao.updateByPrimaryKeySelective(customerList);
+    }
 }

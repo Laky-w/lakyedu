@@ -35,11 +35,14 @@
     </if>
   </select>
   <select id="selectByParameterMap" resultType="java.util.Map">
-    SELECT s.id AS id, s.name  AS name, s.create_time AS createTime, s.end_date AS endDate, s.start_date AS startDate,s.the_type as theType, s.cost AS  cost,s.target_number AS targetNumber, sz.name AS schoolZoneName,u.name AS userName,u.id AS userId, p.name as cateGoryName
+    SELECT * FROM (
+    SELECT s.id AS id, s.name AS name, s.create_time AS createTime, s.end_date AS endDate, s.start_date AS
+    startDate,s.the_type as theType, s.cost AS cost,s.target_number AS targetNumber, sz.name AS schoolZoneName,u.name AS
+    userName,u.id AS userId, p.name as cateGoryName
     FROM laky_supply_market_activity s
     RIGHT JOIN laky_organization_school_zone sz ON s.school_zone_id=sz.id AND sz.the_status=1
     LEFT JOIN laky_organization_user u ON s.user_id = u.id AND u.the_status!=0
-    LEFT  JOIN   laky_organization_parameter_value p ON s.category_id = p.id
+    LEFT JOIN laky_organization_parameter_value p ON s.category_id = p.id
     WHERE s.the_status!=0
     <if test="name != null">
       AND s.`name` LIKE CONCAT('%',#{name,jdbcType=VARCHAR},'%')
@@ -70,6 +73,10 @@
       </if>
     </if>
     ORDER BY s.create_time DESC
+    ) t
+    <if test="columnName!=null">
+      ORDER BY t.${columnName} ${columnOrder}
+    </if>
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from laky_supply_market_activity
@@ -169,43 +176,45 @@
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.laky.edu.supply.bean.Activity" >
+    <foreach collection="list" item="item" index="index" open="" close="" separator=";">
     update laky_supply_market_activity
     <set >
-      <if test="name != null" >
-        name = #{name,jdbcType=VARCHAR},
+      <if test="item.name != null" >
+        name = #{item.name,jdbcType=VARCHAR},
       </if>
-      <if test="userId != null" >
-        user_id = #{userId,jdbcType=INTEGER},
+      <if test="item.userId != null" >
+        user_id = #{item.userId,jdbcType=INTEGER},
       </if>
-      <if test="schoolZoneId != null" >
-        school_zone_id = #{schoolZoneId,jdbcType=INTEGER},
+      <if test="item.schoolZoneId != null" >
+        school_zone_id = #{item.schoolZoneId,jdbcType=INTEGER},
       </if>
-      <if test="createTime != null" >
-        create_time = #{createTime,jdbcType=TIMESTAMP},
+      <if test="item.createTime != null" >
+        create_time = #{item.createTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="startDate != null" >
-        start_date = #{startDate,jdbcType=DATE},
+      <if test="item.startDate != null" >
+        start_date = #{item.startDate,jdbcType=DATE},
       </if>
-      <if test="endDate != null" >
-        end_date = #{endDate,jdbcType=DATE},
+      <if test="item.endDate != null" >
+        end_date = #{item.endDate,jdbcType=DATE},
       </if>
-      <if test="cost != null" >
-        cost = #{cost,jdbcType=DECIMAL},
+      <if test="item.cost != null" >
+        cost = #{item.cost,jdbcType=DECIMAL},
       </if>
-      <if test="targetNumber != null" >
-        target_number = #{targetNumber,jdbcType=INTEGER},
+      <if test="item.targetNumber != null" >
+        target_number = #{item.targetNumber,jdbcType=INTEGER},
       </if>
-      <if test="categoryId != null" >
-        category_id = #{categoryId,jdbcType=INTEGER},
+      <if test="item.categoryId != null" >
+        category_id = #{item.categoryId,jdbcType=INTEGER},
       </if>
-      <if test="theType != null" >
-        the_type = #{theType,jdbcType=TINYINT},
+      <if test="item.theType != null" >
+        the_type = #{item.theType,jdbcType=TINYINT},
       </if>
-      <if test="theStatus != null" >
-        the_status = #{theStatus,jdbcType=TINYINT},
+      <if test="item.theStatus != null" >
+        the_status = #{item.theStatus,jdbcType=TINYINT},
       </if>
     </set>
-    where id = #{id,jdbcType=INTEGER}
+    where id = #{item.id,jdbcType=INTEGER}
+    </foreach>
   </update>
   <update id="updateByPrimaryKey" parameterType="com.laky.edu.supply.bean.Activity" >
     update laky_supply_market_activity

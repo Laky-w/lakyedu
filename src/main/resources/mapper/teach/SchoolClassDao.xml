@@ -19,12 +19,6 @@
     id, name, course_id, school_zone_id, the_status, room_id, main_teacher_id, teacher_id,
     start_date, end_date, remarks, create_time
   </sql>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
-    select 
-    <include refid="Base_Column_List" />
-    from laky_teach_school_class
-    where id = #{id,jdbcType=INTEGER}
-  </select>
   <select id="selectSchoolClassById" resultType="java.util.Map">
     SELECT s.id AS id,s.end_date AS endDate,s.start_date AS startDate,s.name AS name,s.create_time AS createTime,s.remarks AS remarks,r.id as roomId,
     r.`name` AS roomName, c.`name` AS courseName,u1.id as mainTeacherId,u1.name AS mainTeacherName,u.`name` AS teacherName,sz.name as schoolZoneName

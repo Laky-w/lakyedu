@@ -11,7 +11,9 @@ public interface ContactDao {
 
     List<Contact> selectByParameterMap(LinkedHashMap parameterMap);
 
-    int updateByPrimaryKeySelective(Contact record);
+    Contact selectContactByParameterMap(LinkedHashMap parameterMap);
+
+    int updateByPrimaryKeySelective(List<Contact> record);
 
     int updateByPrimaryKeyWithBLOBs(Contact record);
 

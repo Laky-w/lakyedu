@@ -36,4 +36,11 @@
       authority_id = #{authorityId,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
+  <select id="queryRoleAuthorityByUserId" resultType="java.util.Map" parameterType="java.lang.Integer" >
+    SELECT s.key,s.menu_id as menuId ,m.parent_id as parentId from laky_organization_authority s
+      LEFT JOIN laky_organization_menu m on s.menu_id=m.id where s.id in (
+	SELECT DISTINCT(o.authority_id) from laky_organization_user_role s
+		RIGHT  JOIN laky_organization_role_authority o on s.role_id = o.role_id
+		where s.user_id = #{userId,jdbcType=INTEGER})
+  </select>
 </mapper>

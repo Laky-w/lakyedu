@@ -19,6 +19,16 @@ public interface UserDao {
      */
     int insertUser(User user);
 
+
+    User selectById(Integer id);
+
+    /**
+     * 查询用户
+     * @param parameter 参数
+     * @return
+     */
+    Map queryUserById(LinkedHashMap parameter);
+
     /**
      * 更新用户信息
      * @param user
@@ -40,10 +50,5 @@ public interface UserDao {
      */
     List<User> queryUserBySchoolId(LinkedHashMap parameter);
 
-    /**
-     * 查询用户
-     * @param parameter 参数
-     * @return
-     */
-    Map queryUserById(LinkedHashMap parameter);
+
 }

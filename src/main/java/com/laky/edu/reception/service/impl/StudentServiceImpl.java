@@ -126,7 +126,9 @@ public class StudentServiceImpl implements StudentService{
         }
         doMoneyRecord(order,userId,financeAccount);
         customer.setTheType(SupplyConst.CUSTOMER_TYPE_STUDENT);//更新生源类型为正式学员
-        customerDao.updateByPrimaryKeySelective(customer);
+        List<Customer> customerList = new ArrayList<>();
+        customerList.add(customer);
+        customerDao.updateByPrimaryKeySelective(customerList);
         return order;
     }
 

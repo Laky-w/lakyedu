@@ -7,10 +7,7 @@ import com.laky.edu.organization.bean.Authority;
 import com.laky.edu.organization.bean.Menu;
 import com.laky.edu.organization.bean.User;
 import com.laky.edu.organization.bean.UserRole;
-import com.laky.edu.organization.dao.AuthorityDao;
-import com.laky.edu.organization.dao.MenuDao;
-import com.laky.edu.organization.dao.UserDao;
-import com.laky.edu.organization.dao.UserRoleDao;
+import com.laky.edu.organization.dao.*;
 import com.laky.edu.organization.service.UserService;
 import com.laky.edu.util.MD5;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +33,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserRoleDao userRoleDao;
+
+    @Autowired
+    private RoleAuthorityDao roleAuthorityDao;
 
     @Override
     public User loginUser(String userName, String pwd,String serial) throws Exception{
@@ -81,7 +81,68 @@ public class UserServiceImpl implements UserService {
     }
 
 
-    private List<Authority> getAuthorities(Integer menuId,List<Authority> authorities){
+    @Override
+    public Map findUserMenuAll(Integer userId) throws Exception {
+        //判断当前用户是不是超级用户，不是去查询所拥有的权限
+        User user = userDao.selectById(userId);
+        if(user!=null && user.getIsSuper()==1){ //超级管理员
+            Map map = new LinkedHashMap<>();
+            map.put("menuList",this.findMenuAll());
+            map.put("authorities","isAll");
+            return map;
+        } else {
+            List<Map> authorityMaps= roleAuthorityDao.queryRoleAuthorityByUserId(userId);
+            Map menuMap = new HashMap<>();//所有子菜单id
+            authorityMaps.forEach(map -> {
+                menuMap.put(map.get("menuId"),map.get("parentId"));
+            });
+            List<Menu> menuList =menuDao.findMenuAll();
+            Set set = menuMap.keySet();
+            LinkedHashMap parameterMap = new LinkedHashMap();
+            parameterMap.put("ids",set.toArray());
+            List<Menu> childList = menuDao.findMenuAllByIds(parameterMap);
+            List<Menu> parentList = new ArrayList<>();
+            for(Menu menu:childList){
+                parentList.addAll(getParents(menu.getParentId(),menuList));
+                parentList.add(menu);
+            }
+            List<Menu> dataList = new ArrayList<>();
+            Map map = new LinkedHashMap<>();
+            parentList.forEach(item->{
+                if(item.getParentId() == 0){
+                    List<Menu> subs=getSubs(item.getId(),parentList,null);
+                    item.setSubs(subs);
+                    dataList.add(item);
+                }
+            });
+            dataList.sort((a,b) -> a.getSort().compareTo(b.getSort()));
+            map.put("menuList",dataList);
+            map.put("authorities",authorityMaps);
+            return  map;
+        }
+    }
+
+    /**
+     * 查找所有的父节点
+     * @param parentId
+     * @param menuList
+     * @return
+     */
+    private List<Menu> getParents(Integer parentId,List<Menu> menuList){
+        List<Menu> newMenu = new ArrayList<>();
+        for (Menu menu:menuList){
+            if(menu.getId() == parentId){
+                newMenu.add(menu);
+                if(menu.getParentId()!=0){//不是根节点
+                    newMenu.addAll(getParents(menu.getParentId(),menuList));
+                }
+            }
+        }
+        return newMenu;
+    }
+
+
+    private List<Authority> getAuthorities(Integer menuId, List<Authority> authorities){
         List<Authority> temAuthorities = new ArrayList<Authority>();
         authorities.forEach(authority -> {
             if(authority.getMenuId()==menuId) {
@@ -104,7 +165,7 @@ public class UserServiceImpl implements UserService {
             if(item.getParentId() == id){
                 List<Menu> subs=getSubs(item.getId(),menuList,authorities);
                 item.setSubs(subs);
-                if(null==subs){
+                if(null==subs && authorities !=null){
                     item.setAuthorities(this.getAuthorities(item.getId(),authorities));
                 }
                 newMenuList.add(item);
@@ -131,6 +192,7 @@ public class UserServiceImpl implements UserService {
     public User createUser(User user,Integer [] roles) throws Exception {
         user.setTheStatus(1);
         user.setCreateDatetime(new Date());
+        user.setQuitStatus(1);
         //010
         user.setPassword(MD5.getMd5("123456"));
         int row= userDao.insertUser(user);

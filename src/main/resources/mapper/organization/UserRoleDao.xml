@@ -13,4 +13,7 @@
   <delete id="deleteUserRole"  parameterType="Integer">
     DELETE FROM laky_organization_user_role WHERE user_id = #{uesrId,jdbcType=INTEGER};
   </delete>
+  <select id="selectUserRoleById">
+
+  </select>
 </mapper>

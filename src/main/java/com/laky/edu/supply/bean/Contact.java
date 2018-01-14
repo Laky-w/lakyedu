@@ -12,6 +12,10 @@ public class Contact implements Serializable {
 
     private Integer studentId;
 
+    private String studentName;//学生
+
+    private Integer contactStatus;//学生状态
+
     private Integer contactStyleId;
 
     private Integer theStatus;
@@ -95,5 +99,21 @@ public class Contact implements Serializable {
 
     public void setIntentionLevel(String intentionLevel) {
         this.intentionLevel = intentionLevel;
+    }
+
+    public String getStudentName() {
+        return studentName;
+    }
+
+    public void setStudentName(String studentName) {
+        this.studentName = studentName;
+    }
+
+    public Integer getContactStatus() {
+        return contactStatus;
+    }
+
+    public void setContactStatus(Integer contactStatus) {
+        this.contactStatus = contactStatus;
     }
 }

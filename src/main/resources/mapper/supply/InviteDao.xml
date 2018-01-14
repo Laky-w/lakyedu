@@ -16,12 +16,13 @@
     remarks
   </sql>
   <select id="selectByParameterMap" resultType="java.util.Map" >
-    select s.id,s.invite_time AS inviteTime,s.the_status AS theStatus,s.remarks,
-    sz.name AS schoolZoneName,st.name AS studentId,u.name AS userId
+    SELECT * FROM (
+    select s.id,s.invite_time AS inviteTime,s.invite_status as inviteStatus,s.remarks,
+    sz.name AS schoolZoneName,st.name AS studentName,st.id as studentId,u.name AS userName
     FROM laky_supply_invite s
     RIGHT JOIN laky_organization_school_zone sz ON s.school_zone_id = sz.id AND sz.the_status=1
-    LEFT JOIN  laky_supply_student st ON s.student_id = st.id AND st.the_status!=0
-    LEFT JOIN  laky_organization_user u ON s.user_id = u.id AND u.the_status!=0
+    RIGHT JOIN laky_supply_student st ON s.student_id = st.id AND st.the_status!=0
+    LEFT JOIN laky_organization_user u ON s.user_id = u.id AND u.the_status!=0
     where s.the_status !=0
     <if test="userId != null">
       AND u.name LIKE CONCAT('%',#{userId,jdbcType=VARCHAR},'%')
@@ -38,6 +39,9 @@
         #{schoolId}
       </foreach>
     </if>
+    <if test="inviteStatus!=null">
+      AND s.invite_status=#{inviteStatus,jdbcType=INTEGER}
+    </if>
     <if test="schoolZoneId2 != null">
       <if test="schoolZoneId2 instanceof String">
         AND s.school_zone_id = #{schoolZoneId2,jdbcType=INTEGER}
@@ -50,6 +54,10 @@
         </foreach>
       </if>
     </if>
+    ) t
+    <if test="columnName!=null">
+      ORDER BY t.${columnName} ${columnOrder}
+    </if>
   </select>
   <insert id="insert" parameterType="com.laky.edu.supply.bean.Invite" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
     insert into laky_supply_invite (id, invite_time, school_zone_id,
@@ -60,31 +68,33 @@
       #{inviteStatus,jdbcType=TINYINT}, #{remarks,jdbcType=VARCHAR})
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.laky.edu.supply.bean.Invite" >
+    <foreach collection="list" item="item" index="index" open="" close="" separator=";">
     update laky_supply_invite
     <set >
-      <if test="inviteTime != null" >
-        invite_time = #{inviteTime,jdbcType=TIMESTAMP},
+      <if test="item.inviteTime != null" >
+        invite_time = #{item.inviteTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="schoolZoneId != null" >
-        school_zone_id = #{schoolZoneId,jdbcType=INTEGER},
+      <if test="item.schoolZoneId != null" >
+        school_zone_id = #{item.schoolZoneId,jdbcType=INTEGER},
       </if>
-      <if test="studentId != null" >
-        student_id = #{studentId,jdbcType=INTEGER},
+      <if test="item.studentId != null" >
+        student_id = #{item.studentId,jdbcType=INTEGER},
       </if>
-      <if test="userId != null" >
-        user_id = #{userId,jdbcType=INTEGER},
+      <if test="item.userId != null" >
+        user_id = #{item.userId,jdbcType=INTEGER},
       </if>
-      <if test="theStatus != null" >
-        the_status = #{theStatus,jdbcType=TINYINT},
+      <if test="item.theStatus != null" >
+        the_status = #{item.theStatus,jdbcType=TINYINT},
       </if>
-      <if test="inviteStatus != null" >
-        invitation_status = #{inviteStatus,jdbcType=TINYINT},
+      <if test="item.inviteStatus != null" >
+        invitation_status = #{item.inviteStatus,jdbcType=TINYINT},
       </if>
-      <if test="remarks != null" >
-        remarks = #{remarks,jdbcType=VARCHAR},
+      <if test="item.remarks != null" >
+        remarks = #{item.remarks,jdbcType=VARCHAR},
       </if>
     </set>
-    where id = #{id,jdbcType=INTEGER}
+    where id = #{item.id,jdbcType=INTEGER}
+    </foreach>
   </update>
   <update id="updateByPrimaryKey" parameterType="com.laky.edu.supply.bean.Invite" >
     update laky_supply_invite

@@ -34,10 +34,10 @@
     </resultMap>
     <insert id="insertUser" keyColumn="id" keyProperty="id" useGeneratedKeys="true" parameterType="com.laky.edu.organization.bean.User">
       INSERT  INTO  laky_organization_user(user_name,nick_name,`name`,`password`,head_logo,the_status,branch_id,school_zone_id,
-      create_datetime,phone,email,sex,birthday,is_super,id_card)
+      create_datetime,phone,email,sex,birthday,is_super,id_card,quitStatus)
       VALUES (#{userName},#{nickName},#{name},#{password},#{headLogo},
       #{theStatus},#{branchId},#{schoolZoneId},#{createDatetime},#{phone},
-      #{email},#{sex},#{birthday},#{isSuper},#{idCard})
+      #{email},#{sex},#{birthday},#{isSuper},#{idCard},#{quitStatus})
     </insert>
     <update id="updateUser">
         UPDATE laky_organization_user
@@ -129,6 +129,10 @@
         <if test="quitStatus!=null">
             AND s.quit_status = #{quitStatus,jdbcType=INTEGER}
         </if>
+    </select>
+
+    <select id="selectById"   resultType="com.laky.edu.organization.bean.User" >
+        SELECT  * from laky_organization_user s where s.the_status !=0 AND s.id = #{id,jdbcType=INTEGER}
     </select>
 
     <select id="queryUserById"   resultType="java.util.Map" >

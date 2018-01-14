@@ -11,9 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-import java.util.Date;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class SupplyServiceImpl implements SupplyService {
@@ -35,7 +33,9 @@ public class SupplyServiceImpl implements SupplyService {
     @Transactional
     @Override
     public Activity updateByPrimaryKeySelective(Activity activity) throws Exception {
-        int rows=activityDao.updateByPrimaryKeySelective(activity);
+        List<Activity> activityList = new ArrayList<>();
+        activityList.add(activity);
+        int rows=activityDao.updateByPrimaryKeySelective(activityList);
         if(rows==0) throw new Exception("修改市场活动失败！");
         return activity;
     }
@@ -53,11 +53,15 @@ public class SupplyServiceImpl implements SupplyService {
 
     @Transactional
     @Override
-    public int deleteActivity(Integer id) throws Exception {
-        Activity activity = new Activity();
-        activity.setId(id);
-        activity.setTheStatus(0);
-        return activityDao.updateByPrimaryKeySelective(activity);
+    public int deleteActivity(String[] ids) throws Exception {
+        List<Activity> activityList = new ArrayList<>();
+        for(String id:ids){
+            Activity activity = new Activity();
+            activity.setTheStatus(0);
+            activity.setId(new Integer(id));
+            activityList.add(activity);
+        }
+        return activityDao.updateByPrimaryKeySelective(activityList);
     }
 
 }

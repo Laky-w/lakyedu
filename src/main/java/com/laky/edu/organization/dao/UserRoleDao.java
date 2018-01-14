@@ -12,4 +12,6 @@ public interface UserRoleDao {
 
     int deleteUserRole(Integer userId);
 
+    List<UserRole> selectUserRoleById(Integer userId);
+
 }

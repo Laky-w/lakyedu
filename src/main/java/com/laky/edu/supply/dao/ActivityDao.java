@@ -19,7 +19,7 @@ public interface ActivityDao {
 
     List<Activity> selectByParameterMap(LinkedHashMap parameterMap);
 
-    int updateByPrimaryKeySelective(Activity activity);
+    int updateByPrimaryKeySelective(List<Activity> activity);
 
     int updateByPrimaryKey(Activity activity);
 }

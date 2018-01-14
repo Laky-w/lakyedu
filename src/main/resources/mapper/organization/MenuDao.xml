@@ -6,4 +6,11 @@
     <select id="findMenuAll" resultType="com.laky.edu.organization.bean.Menu">
       SELECT  * FROM laky_organization_menu WHERE  the_status !=0 ORDER BY sort;
     </select>
+    <select id="findMenuAllByIds" resultType="com.laky.edu.organization.bean.Menu" >
+        SELECT  * FROM laky_organization_menu WHERE  the_status !=0 AND id in
+        <foreach collection="ids" item="id" index="index"
+                 open="(" close=")" separator=",">
+            #{id,jdbcType=INTEGER}
+        </foreach>
+    </select>
 </mapper>

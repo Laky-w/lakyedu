@@ -24,6 +24,22 @@ public interface ContactService {
      */
     PageBean<Contact> findContactAll(LinkedHashMap parameterMap)throws Exception;
 
+    /**
+     * 查询联系记录详情
+     * @param parameterMap
+     * @return
+     * @throws Exception
+     */
+    Contact findContactById(LinkedHashMap parameterMap ) throws Exception;
+
     int updateByPrimaryKeySelective(Contact record)throws  Exception;
+
+    /**
+     * 删除联系记录
+     * @param ids
+     * @return
+     * @throws Exception
+     */
+    int deleteContact(String [] ids) throws Exception;
 
 }

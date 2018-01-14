@@ -5,6 +5,8 @@ import org.springframework.stereotype.Component;
 
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+
 @Component
 public interface RoleAuthorityDao {
 
@@ -16,4 +18,11 @@ public interface RoleAuthorityDao {
 
 
     int updateRoleAuthority(RoleAuthority roleAuthority);
+
+    /**
+     * 查询用户所拥有的权限
+     * @param userId
+     * @return
+     */
+    List<Map> queryRoleAuthorityByUserId(Integer userId);
 }

@@ -15,4 +15,12 @@ public interface InviteService {
     int updateByPrimaryKeySelective(Invite record)throws Exception;
 
     int updateByPrimaryKey(Invite record)throws Exception;
+
+    /**
+     * 删除邀约记录
+     * @param ids
+     * @return
+     * @throws Exception
+     */
+    int deleteInvite(String [] ids) throws Exception;
 }

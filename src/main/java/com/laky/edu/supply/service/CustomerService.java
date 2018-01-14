@@ -44,5 +44,20 @@ public interface CustomerService {
      */
     Map findCustomer(LinkedHashMap parameterMap)throws Exception;
 
+    /**
+     * 查询全部生源
+     * @param parameterMap
+     * @return
+     * @throws Exception
+     */
     PageBean<Customer> findCustomerAll(LinkedHashMap parameterMap)throws Exception;
+
+    /**
+     * 分配生源
+     * @param ownerId
+     * @param students
+     * @return
+     * @throws Exception
+     */
+    int updateUserOwner(Integer ownerId,Integer [] students) throws Exception;
 }

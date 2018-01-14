@@ -12,7 +12,7 @@ public interface InviteDao {
 
     List<Invite> selectByParameterMap(LinkedHashMap parameterMap);
 
-    int updateByPrimaryKeySelective(Invite record);
+    int updateByPrimaryKeySelective(List<Invite> record);
 
     int updateByPrimaryKey(Invite record);
 }

@@ -30,6 +30,14 @@ public interface UserService {
     List<Menu> findMenuAll() throws Exception;
 
     /**
+     * 查询用户全部菜单和权限
+     * @param userId
+     * @return
+     * @throws Exception
+     */
+    Map findUserMenuAll(Integer userId) throws Exception;
+
+    /**
      * 查询校区用户
      * @param parameterMap
      * @return
@@ -70,4 +78,6 @@ public interface UserService {
      * @throws Exception
      */
     int doDeleteUser(Integer userId) throws Exception;
+
+
 }

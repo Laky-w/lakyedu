@@ -42,9 +42,9 @@ public interface SupplyService {
 
     /**
      * 删除市场活动
-     * @param id
+     * @param ids
      * @return
      * @throws Exception
      */
-    int deleteActivity(Integer id)throws  Exception;
+    int deleteActivity(String [] ids)throws  Exception;
 }

@@ -29,7 +29,7 @@ public class CustomerController extends BaseController{
     public Map getCustomerList(HttpServletRequest request, @PathVariable int pageNum, @PathVariable int pageSize){
         try {
             LinkedHashMap parameterMap = new LinkedHashMap();
-            parameterMap.put("schoolIds",super.getSchoolIds(request));
+            parameterMap.put("schoolIds",super.getSchoolIds(request,2));
             parameterMap.put("pageNum",pageNum);
             parameterMap.put("pageSize",pageSize);
             parameterMap = super.doWrappingFormParameter(request,parameterMap);
@@ -43,6 +43,7 @@ public class CustomerController extends BaseController{
     public Map createCustomer(HttpServletRequest request, Customer customer,Integer [] intentionId ){
         try {
             if(customer.getId() == null ){ //添加
+                customer.setCreateUserId(super.getCurrentUser(request).getId());
                 customer=customerService.createCustomer(customer,intentionId);
                 super.handleOperate("添加生源", OrganizationConst.OPERATE_ADD,"添加生源【"+customer.getName()+"】",request);
             } else {
@@ -82,5 +83,16 @@ public class CustomerController extends BaseController{
         }
     }
 
-
+    @PutMapping(value = "/updateUserOwner/{ownerId}")
+    public Map updateUserOwner(javax.servlet.http.HttpServletRequest request, @PathVariable Integer ownerId, Integer [] students){
+        try {
+            String logTitle = "恢复入职";
+            String logContent = "分配生源";
+            customerService.updateUserOwner(ownerId,students);
+            super.handleOperate(logTitle,OrganizationConst.OPERATE_UPDATE,logContent,request);
+            return super.doWrappingData("操作成功");
+        } catch (Exception e) {
+            return  super.doWrappingErrorData(e);
+        }
+    }
 }

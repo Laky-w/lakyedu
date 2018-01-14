@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -36,7 +37,10 @@ public class InviteServiceImpl implements InviteService {
         if (rows==0) throw new RuntimeException("创建邀约试听失败");
         Customer customer= customerDao.selectByPrimaryKey(invite.getStudentId());
         customer.setInviteStatus(2);
-        customerDao.updateByPrimaryKeySelective(customer);
+        customer.setContactStatus(2);
+        List<Customer> customerList = new ArrayList<>();
+        customerList.add(customer);
+        customerDao.updateByPrimaryKeySelective(customerList);
         return invite;
     }
 
@@ -50,6 +54,19 @@ public class InviteServiceImpl implements InviteService {
     public PageBean<Invite> findByInviteAll(LinkedHashMap parameterMap) throws Exception {
         PageHelper.startPage((int)parameterMap.get("pageNum"),(int)parameterMap.get("pageSize"));
         return new PageBean<>(inviteDao.selectByParameterMap(parameterMap));
+    }
+
+    @Transactional
+    @Override
+    public int deleteInvite(String[] ids) throws Exception {
+        List<Invite> inviteList = new ArrayList<>();
+        for(String id:ids){
+            Invite invite = new Invite();
+            invite.setTheStatus(0);
+            invite.setId(new Integer(id));
+            inviteList.add(invite);
+        }
+        return inviteDao.updateByPrimaryKeySelective(inviteList);
     }
 
     @Override

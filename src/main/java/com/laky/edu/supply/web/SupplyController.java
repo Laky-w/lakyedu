@@ -6,6 +6,7 @@ import com.laky.edu.supply.bean.Activity;
 import com.laky.edu.supply.service.SupplyService;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
@@ -67,11 +68,14 @@ public class SupplyController extends BaseController{
 //    private int
 
     @DeleteMapping("/deleteActivity/{id}")
-    public Map deleteActivity(javax.servlet.http.HttpServletRequest request, @PathVariable(required = true) Integer id){
+    public Map deleteActivity(javax.servlet.http.HttpServletRequest request, @PathVariable String ids){
         try {
-            Activity activity = new Activity();
-            supplyService.deleteActivity(id);
-            super.handleOperate("删除市场活动",OrganizationConst.OPERATE_DELETE,"删除市场活动【"+activity.getName()+"】",request);
+            if(!StringUtils.isEmpty(ids)){
+                supplyService.deleteActivity(ids.split(","));
+            } else {
+                throw new Exception("删除记录出错！");
+            }
+            super.handleOperate("删除市场活动",OrganizationConst.OPERATE_DELETE,"删除市场活动",request);
             return super.doWrappingData("操作成功");
         } catch (Exception e) {
             return  super.doWrappingErrorData(e);

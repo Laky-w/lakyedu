@@ -33,7 +33,7 @@ public interface CustomerDao {
 
     List<Customer> selectByParameterMap(LinkedHashMap parameterMap);
 
-    int updateByPrimaryKeySelective(Customer record);
+    int updateByPrimaryKeySelective(List<Customer> record);
 
     int updateByPrimaryKey(Customer record);
 

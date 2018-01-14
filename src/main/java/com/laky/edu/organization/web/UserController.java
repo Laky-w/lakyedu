@@ -75,6 +75,14 @@ public class UserController extends BaseController{
 
     }
 
+    @GetMapping("/getUserMenu")
+    public Map getUserMenu(HttpServletRequest request){
+        try {
+            return super.doWrappingData(userService.findUserMenuAll(getCurrentUser(request).getId()));
+        } catch (Exception e) {
+            return  super.doWrappingErrorData(e);
+        }
+    }
 
     @GetMapping("/getMenu")
     public Map getMenu(HttpServletRequest request) {
@@ -88,6 +96,7 @@ public class UserController extends BaseController{
             menuMap.put("title","系统");
             List menuList = new ArrayList<>();
             menuList.add(menuMap);*/
+
             List<Menu> menuList =userService.findMenuAll();
             return super.doWrappingData(menuList);
         } catch (Exception e) {
@@ -100,7 +109,7 @@ public class UserController extends BaseController{
         try {
             LinkedHashMap parameterMap = new LinkedHashMap();
             parameterMap = super.doWrappingFormParameter(request,parameterMap);
-            parameterMap.put("schoolZoneId",super.getSchoolIds(request,parameterMap.get("theType"),parameterMap.get("parentSchoolId")));//获取当前用户所在校区的id和下级校区的数组
+            parameterMap.put("schoolZoneId",super.getSchoolIds(request,parameterMap.get("theType")==null?0:parameterMap.get("theType"),parameterMap.get("parentSchoolId")));//获取当前用户所在校区的id和下级校区的数组
             parameterMap.put("pageNum",pageNum);
             parameterMap.put("pageSize",pageSize);
             return super.doWrappingData(userService.findUserBySchoolId(parameterMap));
@@ -215,5 +224,6 @@ public class UserController extends BaseController{
             return  super.doWrappingErrorData(e);
         }
     }
+
 
 }

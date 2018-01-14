@@ -30,6 +30,8 @@ public class Customer implements Serializable {
 
     private String remarks;
 
+    private Integer createUserId;
+
     private Date createTime;
 
     private Integer contactId;
@@ -217,5 +219,13 @@ public class Customer implements Serializable {
 
     public void setIntentionLevel(String intentionLevel) {
         this.intentionLevel = intentionLevel;
+    }
+
+    public Integer getCreateUserId() {
+        return createUserId;
+    }
+
+    public void setCreateUserId(Integer createUserId) {
+        this.createUserId = createUserId;
     }
 }
