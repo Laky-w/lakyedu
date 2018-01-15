@@ -9,7 +9,6 @@ import java.util.Map;
 
 @Component
 public interface CourseDao {
-    int deleteByPrimaryKey(Integer id);
 
     int insert(Course record);
 
@@ -19,15 +18,11 @@ public interface CourseDao {
 
     List<Map> selectCourseChargeStandard(LinkedHashMap parameterMap);
 
-    Course selectByPrimaryKey(Integer id);
-
-    Course selectCourse(LinkedHashMap parameterMap);
+    Map selectCourse(LinkedHashMap parameterMap);
 
     List<Course> selectByParameterMap(LinkedHashMap parameterMap);
 
     int updateByPrimaryKeySelective(Course record);
-
-    int updateByPrimaryKeyWithBLOBs(Course record);
 
     int updateByPrimaryKey(Course record);
 }

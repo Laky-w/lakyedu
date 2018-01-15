@@ -30,13 +30,14 @@
     from laky_core_login_log
     where id = #{id,jdbcType=INTEGER}
   </select>
-  <select id="selectByParameter"  resultMap="BaseResultMap">
-    SELECT
-    s.*,u.`name` as u_name,sz.name as sz_name
-    from laky_core_login_log s LEFT  JOIN laky_organization_user u ON s.user_id = u.id and u.the_status != 0
+  <select id="selectByParameter"  resultType="java.util.Map">
+    SELECT * FROM (
+    SELECT s.id,s.IP AS ip,s.the_type AS theType,s.the_datetime AS
+    theDatetime,u.`name` as userName,sz.name as schoolZoneName
+    from laky_core_login_log s
+    LEFT JOIN laky_organization_user u ON s.user_id = u.id and u.the_status != 0
     LEFT JOIN laky_organization_school_zone sz on sz.id = s.school_zone_id
-    <where>
-       1=1
+    <where>1=1
       <if test="userId != null">
         AND s.user_id = #{userId,jdbcType=INTEGER}
       </if>
@@ -72,9 +73,10 @@
         AND s.the_type = #{theType,jdbcType=TINYINT}
       </if>
       <if test="theDate != null">
-      AND s.the_datetime &gt;= #{theDate[0],jdbcType=TIMESTAMP}
-      AND s.the_datetime &lt;= #{theDate[1],jdbcType=TIMESTAMP}
-    </if>
+        AND s
+        .the_datetime &gt;= #{theDate[0],jdbcType=TIMESTAMP}
+        AND s.the_datetime &lt;= #{theDate[1],jdbcType=TIMESTAMP}
+      </if>
       <!--<if test="theDate1 != null">-->
         <!--AND s.the_datetime &gt;= #{theDate1,jdbcType=TIMESTAMP}-->
       <!--</if>-->
@@ -83,6 +85,10 @@
       <!--</if>-->
     </where>
     ORDER BY s.the_datetime DESC
+    ) t
+    <if test="columnName!=null">
+      ORDER BY t.${columnName} ${columnOrder}
+    </if>
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from laky_core_login_log

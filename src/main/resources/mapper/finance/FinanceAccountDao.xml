@@ -15,13 +15,23 @@
   <sql id="Base_Column_List" >
     id, name, the_status, school_zone_id, branch_id, money, the_open, the_type, remarks
   </sql>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
-    select 
-    <include refid="Base_Column_List" />
-    from laky_finance_account
-    where id = #{id,jdbcType=INTEGER}
+  <select id="selectFinanceAccount" resultType="java.util.Map" >
+    select s.id,s.`name`,s.the_public AS thePublic,s.the_type as theType,s.the_open as theOpen,s.money,s.remarks,
+    sz.`name` AS schoolZoneName,sz.id AS schoolZoneId
+    from laky_finance_account s
+    RIGHT JOIN laky_organization_school_zone sz ON s.school_zone_id=sz.id AND sz.the_status =1
+    where s.id = #{id,jdbcType=INTEGER}  AND s.the_status !=0 AND
+    ((s.branch_id = #{branchId,jdbcType=INTEGER} AND s.the_open =2) OR (
+    s.school_zone_id IN
+    <foreach collection="schoolZoneId" item="schoolId" index="index"
+             open="(" close=")" separator=",">
+      #{schoolId}
+    </foreach> AND s.the_open =1)
+    )
   </select>
+
   <select id="selectByParameterMap" resultType="java.util.Map" >
+    select * from (
     select
     s.id,s.`name`,s.the_public AS thePublic,s.the_type as theType,s.the_open as theOpen,s.money,s.remarks,sz.`name` AS schoolZoneName
     from laky_finance_account s
@@ -53,11 +63,12 @@
       </if>
     </if>
     ORDER BY s.school_zone_id,s.the_time DESC
+    ) t
+    <if test="columnName!=null">
+      ORDER BY t.${columnName} ${columnOrder}
+    </if>
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
-    delete from laky_finance_account
-    where id = #{id,jdbcType=INTEGER}
-  </delete>
+
   <insert id="insert" parameterType="com.laky.edu.finance.bean.FinanceAccount" useGeneratedKeys="true" keyProperty="id"
           keyColumn="id">
     insert into laky_finance_account (name, the_status,
@@ -69,7 +80,8 @@
       #{theOpen,jdbcType=TINYINT}, #{theType,jdbcType=TINYINT},#{thePublic,jdbcType=TINYINT},#{theTime,jdbcType=TIMESTAMP}, #{remarks,jdbcType=VARCHAR}
       )
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.laky.edu.finance.bean.FinanceAccount" >
+
+  <update id="updateFinanceAccount" parameterType="com.laky.edu.finance.bean.FinanceAccount" >
     update laky_finance_account
     <set >
       <if test="name != null" >
@@ -99,6 +111,7 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
+
   <update id="batchUpdateByPrimaryKeySelective" parameterType="com.laky.edu.finance.bean.FinanceAccount" >
     <foreach collection="list" item="item" index="index" open="" close="" separator=";">
       update laky_finance_account
@@ -108,6 +121,7 @@
       where id = #{item.id,jdbcType=INTEGER}
     </foreach>
   </update>
+
   <update id="updateByPrimaryKey" parameterType="com.laky.edu.finance.bean.FinanceAccount" >
     update laky_finance_account
     set name = #{name,jdbcType=VARCHAR},

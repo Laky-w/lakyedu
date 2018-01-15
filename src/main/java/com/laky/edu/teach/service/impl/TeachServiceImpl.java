@@ -75,7 +75,7 @@ public class TeachServiceImpl implements TeachService{
     }
 
     @Override
-    public Course queryCourse(LinkedHashMap parameterMap) throws Exception {
+    public Map queryCourse(LinkedHashMap parameterMap) throws Exception {
         return courseDao.selectCourse(parameterMap);
     }
 

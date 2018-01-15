@@ -20,6 +20,7 @@
   </select>
 
   <select id="selectByParameterMap" resultType="java.util.Map" >
+    select * from (
     select gr.id,gr.consume_amount AS consumeAmount,gr.last_amount AS lastAmount,v.name as clazzName,
     s.name AS schoolZoneId,g.name AS goodsName
     from laky_logistics_goods_repository gr
@@ -32,7 +33,6 @@
              open="(" close=")" separator=",">
       #{schoolId}
     </foreach>
-
     <if test="goodsName!=null">
       AND g.name LIKE CONCAT('%',#{goodsName,jdbcType="INTEGER"},'%')
     </if>
@@ -47,6 +47,10 @@
           #{schoolId}
         </foreach>
       </if>
+    </if>
+    ) t
+    <if test="columnName!=null">
+      ORDER BY t.${columnName} ${columnOrder}
     </if>
   </select>
   <insert id="insert"  useGeneratedKeys="true" keyProperty="id" keyColumn="id" parameterType="com.laky.edu.logistics.bean.GoodsRepository">

@@ -2,21 +2,20 @@ package com.laky.edu.finance.dao;
 
 import com.laky.edu.finance.bean.FinanceAccount;
 import org.springframework.stereotype.Component;
-
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 @Component
 public interface FinanceAccountDao {
-    int deleteByPrimaryKey(Integer id);
 
     int insert(FinanceAccount record);
 
-    FinanceAccount selectByPrimaryKey(Integer id);
+    Map selectFinanceAccount(LinkedHashMap parameterMap);
 
     List<FinanceAccount> selectByParameterMap(LinkedHashMap parameterMap);
 
-    int updateByPrimaryKeySelective(FinanceAccount record);
+    int updateFinanceAccount(FinanceAccount financeAccount);
 
     int batchUpdateByPrimaryKeySelective(List<FinanceAccount> record);
 

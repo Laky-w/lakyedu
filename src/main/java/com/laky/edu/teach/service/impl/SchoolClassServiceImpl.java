@@ -48,4 +48,23 @@ public class SchoolClassServiceImpl implements SchoolClassService{
         PageHelper.startPage((int)parameterMap.get("pageNum"),(int)parameterMap.get("pageSize"));
         return new PageBean<>(studentClassDao.selectByParameterMap(parameterMap));
     }
+    @Transactional
+    @Override
+    public int deleteSchoolZone(Integer id) throws Exception {
+        SchoolClass schoolClass = new SchoolClass();
+        schoolClass.setId(id);
+        schoolClass.setTheStatus(0);
+        int rows = schoolClassDao.updateSchoolClass(schoolClass);
+        if (rows==0) throw new RuntimeException("删除班级失败!");
+        return rows;
+    }
+    @Transactional
+    @Override
+    public SchoolClass updateSchoolZOne(SchoolClass schoolClass) throws Exception {
+        int rows = schoolClassDao.updateSchoolClass(schoolClass);
+        if (rows==0)throw new RuntimeException("更新班级失败!");
+        return schoolClass;
+    }
+
+
 }

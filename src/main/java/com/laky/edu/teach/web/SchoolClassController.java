@@ -5,6 +5,7 @@ import com.laky.edu.organization.OrganizationConst;
 import com.laky.edu.organization.service.SchoolZoneService;
 import com.laky.edu.teach.bean.Course;
 import com.laky.edu.teach.bean.Room;
+import com.laky.edu.teach.bean.ScheduleStandard;
 import com.laky.edu.teach.bean.SchoolClass;
 import com.laky.edu.teach.service.SchoolClassService;
 import com.laky.edu.teach.service.TeachService;
@@ -44,8 +45,13 @@ public class SchoolClassController extends BaseController{
     @PostMapping("/createSchoolClass")
     public Map createSchoolClass(HttpServletRequest request, SchoolClass schoolClass){
         try {
-            schoolClass=schoolClassService.createSchoolClass(schoolClass); //
-            super.handleOperate("添加班级", OrganizationConst.OPERATE_ADD,"添加班级【"+schoolClass.getName()+"】",request);
+            if (schoolClass.getId()==null){
+                schoolClass=schoolClassService.createSchoolClass(schoolClass); //
+                super.handleOperate("添加班级", OrganizationConst.OPERATE_ADD,"添加班级【"+schoolClass.getName()+"】",request);
+            }else {
+                schoolClassService.updateSchoolZOne(schoolClass);
+                super.handleOperate("修改班级", OrganizationConst.OPERATE_ADD,"修改班级【"+schoolClass.getName()+"】",request);
+            }
             return  super.doWrappingData(schoolClass);
         } catch (Exception e) {
             return  super.doWrappingErrorData(e);
@@ -78,4 +84,15 @@ public class SchoolClassController extends BaseController{
         }
     }
 
+    @DeleteMapping("deleteSchoolClass/{id}")
+    public Map deleteSchoolClass(HttpServletRequest request,@PathVariable Integer id){
+        try {
+            SchoolClass schoolClass = new SchoolClass();
+            schoolClassService.deleteSchoolZone(id);
+            super.handleOperate("删除班级",OrganizationConst.OPERATE_DELETE,"删除班级【"+schoolClass.getName()+"】",request);
+            return super.doWrappingData("操作成功");
+        } catch (Exception e) {
+            return  super.doWrappingErrorData(e);
+        }
+    }
 }

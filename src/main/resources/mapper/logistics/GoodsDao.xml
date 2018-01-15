@@ -39,13 +39,15 @@
   </select>
 <!--查询物品-->
   <select id="selectByParameterMap" resultType="java.util.Map" >
-    select g.id,g.name,g.price,g.sell_price AS sellPrice,g.the_status AS theStatus,(CASE WHEN gr.last_amount IS NULL THEN 0 ELSE gr.last_amount END) AS lastAmount,
+    SELECT * FROM (
+    select g.id,g.name,g.price,g.sell_price AS sellPrice,g.the_status AS theStatus,(CASE WHEN gr.last_amount IS NULL
+    THEN 0 ELSE gr.last_amount END) AS lastAmount,
     g.create_time AS createTime,g.the_type AS theType,b.branch_name AS branchName, v.name AS clazzName
     from laky_logistics_goods g
     LEFT JOIN laky_organization_branch b ON g.branch_id=b.id AND b.the_status!=0
     LEFT JOIN laky_organization_parameter_value v ON g.clazz_id =v.id AND v.the_status!=0
     LEFT JOIN laky_organization_parameter_value p ON g.the_type = p.id AND p.the_status!=0
-    LEFT JOIN  laky_logistics_goods_repository gr ON  gr.goods_id = g.id
+    LEFT JOIN laky_logistics_goods_repository gr ON gr.goods_id = g.id
     <if test="schoolZoneId2 != null">
       <if test="schoolZoneId2 instanceof String">
         AND gr.school_zone_id = #{schoolZoneId2,jdbcType=INTEGER}
@@ -59,14 +61,17 @@
       </if>
     </if>
     where g.the_status!=0
-    <if test="name!=null">
-        AND g.name LIKE CONCAT('%',#{name,jdbcType=VARCHAR},'%')
+    <if test="name!=null">AND g.name LIKE CONCAT('%',#{name,jdbcType=VARCHAR},'%')
     </if>
     <if test="clazzId!=null">
       AND g.clazz_id = #{clazzId,jdbcType=INTEGER}
     </if>
 
     ORDER BY g.create_time DESC
+    ) t
+    <if test="columnName!=null">
+      ORDER BY t.${columnName} ${columnOrder}
+    </if>
   </select>
 <!--增加物品-->
   <insert id="insert" parameterType="com.laky.edu.logistics.bean.Goods" useGeneratedKeys="true" keyProperty="id" keyColumn="id" >

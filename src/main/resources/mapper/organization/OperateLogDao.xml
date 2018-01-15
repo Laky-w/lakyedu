@@ -32,9 +32,10 @@
     content
   </sql>
 
-  <select id="queryOperateLogAll" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
-    SELECT s.*,u.`name` as u_name,sz.`name` as sz_name from  laky_core_operate_log s RIGHT JOIN laky_organization_user u on s.account_id = u.id and u.the_status !=0
-
+  <select id="queryOperateLogAll" resultType="java.util.Map"  >
+    SELECT * FROM (SELECT s.create_time as createTime,s.content,s.the_type as theType,s.title,u.`name` as
+    userName,sz.`name` as schoolZoneName from laky_core_operate_log s RIGHT JOIN laky_organization_user u on
+    s.account_id = u.id and u.the_status !=0
     LEFT JOIN laky_organization_school_zone sz on s.school_zone_id = sz.id and sz.the_status =1
     <where>
       s.branch_id = #{branchId,jdbcType=INTEGER}
@@ -69,6 +70,10 @@
       </if>
     </where>
     ORDER BY s.create_time DESC
+    ) t
+    <if test="columnName!=null">
+      ORDER BY t.${columnName} ${columnOrder}
+    </if>
   </select>
   <insert id="insertOperateLog" parameterType="com.laky.edu.log.bean.OperateLog" useGeneratedKeys="true" keyProperty="id"
           keyColumn="id">

@@ -37,5 +37,21 @@ public interface SchoolClassService {
      * @param parameterMap
      * @return
      */
-    PageBean<Map> findWaitStudentAll(LinkedHashMap parameterMap);
+    PageBean<Map> findWaitStudentAll(LinkedHashMap parameterMap)throws  Exception;
+
+    /**
+     * 删除班级
+     * @param id
+     * @return
+     * @throws Exception
+     */
+    int deleteSchoolZone(Integer id)throws Exception;
+
+    /**
+     * 修改班级
+     * @param schoolClass
+     * @return
+     * @throws Exception
+     */
+    SchoolClass updateSchoolZOne(SchoolClass schoolClass)throws Exception;
 }

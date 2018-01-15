@@ -27,11 +27,12 @@
     </if>
   </select>
   <!--查询教室-->
-  <select id="selectByParameterMap" resultMap="BaseResultMap" >
-    SELECT s.*,sz.name as schoolZoneName,sz.id AS  schoolZoneId
+  <select id="selectByParameterMap" resultType="java.util.Map" >
+    SELECT * FROM (
+    SELECT s.id,s.name,s.max_count AS maxCount,s.sort,sz.name as schoolZoneName,sz.id AS schoolZoneId
     from laky_teach_room s
     RIGHT JOIN laky_organization_school_zone sz on s.school_zone_id = sz.id and sz.the_status =1
-     where s.the_status !=0
+    where s.the_status !=0
     <if test="name != null">
       AND s.`name` LIKE CONCAT('%',#{name,jdbcType=VARCHAR},'%')
     </if>
@@ -54,8 +55,11 @@
         </foreach>
       </if>
     </if>
-
     ORDER BY s.sort
+    ) t
+    <if test="columnName!=null">
+      ORDER BY t.${columnName} ${columnOrder}
+    </if>
   </select>
   <!--删除教室-->
   <delete id="deleteRoom" parameterType="java.lang.Integer" >

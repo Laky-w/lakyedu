@@ -15,7 +15,9 @@
     id, student_id, class_id, the_status, class_status, create_time, order_id, school_zone_id
   </sql>
   <select id="selectByParameterMap" resultType="java.util.Map">
-    SELECT s.id,s.student_id AS studentId,st.name as studentName,c.name as courseName,s.class_status as classStatus,s.create_time as createTime,sc.name as className,sz.name as schoolName
+    SELECT * FROM (
+    SELECT s.id,s.student_id AS studentId,st.name as studentName,c.name as courseName,s.class_status as
+    classStatus,s.create_time as createTime,sc.name as className,sz.name as schoolZoneName
     from laky_reception_student_class s
     RIGHT JOIN laky_organization_school_zone sz ON s.school_zone_id=sz.id AND sz.the_status=1
     LEFT JOIN laky_reception_student st on s.student_id = st.id and st.the_status !=0
@@ -52,6 +54,10 @@
     <if test="createTime != null">
       AND s.create_time &gt;= #{createTime[0],jdbcType=TIMESTAMP}
       AND s.create_time &lt;= #{createTime[1],jdbcType=TIMESTAMP}
+    </if>
+    ) t
+    <if test="columnName!=null">
+      ORDER BY t.${columnName} ${columnOrder}
     </if>
   </select>
 

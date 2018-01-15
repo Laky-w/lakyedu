@@ -47,11 +47,4 @@ public class OperateLogServiceImpl implements OperateLogService{
         return new PageBean(operateLogDao.queryOperateLogAll(parameterMap));
     }
 
-    @Override
-    public int deleteExpireLogByCreatetime(Date createTime) {
-
-        return operateLogDao.deleteExpireLogByCreatetime(createTime);
-    }
-
-
 }

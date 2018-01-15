@@ -11,11 +11,13 @@ import com.laky.edu.finance.dao.MoneyRecordDao;
 import com.laky.edu.finance.service.FinanceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by 湖之教育工作室·laky on 2017/12/18.
@@ -48,7 +50,7 @@ public class FinanceServiceImpl implements FinanceService {
     public List<MoneyRecordAccount> findMoneyRecordAccountList(Integer recordId) throws Exception {
         return moneyRecordAccountDao.selectByParameter(recordId);
     }
-
+    @Transactional
     @Override
     public FinanceAccount createFinanceAccount(FinanceAccount financeAccount) throws Exception {
         financeAccount.setTheStatus(1);
@@ -57,5 +59,28 @@ public class FinanceServiceImpl implements FinanceService {
         int rows=financeAccountDao.insert(financeAccount);
         if(rows==0) throw new Exception("创建校区账户失败");
         return financeAccount;
+    }
+
+    @Transactional
+    @Override
+    public FinanceAccount updateFinanceAccount(FinanceAccount financeAccount) throws Exception {
+        int rows = financeAccountDao.updateFinanceAccount(financeAccount);
+        if (rows==0) throw new RuntimeException("更新财务账户失败!");
+        return financeAccount;
+    }
+    @Transactional
+    @Override
+    public int deleteFinanceAccount(Integer id) throws Exception {
+        FinanceAccount financeAccount = new FinanceAccount();
+        financeAccount.setId(id);
+        financeAccount.setTheStatus(0);
+        int rows  = financeAccountDao.updateFinanceAccount(financeAccount);
+        if (rows==0) throw new RuntimeException("删除财务账户失败!");
+        return rows;
+    }
+
+    @Override
+    public Map selectFinanceAccount(LinkedHashMap parameterMap) throws Exception {
+        return financeAccountDao.selectFinanceAccount(parameterMap);
     }
 }

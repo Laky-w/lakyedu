@@ -50,36 +50,9 @@ public class OperateLogController extends BaseController{
             } else {
                 throw new Exception("添加日志失败");
             }
-
-
         }catch ( Exception e ){
             return  super.doWrappingErrorData(e);
         }
 
     }
-    @GetMapping("/deleteExpireLogByCreatetime")
-    public void deleteExpireLogByCreatetime(Date createTime) {
-        try {
-            OperateLog operateLog = new OperateLog();
-            long day=0;
-            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-
-            Date beginDate= operateLog.getCreateTime() ;
-            Date endDate =  new Date(System.currentTimeMillis());
-            beginDate = format.parse(String.valueOf(beginDate));
-            endDate = format.parse(String.valueOf(endDate));
-            day=(endDate.getTime()-beginDate.getTime())/(24*60*60*1000);
-            if (day>1){
-                operateLogService.deleteExpireLogByCreatetime(createTime);
-            }
-
-             }catch ( Exception e ){
-
-            }
-
-
-    }
-
-
-
 }

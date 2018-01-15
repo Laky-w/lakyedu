@@ -62,16 +62,46 @@ public class FinanceController extends BaseController {
     @PostMapping("/createFinanceAccount")
     public Map createFinanceAccount(org.apache.catalina.servlet4preview.http.HttpServletRequest request, FinanceAccount account){
         try {
-            account.setBranchId(super.getCurrentUser(request).getBranchId());
             boolean isOpen =Boolean.valueOf(request.getParameter("isOpen"));
             boolean isPublic = Boolean.valueOf(request.getParameter("isPublic"));
             if(isOpen) account.setTheOpen(1);//前台账户
             else account.setTheOpen(2);
             if(isPublic) account.setThePublic(1); //公共账户
             else account.setThePublic(2);
-            account=financeService.createFinanceAccount(account);
-            super.handleOperate("添加账户", OrganizationConst.OPERATE_ADD,"添加账户【"+account.getName()+"】",request);
+            if (account.getId()==null){
+                account.setBranchId(super.getCurrentUser(request).getBranchId());
+                account=financeService.createFinanceAccount(account);
+                super.handleOperate("添加账户", OrganizationConst.OPERATE_ADD,"添加账户【"+account.getName()+"】",request);
+            }else {
+                financeService.updateFinanceAccount(account);
+                super.handleOperate("修改账户", OrganizationConst.OPERATE_ADD,"修改账户【"+account.getName()+"】",request);
+            }
             return super.doWrappingData(account);
+        } catch (Exception e) {
+            return  super.doWrappingErrorData(e);
+        }
+    }
+
+    @DeleteMapping("/deleteFinanceAccount/{id}")
+    public Map deleteFinanceAccount(HttpServletRequest request,@PathVariable Integer id){
+        try{
+            FinanceAccount financeAccount = new FinanceAccount();
+            financeService.deleteFinanceAccount(id);
+            super.handleOperate("删除财务账户", OrganizationConst.OPERATE_ADD,"删除财务账户【"+financeAccount.getName()+"】",request);
+            return super.doWrappingData("操作成功");
+        }catch (Exception e){
+            return  super.doWrappingErrorData(e);
+        }
+    }
+
+    @GetMapping("/getFinanceAccountView/{id}")
+    public Map getFinanceAccountView(HttpServletRequest request, @PathVariable Integer id){
+        try {
+            LinkedHashMap parameterMap = new LinkedHashMap();
+            parameterMap.put("id",id);
+            parameterMap.put("branchId",getCurrentUser(request).getBranchId());
+            parameterMap.put("schoolZoneId",getSchoolIds(request,2));
+            return super.doWrappingData(financeService.selectFinanceAccount(parameterMap));
         } catch (Exception e) {
             return  super.doWrappingErrorData(e);
         }

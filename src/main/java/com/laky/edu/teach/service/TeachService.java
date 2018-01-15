@@ -44,7 +44,7 @@ public interface TeachService {
      * @param parameterMap
      * @return
      */
-    Course queryCourse(LinkedHashMap parameterMap)throws Exception;
+    Map queryCourse(LinkedHashMap parameterMap)throws Exception;
     /**
      * 查询教室
      * @param parameterMap

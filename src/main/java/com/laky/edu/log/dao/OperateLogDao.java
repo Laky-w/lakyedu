@@ -25,11 +25,5 @@ public interface OperateLogDao {
      */
     List<OperateLog> queryOperateLogAll(LinkedHashMap parameterMap);
 
-    /**
-     * 删除过期日志通过时间
-     * @param createTime
-     * @return
-     */
-    int deleteExpireLogByCreatetime(Date createTime);
 
 }

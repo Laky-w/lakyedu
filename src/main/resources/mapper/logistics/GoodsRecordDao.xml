@@ -19,6 +19,7 @@
         SELECT  * FROM laky_logistics_goods_record WHERE id =#{id,jdbcType=INTEGER}
     </select>
     <select id="selectByParameterMap" resultType="java.util.Map">
+        SELECT *FROM (
         select r.id,r.the_type AS theType,r.amount,r.create_time AS createTime,r.price,r.other_name AS otherName,r.return_status AS returnStatus,r.return_date as returnDate,
         s.name AS schoolZoneName,s1.name AS schoolZoneNameIn,g.name AS goodsName,u.name AS userName,v.name as supplierName
         from laky_logistics_goods_record r
@@ -54,6 +55,10 @@
             AND r.the_type=#{theType,jdbcType=TINYINT}
         </if>
         ORDER BY r.create_time DESC
+        ) t
+        <if test="columnName!=null">
+            ORDER BY t.${columnName} ${columnOrder}
+        </if>
     </select>
     <insert id="batchInsert"  useGeneratedKeys="true" keyColumn="id"
             keyProperty="id">

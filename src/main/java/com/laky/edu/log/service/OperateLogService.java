@@ -28,10 +28,4 @@ public interface OperateLogService {
     PageBean findLogAllByBranchId(LinkedHashMap parameterMap) throws Exception;
 
 
-    /**
-     * 删除过期日志通过时间
-     * @param createTime
-     * @return
-     */
-    int deleteExpireLogByCreatetime(Date createTime);
 }

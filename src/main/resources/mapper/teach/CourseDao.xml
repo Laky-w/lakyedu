@@ -11,35 +11,24 @@
     <result column="clazz_name" property="clazzName" jdbcType="VARCHAR" />
     <result column="school_name" property="schoolName" jdbcType="VARCHAR" />
     <result column="school_id" property="schoolId" jdbcType="VARCHAR" />
-  </resultMap>
-  <resultMap id="ResultMapWithBLOBs" type="com.laky.edu.teach.bean.Course" extends="BaseResultMap" >
     <result column="remarks" property="remarks" jdbcType="LONGVARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, name, the_status, the_type, branch_id, clazz_id
+    id, name, the_status, the_type, branch_id, clazz_id,clazz_name,school_name,school_id,remarks
   </sql>
-  <sql id="Blob_Column_List" >
-    remarks
-  </sql>
-  <select id="selectCourse" resultMap="ResultMapWithBLOBs">
+  <select id="selectCourse" resultType="java.util.Map">
     select
-    s.*,p.name as clazz_name
+    s.id,s.name,s.the_type AS theType,s.remarks,p.name as clazzName
     from laky_teach_course s
     LEFT JOIN laky_organization_parameter_value p on s.clazz_id = p.id and p.the_status !=0
     where s.id =#{id,jdbcType=INTEGER} AND s.the_status !=0 AND s.branch_id =#{branchId,jdbcType=INTEGER}
   </select>
-  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
-    select 
-    <include refid="Base_Column_List" />
-    ,
-    <include refid="Blob_Column_List" />
-    from laky_teach_course
-    where  id = #{id,jdbcType=INTEGER}
-  </select>
 
-  <select id="selectByParameterMap" resultMap="ResultMapWithBLOBs">
+
+  <select id="selectByParameterMap" resultType="java.util.Map">
+    select * from (
     select
-    s.*,p.name as clazz_name,sz1.name as school_name,sz.school_zone_id as school_id
+    s.id,s.name,s.the_type AS theType,s.remarks,p.name as clazzName,sz1.name as schoolZoneName,sz.school_zone_id as schoolZoneId
     from laky_teach_course s
     LEFT JOIN laky_organization_parameter_value p on s.clazz_id = p.id and p.the_status !=0
     RIGHT JOIN laky_teach_course_school sz on sz.course_id = s.id
@@ -80,12 +69,12 @@
         </foreach>
       </if>
     </if>
+    ) t
+    <if test="columnName!=null">
+      ORDER BY t.${columnName} ${columnOrder}
+    </if>
   </select>
 
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
-    delete from laky_teach_course
-    where id = #{id,jdbcType=INTEGER}
-  </delete>
   <insert id="insert" parameterType="com.laky.edu.teach.bean.Course"  useGeneratedKeys="true" keyProperty="id"
           keyColumn="id">
     insert into laky_teach_course (id, name, the_status, 
@@ -147,16 +136,7 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.laky.edu.teach.bean.Course" >
-    update laky_teach_course
-    set name = #{name,jdbcType=VARCHAR},
-      the_status = #{theStatus,jdbcType=TINYINT},
-      the_type = #{theType,jdbcType=TINYINT},
-      branch_id = #{branchId,jdbcType=INTEGER},
-      clazz_id = #{clazzId,jdbcType=INTEGER},
-      remarks = #{remarks,jdbcType=LONGVARCHAR}
-    where id = #{id,jdbcType=INTEGER}
-  </update>
+
   <update id="updateByPrimaryKey" parameterType="com.laky.edu.teach.bean.Course" >
     update laky_teach_course
     set name = #{name,jdbcType=VARCHAR},

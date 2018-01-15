@@ -9,7 +9,6 @@ import java.util.Map;
 
 @Component
 public interface ScheduleDao {
-    int deleteByPrimaryKey(Integer id);
 
     int insert(Schedule record);
 

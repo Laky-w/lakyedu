@@ -13,13 +13,11 @@ public interface SchoolClassDao {
 
     int insert(SchoolClass schoolClass);
 
-    int insertSelective(SchoolClass record);
-
     Map selectSchoolClassById(LinkedHashMap parameterMap);
 
     List<Map> selectByParameterMap(LinkedHashMap parameterMap);
 
-    int updateByPrimaryKeySelective(SchoolClass record);
+    int updateSchoolClass(SchoolClass record);
 
     int updateByPrimaryKey(SchoolClass record);
 }

@@ -29,8 +29,10 @@
   </select>
   <!--查询上课时间-->
   <select id="selectByParameterMap" resultType="java.util.Map" >
+    SELECT * FROM (
     select
-    s.id,s.name AS name,s.start_time as startTime,s.end_time as endTime,s.course_hour as courseHour,sz.name as schoolZoneName
+    s.id,s.name AS name,s.start_time as startTime,s.end_time as endTime,s.course_hour as courseHour,sz.name as
+    schoolZoneName
     from laky_teach_schedule_standard s
     RIGHT JOIN laky_organization_school_zone sz on s.school_zone_id = sz.id and sz.the_status =1
     where s.the_status !=0
@@ -55,6 +57,10 @@
           #{schoolId}
         </foreach>
       </if>
+    </if>
+    ) t
+    <if test="columnName!=null">
+      ORDER BY t.${columnName} ${columnOrder}
     </if>
   </select>
 

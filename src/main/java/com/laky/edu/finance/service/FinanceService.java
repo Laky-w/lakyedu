@@ -35,5 +35,35 @@ public interface FinanceService {
      */
     List<MoneyRecordAccount> findMoneyRecordAccountList(Integer recordId)throws Exception;
 
+    /**
+     * 创建财务账户
+     * @param financeAccount
+     * @return
+     * @throws Exception
+     */
     FinanceAccount createFinanceAccount(FinanceAccount financeAccount) throws Exception;
+
+    /**
+     * 修改财务账户
+     * @param financeAccount
+     * @return
+     * @throws Exception
+     */
+    FinanceAccount updateFinanceAccount(FinanceAccount financeAccount)throws Exception;
+
+    /**
+     * 删除财务账户
+     * @param id
+     * @return
+     * @throws Exception
+     */
+    int deleteFinanceAccount(Integer id)throws Exception;
+
+    /**
+     *查询财务账户详情
+     * @param parameterMap
+     * @return
+     * @throws Exception
+     */
+    Map selectFinanceAccount(LinkedHashMap parameterMap)throws Exception;
 }
