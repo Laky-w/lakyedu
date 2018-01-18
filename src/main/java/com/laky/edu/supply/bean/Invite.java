@@ -12,6 +12,8 @@ public class Invite implements Serializable {
 
     private Integer studentId;
 
+    private String studentName;
+
     private Integer userId;
 
     private Integer theStatus;
@@ -86,5 +88,11 @@ public class Invite implements Serializable {
         this.remarks = remarks == null ? null : remarks.trim();
     }
 
+    public String getStudentName() {
+        return studentName;
+    }
 
+    public void setStudentName(String studentName) {
+        this.studentName = studentName;
+    }
 }

@@ -75,6 +75,9 @@
     <if test="theType !=null">
       AND s.the_type =#{theType,jdbcType=TINYINT}
     </if>
+    <if test="theType2 !=null">
+      AND s.the_type !=#{theType2,jdbcType=TINYINT}
+    </if>
     <if test="name != null">
       AND (s.`name` LIKE CONCAT('%',#{name,jdbcType=VARCHAR},'%')
       OR s.pinyin LIKE CONCAT('%',#{name,jdbcType=VARCHAR},'%')

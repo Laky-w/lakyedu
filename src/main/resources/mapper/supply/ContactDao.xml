@@ -68,6 +68,13 @@
     SELECT s.*,st.name as studentName,st.contact_status AS contactStatus FROM laky_supply_contact s
     LEFT JOIN laky_supply_student st ON s.student_id =st.id and st.the_status!=0
      WHERE s.the_status != 0 AND  s.id = #{id}
+    <if test="schoolIds != null">
+      AND st.school_zone_id IN
+      <foreach collection="schoolIds" item="schoolId" index="index"
+               open="(" close=")" separator=",">
+        #{schoolId}
+      </foreach>
+    </if>
   </select>
 
 

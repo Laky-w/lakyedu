@@ -22,19 +22,14 @@ public class InviteServiceImpl implements InviteService {
     @Autowired
     private CustomerDao customerDao;
 
-    /**
-     * 添加邀约参观
-     * @param invite
-     * @return
-     * @throws Exception
-     */
+
     @Transactional
     @Override
     public Invite addInvite(Invite invite) throws Exception {
 
         invite.setTheStatus(1);
         int rows = inviteDao.insert(invite);
-        if (rows==0) throw new RuntimeException("创建邀约试听失败");
+        if (rows==0) throw new RuntimeException("创建邀约参观失败");
         Customer customer= customerDao.selectByPrimaryKey(invite.getStudentId());
         customer.setInviteStatus(2);
         customer.setContactStatus(2);
@@ -44,14 +39,23 @@ public class InviteServiceImpl implements InviteService {
         return invite;
     }
 
-    /**
-     * 查询全部邀约参观人支持分页查询
-     * @param parameterMap
-     * @return
-     * @throws Exception
-     */
+    @Transactional
     @Override
-    public PageBean<Invite> findByInviteAll(LinkedHashMap parameterMap) throws Exception {
+    public Invite updateInvite(Invite invite) throws Exception {
+        List<Invite> inviteList = new ArrayList<>();
+        inviteList.add(invite);
+        int rows = inviteDao.updateByPrimaryKeySelective(inviteList);
+        if (rows==0) throw new RuntimeException("修改邀约参观失败");
+        return invite;
+    }
+
+    @Override
+    public Invite findInviteById(LinkedHashMap parameterMap) throws Exception {
+        return inviteDao.selectById(parameterMap);
+    }
+
+    @Override
+    public PageBean<Invite> findInviteAll(LinkedHashMap parameterMap) throws Exception {
         PageHelper.startPage((int)parameterMap.get("pageNum"),(int)parameterMap.get("pageSize"));
         return new PageBean<>(inviteDao.selectByParameterMap(parameterMap));
     }

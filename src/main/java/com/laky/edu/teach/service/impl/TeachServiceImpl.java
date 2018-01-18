@@ -33,9 +33,15 @@ public class TeachServiceImpl implements TeachService{
     private ScheduleStandardDao scheduleStandardDao;
 
     @Override
-    public PageBean<Course> findCourseByBranch(LinkedHashMap parameterMap) {
+    public PageBean<Course> findCourseBySchoolZone(LinkedHashMap parameterMap) {
         PageHelper.startPage((int)parameterMap.get("pageNum"),(int)parameterMap.get("pageSize"));
         return new PageBean<>(courseDao.selectByParameterMap(parameterMap));
+    }
+
+    @Override
+    public PageBean<Course> findCourseByBranch(LinkedHashMap parameterMap) {
+        PageHelper.startPage((int)parameterMap.get("pageNum"),(int)parameterMap.get("pageSize"));
+        return new PageBean<>(courseDao.selectBranchByParameterMap(parameterMap));
     }
 
     @Override
@@ -72,6 +78,21 @@ public class TeachServiceImpl implements TeachService{
             courseDao.insertCourseSchool(courseSchoolList);
         }
         return course;
+    }
+
+    @Transactional
+    @Override
+    public Integer[] updateCourseSchool(Integer courseId, Integer[] schoolIds) throws Exception {
+        List<Map> courseSchoolList = new ArrayList<>();
+        courseDao.deleteCourseSchool(courseId);
+        for(int i=0;i<schoolIds.length;i++){
+            Map objectMap = new HashMap<>();
+            objectMap.put("schoolZoneId",schoolIds[i]);
+            objectMap.put("courseId",courseId);
+            courseSchoolList.add(objectMap);
+        }
+        courseDao.insertCourseSchool(courseSchoolList);
+        return schoolIds;
     }
 
     @Override
@@ -158,6 +179,11 @@ public class TeachServiceImpl implements TeachService{
             returnList.add(dataMap);
         }
         return returnList;
+    }
+
+    @Override
+    public List<Map> findCourseSchool(LinkedHashMap parameterMap) {
+        return courseDao.selectCourseSchool(parameterMap);
     }
 
     @Override

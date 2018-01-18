@@ -18,7 +18,7 @@
   </sql>
   <select id="selectCourse" resultType="java.util.Map">
     select
-    s.id,s.name,s.the_type AS theType,s.remarks,p.name as clazzName
+    s.id,s.name,s.the_type AS theType,s.remarks,p.name as clazzName,s.standard_type as standardType
     from laky_teach_course s
     LEFT JOIN laky_organization_parameter_value p on s.clazz_id = p.id and p.the_status !=0
     where s.id =#{id,jdbcType=INTEGER} AND s.the_status !=0 AND s.branch_id =#{branchId,jdbcType=INTEGER}
@@ -75,6 +75,40 @@
     </if>
   </select>
 
+  <select id="selectBranchByParameterMap" resultType="java.util.Map">
+    select * from (
+    select
+    s.id,s.name,s.the_type AS theType,s.remarks,p.name as clazzName,s.standard_type as standardType,(SELECT COUNT(1) FROM laky_teach_course_school where course_id=s.id) as schoolZoneNumber
+    from laky_teach_course s
+    LEFT JOIN laky_organization_parameter_value p on s.clazz_id = p.id and p.the_status !=0
+    where s.the_status !=0 AND s.branch_id = #{branchId,jdbcType=INTEGER}
+    <if test="name!=null">
+      AND s.`name` LIKE CONCAT('%',#{name,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="name2!=null">
+      AND s.`name` = #{name2,jdbcType=VARCHAR}
+    </if>
+    <if test="theType!=null">
+      AND s.the_type = #{theType,jdbcType=INTEGER}
+    </if>
+    <if test="clazzId!=null">
+      <if test="clazzId instanceof String">
+        AND s.clazz_id = #{clazzId,jdbcType=INTEGER}
+      </if>
+      <if test="!(clazzId instanceof String)">
+        AND s.clazz_id IN
+        <foreach collection="clazzId" item="id" index="index"
+                 open="(" close=")" separator=",">
+          #{id}
+        </foreach>
+      </if>
+    </if>
+    ) t
+    <if test="columnName!=null">
+      ORDER BY t.${columnName} ${columnOrder}
+    </if>
+  </select>
+
   <insert id="insert" parameterType="com.laky.edu.teach.bean.Course"  useGeneratedKeys="true" keyProperty="id"
           keyColumn="id">
     insert into laky_teach_course (id, name, the_status, 
@@ -105,10 +139,21 @@
     </foreach>
   </insert>
 
+  <delete id="deleteCourseSchool" parameterType="java.lang.Integer">
+    DELETE FROM laky_teach_course_school where course_id = #{courseId,jdbcType=INTEGER}
+  </delete>
+
   <select id="selectCourseChargeStandard" resultType="java.util.Map" >
     select
      id,max_hourse as maxHourse,min_hourse as minHourse,price,the_type as theType
     from laky_teach_course_charge_standard
+    where  course_id = #{courseId,jdbcType=INTEGER}
+  </select>
+
+  <select id="selectCourseSchool" resultType="java.util.Map" >
+    select
+    id,school_zone_id AS schoolZoneId,course_id AS courseId
+    from laky_teach_course_school
     where  course_id = #{courseId,jdbcType=INTEGER}
   </select>
 

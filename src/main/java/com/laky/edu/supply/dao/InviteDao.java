@@ -10,6 +10,9 @@ public interface InviteDao {
 
     int insert(Invite invite);
 
+
+    Invite selectById(LinkedHashMap parameterMap);
+
     List<Invite> selectByParameterMap(LinkedHashMap parameterMap);
 
     int updateByPrimaryKeySelective(List<Invite> record);

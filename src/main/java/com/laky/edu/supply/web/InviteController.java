@@ -27,7 +27,20 @@ public class InviteController extends BaseController{
             parameterMap.put("pageNum",pageNum);
             parameterMap.put("pageSize",pageSize);
             parameterMap = super.doWrappingFormParameter(request,parameterMap);
-            return super.doWrappingData(inviteService.findByInviteAll(parameterMap));
+            return super.doWrappingData(inviteService.findInviteAll(parameterMap));
+        } catch (Exception e) {
+            return  super.doWrappingErrorData(e);
+        }
+    }
+
+    @GetMapping("/getInviteView/{id}")
+    public Map getInviteView(HttpServletRequest request, @PathVariable int id){
+        try {
+            LinkedHashMap parameterMap = new LinkedHashMap();
+            parameterMap.put("schoolIds",super.getSchoolIds(request,2));
+            parameterMap.put("id",id);
+            parameterMap = super.doWrappingFormParameter(request,parameterMap);
+            return super.doWrappingData(inviteService.findInviteById(parameterMap));
         } catch (Exception e) {
             return  super.doWrappingErrorData(e);
         }
@@ -36,11 +49,17 @@ public class InviteController extends BaseController{
     @PostMapping("/createInvite")
     public Map createInvite(HttpServletRequest request, Invite invite){
         try {
-            invite.setSchoolZoneId(super.getCurrentUser(request).getSchoolZoneId());
-            invite.setInviteStatus(1);
-            invite.setUserId(super.getCurrentUser(request).getId());
-            inviteService.addInvite(invite);
-            super.handleOperate("添加邀请试听", OrganizationConst.OPERATE_ADD,"添加邀约参观,参观人【"+invite.getUserId()+"】,参观时间:"+invite.getInviteTime(),request);
+            if(invite.getId()!=null){
+                inviteService.updateInvite(invite);
+                super.handleOperate("修改邀请参观", OrganizationConst.OPERATE_UPDATE,"修改邀约参观,参观人【"+invite.getStudentName()+"】,参观时间:"+invite.getInviteTime(),request);
+            } else {
+                invite.setSchoolZoneId(super.getCurrentUser(request).getSchoolZoneId());
+                invite.setInviteStatus(1);
+                invite.setUserId(super.getCurrentUser(request).getId());
+                inviteService.addInvite(invite);
+                super.handleOperate("添加邀请参观", OrganizationConst.OPERATE_ADD,"添加邀约参观,参观人【"+invite.getStudentName()+"】,参观时间:"+invite.getInviteTime(),request);
+            }
+
             return super.doWrappingData(invite);
         } catch (Exception e) {
             return  super.doWrappingErrorData(e);

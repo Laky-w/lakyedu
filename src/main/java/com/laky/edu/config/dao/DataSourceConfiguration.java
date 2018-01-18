@@ -42,9 +42,11 @@ public class DataSourceConfiguration {
         //数据库链接关闭后不自动提交
         dataSource.setAutoCommitOnClose(false);
         //数据库链接超时时间
-        dataSource.setCheckoutTimeout(3000);
+        dataSource.setCheckoutTimeout(1000);
         //数据库链接失败重连次数
         dataSource.setAcquireRetryAttempts(2);
+        //最大空闲时间,60秒内未使用则连接被丢弃。若为0则永不丢弃。Default: 0
+        dataSource.setMaxIdleTime(60);
         return dataSource;
     }
 

@@ -20,6 +20,13 @@ public interface TeachService {
      * @param parameterMap
      * @return
      */
+    PageBean<Course> findCourseBySchoolZone(LinkedHashMap parameterMap);
+
+    /**
+     * 查询课程
+     * @param parameterMap
+     * @return
+     */
     PageBean<Course> findCourseByBranch(LinkedHashMap parameterMap);
 
     /**
@@ -38,6 +45,8 @@ public interface TeachService {
      * @throws Exception
      */
     Course createCourse(Course course, String[] schoolIds, JSONArray chargeStandards) throws Exception;
+
+    Integer [] updateCourseSchool(Integer courseId,Integer [] schoolIds) throws Exception;
 
     /**
      * 查询课程详情页
@@ -87,6 +96,13 @@ public interface TeachService {
      * @return 类目=》类别=》课程 三级树
      */
     List<Map> findCourseTreeByBranch(LinkedHashMap parameterMap);
+
+    /**
+     * 查询课程授权校区
+     * @param parameterMap
+     * @return
+     */
+    List<Map> findCourseSchool(LinkedHashMap parameterMap);
 
     /**
      * 查询排课标准

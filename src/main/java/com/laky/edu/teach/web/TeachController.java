@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,6 +36,20 @@ public class TeachController extends BaseController{
             parameterMap.put("pageNum",pageNum);
             parameterMap.put("pageSize",pageSize);
             parameterMap = super.doWrappingFormParameter(request,parameterMap);
+            return super.doWrappingData(teachService.findCourseBySchoolZone(parameterMap));
+        } catch (Exception e) {
+            return  super.doWrappingErrorData(e);
+        }
+    }
+
+    @PostMapping("/getBranchCourseList/{pageNum}/{pageSize}")
+    public Map getBranchCourseList(HttpServletRequest request, @PathVariable int pageNum, @PathVariable int pageSize){
+        try {
+            LinkedHashMap parameterMap = new LinkedHashMap();
+            parameterMap.put("branchId",super.getCurrentUser(request).getBranchId());
+            parameterMap.put("pageNum",pageNum);
+            parameterMap.put("pageSize",pageSize);
+            parameterMap = super.doWrappingFormParameter(request,parameterMap);
             return super.doWrappingData(teachService.findCourseByBranch(parameterMap));
         } catch (Exception e) {
             return  super.doWrappingErrorData(e);
@@ -53,10 +68,21 @@ public class TeachController extends BaseController{
         }
     }
 
+    @GetMapping("/getCourseSchool/{courseId}")
+    public Map getCourseSchool(HttpServletRequest request,@PathVariable  Integer courseId){
+        try {
+            LinkedHashMap parameterMap = new LinkedHashMap();
+            parameterMap.put("branchId",super.getCurrentUser(request).getBranchId());
+            parameterMap.put("courseId",courseId);
+            return super.doWrappingData(teachService.findCourseSchool(parameterMap));
+        } catch (Exception e) {
+            return  super.doWrappingErrorData(e);
+        }
+    }
+
     @PostMapping("/createCourse")
     public Map createCourse(HttpServletRequest request, Course course){
         try {
-            LinkedHashMap parameterMap = new LinkedHashMap();
             course.setBranchId(super.getCurrentUser(request).getBranchId());
             String chargeStandardStr=request.getParameter("chargeStandardStr");
             if(StringUtils.isEmpty(chargeStandardStr)) chargeStandardStr="[]";
@@ -68,13 +94,28 @@ public class TeachController extends BaseController{
         }
     }
 
+    @PutMapping("/updateCourseSchool/{courseId}")
+    public Map updateCourseSchool(HttpServletRequest request,@PathVariable Integer courseId,Integer[] schoolIds){
+        try {
+            teachService.updateCourseSchool(courseId,schoolIds);
+            super.handleOperate("修改课程授权校区", OrganizationConst.OPERATE_UPDATE,"修改课程授权校区",request);
+            return super.doWrappingData(schoolIds);
+        } catch (Exception e) {
+            return  super.doWrappingErrorData(e);
+        }
+    }
+
     @GetMapping("/getCourseView/{id}")
     public Map getCourseView(HttpServletRequest request,@PathVariable Integer id){
         try {
             LinkedHashMap parameterMap = new LinkedHashMap();
             parameterMap.put("id",id);
             parameterMap.put("branchId",getCurrentUser(request).getBranchId());
-            return super.doWrappingData(teachService.queryCourse(parameterMap));
+            parameterMap.put("courseId",id);
+            Map courseMap = new HashMap<>();
+            courseMap.put("course",teachService.queryCourse(parameterMap));
+            courseMap.put("chargeStandards",teachService.findChargeStandardByCourseId(parameterMap));
+            return super.doWrappingData(courseMap);
         } catch (Exception e) {
             return  super.doWrappingErrorData(e);
         }

@@ -27,7 +27,8 @@ public class SecurityInterceptor extends HandlerInterceptorAdapter {
             return true;
         }
         String token =  request.getHeader("token");
-        if (BaseController.userSession.get(token) != null) { //登录
+        String url = request.getRequestURI();
+        if (url.endsWith("/")||BaseController.userSession.get(token) != null) { //登录
             return true;
         }
         String res ="{\"code\":420,\"message\":\"登录过期\",\"data\":\"登录过期，请重新登录！\"}";

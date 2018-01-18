@@ -16,11 +16,17 @@ public interface CourseDao {
 
     int insertCourseChargeStandard(List<Map> chargeStandardList);
 
+    int deleteCourseSchool(Integer courseId);
+
     List<Map> selectCourseChargeStandard(LinkedHashMap parameterMap);
+
+    List<Map> selectCourseSchool(LinkedHashMap parameterMap);
 
     Map selectCourse(LinkedHashMap parameterMap);
 
     List<Course> selectByParameterMap(LinkedHashMap parameterMap);
+
+    List<Course> selectBranchByParameterMap(LinkedHashMap parameterMap);
 
     int updateByPrimaryKeySelective(Course record);
 
