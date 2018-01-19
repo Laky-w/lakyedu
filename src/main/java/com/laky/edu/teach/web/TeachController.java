@@ -8,6 +8,7 @@ import com.laky.edu.teach.bean.Course;
 import com.laky.edu.teach.bean.Room;
 import com.laky.edu.teach.bean.ScheduleStandard;
 import com.laky.edu.teach.service.TeachService;
+import com.laky.edu.teach.web.form.CourseForm;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
@@ -26,114 +27,6 @@ import java.util.Map;
 public class TeachController extends BaseController{
     @Autowired
     private TeachService teachService;
-
-    @PostMapping("/getCourseList/{pageNum}/{pageSize}")
-    public Map getCourseList(HttpServletRequest request, @PathVariable int pageNum, @PathVariable int pageSize){
-        try {
-            LinkedHashMap parameterMap = new LinkedHashMap();
-            parameterMap.put("branchId",super.getCurrentUser(request).getBranchId());
-            parameterMap.put("schoolZoneId",super.getSchoolIds(request,2));
-            parameterMap.put("pageNum",pageNum);
-            parameterMap.put("pageSize",pageSize);
-            parameterMap = super.doWrappingFormParameter(request,parameterMap);
-            return super.doWrappingData(teachService.findCourseBySchoolZone(parameterMap));
-        } catch (Exception e) {
-            return  super.doWrappingErrorData(e);
-        }
-    }
-
-    @PostMapping("/getBranchCourseList/{pageNum}/{pageSize}")
-    public Map getBranchCourseList(HttpServletRequest request, @PathVariable int pageNum, @PathVariable int pageSize){
-        try {
-            LinkedHashMap parameterMap = new LinkedHashMap();
-            parameterMap.put("branchId",super.getCurrentUser(request).getBranchId());
-            parameterMap.put("pageNum",pageNum);
-            parameterMap.put("pageSize",pageSize);
-            parameterMap = super.doWrappingFormParameter(request,parameterMap);
-            return super.doWrappingData(teachService.findCourseByBranch(parameterMap));
-        } catch (Exception e) {
-            return  super.doWrappingErrorData(e);
-        }
-    }
-
-    @GetMapping("/getCourseTreeList")
-    public Map getCourseTreeList(HttpServletRequest request){
-        try {
-            LinkedHashMap parameterMap = new LinkedHashMap();
-            parameterMap.put("branchId",super.getCurrentUser(request).getBranchId());
-            parameterMap.put("schoolZoneId",new Integer[]{super.getCurrentUser(request).getSchoolZoneId()});
-            return super.doWrappingData(teachService.findCourseTreeByBranch(parameterMap));
-        } catch (Exception e) {
-            return  super.doWrappingErrorData(e);
-        }
-    }
-
-    @GetMapping("/getCourseSchool/{courseId}")
-    public Map getCourseSchool(HttpServletRequest request,@PathVariable  Integer courseId){
-        try {
-            LinkedHashMap parameterMap = new LinkedHashMap();
-            parameterMap.put("branchId",super.getCurrentUser(request).getBranchId());
-            parameterMap.put("courseId",courseId);
-            return super.doWrappingData(teachService.findCourseSchool(parameterMap));
-        } catch (Exception e) {
-            return  super.doWrappingErrorData(e);
-        }
-    }
-
-    @PostMapping("/createCourse")
-    public Map createCourse(HttpServletRequest request, Course course){
-        try {
-            course.setBranchId(super.getCurrentUser(request).getBranchId());
-            String chargeStandardStr=request.getParameter("chargeStandardStr");
-            if(StringUtils.isEmpty(chargeStandardStr)) chargeStandardStr="[]";
-            course =teachService.createCourse(course,request.getParameterValues("schoolIds"),JSON.parseArray(chargeStandardStr));
-            super.handleOperate("添加课程", OrganizationConst.OPERATE_ADD,"添加课程【"+course.getName()+"】",request);
-            return super.doWrappingData(course);
-        } catch (Exception e) {
-            return  super.doWrappingErrorData(e);
-        }
-    }
-
-    @PutMapping("/updateCourseSchool/{courseId}")
-    public Map updateCourseSchool(HttpServletRequest request,@PathVariable Integer courseId,Integer[] schoolIds){
-        try {
-            teachService.updateCourseSchool(courseId,schoolIds);
-            super.handleOperate("修改课程授权校区", OrganizationConst.OPERATE_UPDATE,"修改课程授权校区",request);
-            return super.doWrappingData(schoolIds);
-        } catch (Exception e) {
-            return  super.doWrappingErrorData(e);
-        }
-    }
-
-    @GetMapping("/getCourseView/{id}")
-    public Map getCourseView(HttpServletRequest request,@PathVariable Integer id){
-        try {
-            LinkedHashMap parameterMap = new LinkedHashMap();
-            parameterMap.put("id",id);
-            parameterMap.put("branchId",getCurrentUser(request).getBranchId());
-            parameterMap.put("courseId",id);
-            Map courseMap = new HashMap<>();
-            courseMap.put("course",teachService.queryCourse(parameterMap));
-            courseMap.put("chargeStandards",teachService.findChargeStandardByCourseId(parameterMap));
-            return super.doWrappingData(courseMap);
-        } catch (Exception e) {
-            return  super.doWrappingErrorData(e);
-        }
-    }
-
-
-    @GetMapping("/getChargeStandard/{courseId}")
-    public Map getChargeStandard(HttpServletRequest request,@PathVariable Integer courseId){
-        try {
-            LinkedHashMap parameterMap = new LinkedHashMap();
-//            parameterMap.put("branchId",super.getCurrentUser(request).getBranchId());
-            if(StringUtils.isEmpty(courseId)) throw new Exception("课程必填");
-            parameterMap.put("courseId",courseId);
-            return super.doWrappingData(teachService.findChargeStandardByCourseId(parameterMap));
-        } catch (Exception e) {
-            return  super.doWrappingErrorData(e);
-        }
-    }
 
     @PostMapping("/createScheduleStandard")
     public Map createScheduleStandard(HttpServletRequest request, ScheduleStandard scheduleStandard,String [] time){

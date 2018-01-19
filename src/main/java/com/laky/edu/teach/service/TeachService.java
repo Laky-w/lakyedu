@@ -15,45 +15,7 @@ import java.util.Map;
  */
 
 public interface TeachService {
-    /**
-     * 查询课程
-     * @param parameterMap
-     * @return
-     */
-    PageBean<Course> findCourseBySchoolZone(LinkedHashMap parameterMap);
 
-    /**
-     * 查询课程
-     * @param parameterMap
-     * @return
-     */
-    PageBean<Course> findCourseByBranch(LinkedHashMap parameterMap);
-
-    /**
-     * 查询课程收费标准
-     * @param parameterMap
-     * @return
-     */
-    List<Map> findChargeStandardByCourseId(LinkedHashMap parameterMap);
-
-    /**
-     * 创建课程
-     * @param course 课程
-     * @param schoolIds 授权校区
-     * @param chargeStandards 收费标准
-     * @return
-     * @throws Exception
-     */
-    Course createCourse(Course course, String[] schoolIds, JSONArray chargeStandards) throws Exception;
-
-    Integer [] updateCourseSchool(Integer courseId,Integer [] schoolIds) throws Exception;
-
-    /**
-     * 查询课程详情页
-     * @param parameterMap
-     * @return
-     */
-    Map queryCourse(LinkedHashMap parameterMap)throws Exception;
     /**
      * 查询教室
      * @param parameterMap
@@ -90,19 +52,7 @@ public interface TeachService {
      * @throws Exception
      */
     Room updateRoom(Room room)throws Exception;
-    /**
-     * 查询课程
-     * @param parameterMap
-     * @return 类目=》类别=》课程 三级树
-     */
-    List<Map> findCourseTreeByBranch(LinkedHashMap parameterMap);
 
-    /**
-     * 查询课程授权校区
-     * @param parameterMap
-     * @return
-     */
-    List<Map> findCourseSchool(LinkedHashMap parameterMap);
 
     /**
      * 查询排课标准

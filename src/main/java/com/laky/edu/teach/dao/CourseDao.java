@@ -16,11 +16,25 @@ public interface CourseDao {
 
     int insertCourseChargeStandard(List<Map> chargeStandardList);
 
+    /**
+     * 删除授权校区
+     * @param courseId
+     * @return
+     */
     int deleteCourseSchool(Integer courseId);
+
+    /**
+     * 删除课程标准
+     * @param courseId
+     * @return
+     */
+    int deleteChargeStandard(Integer courseId);
 
     List<Map> selectCourseChargeStandard(LinkedHashMap parameterMap);
 
     List<Map> selectCourseSchool(LinkedHashMap parameterMap);
+
+    Course selectCourseById(Integer id);
 
     Map selectCourse(LinkedHashMap parameterMap);
 

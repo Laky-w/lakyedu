@@ -18,7 +18,7 @@
   </sql>
   <select id="selectCourse" resultType="java.util.Map">
     select
-    s.id,s.name,s.the_type AS theType,s.remarks,p.name as clazzName,s.standard_type as standardType
+    s.id,s.name,s.the_type AS theType,s.remarks,p.id AS  clazzId,p.name as clazzName,s.standard_type as standardType
     from laky_teach_course s
     LEFT JOIN laky_organization_parameter_value p on s.clazz_id = p.id and p.the_status !=0
     where s.id =#{id,jdbcType=INTEGER} AND s.the_status !=0 AND s.branch_id =#{branchId,jdbcType=INTEGER}
@@ -50,7 +50,7 @@
       </if>
     </if>
     LEFT JOIN laky_organization_school_zone sz1 on sz.school_zone_id = sz1.id
-    where s.the_status !=0 AND s.branch_id = #{branchId,jdbcType=INTEGER}
+    where s.the_status =1 AND s.branch_id = #{branchId,jdbcType=INTEGER}
     <if test="name!=null">
       AND s.`name` LIKE CONCAT('%',#{name,jdbcType=VARCHAR},'%')
     </if>
@@ -78,7 +78,7 @@
   <select id="selectBranchByParameterMap" resultType="java.util.Map">
     select * from (
     select
-    s.id,s.name,s.the_type AS theType,s.remarks,p.name as clazzName,s.standard_type as standardType,(SELECT COUNT(1) FROM laky_teach_course_school where course_id=s.id) as schoolZoneNumber
+    s.id,s.name,s.the_type AS theType,s.remarks,p.name as clazzName,s.standard_type as standardType,s.the_status AS theStatus,(SELECT COUNT(1) FROM laky_teach_course_school where course_id=s.id) as schoolZoneNumber
     from laky_teach_course s
     LEFT JOIN laky_organization_parameter_value p on s.clazz_id = p.id and p.the_status !=0
     where s.the_status !=0 AND s.branch_id = #{branchId,jdbcType=INTEGER}
@@ -90,6 +90,9 @@
     </if>
     <if test="theType!=null">
       AND s.the_type = #{theType,jdbcType=INTEGER}
+    </if>
+    <if test="theStatus2!=null">
+      AND s.the_status = #{theStatus2,jdbcType=TINYINT}
     </if>
     <if test="clazzId!=null">
       <if test="clazzId instanceof String">
@@ -143,11 +146,20 @@
     DELETE FROM laky_teach_course_school where course_id = #{courseId,jdbcType=INTEGER}
   </delete>
 
+  <delete id="deleteChargeStandard" parameterType="java.lang.Integer">
+    DELETE FROM laky_teach_course_charge_standard where course_id = #{courseId,jdbcType=INTEGER}
+  </delete>
+
   <select id="selectCourseChargeStandard" resultType="java.util.Map" >
     select
      id,max_hourse as maxHourse,min_hourse as minHourse,price,the_type as theType
     from laky_teach_course_charge_standard
     where  course_id = #{courseId,jdbcType=INTEGER}
+  </select>
+
+  <select id="selectCourseById" resultType="com.laky.edu.teach.bean.Course" >
+    select * from laky_teach_course
+    where  id = #{id,jdbcType=INTEGER}
   </select>
 
   <select id="selectCourseSchool" resultType="java.util.Map" >
