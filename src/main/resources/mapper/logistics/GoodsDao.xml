@@ -61,7 +61,11 @@
       </if>
     </if>
     where g.the_status!=0
-    <if test="name!=null">AND g.name LIKE CONCAT('%',#{name,jdbcType=VARCHAR},'%')
+    <if test="name!=null">
+      AND g.name LIKE CONCAT('%',#{name,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="name2!=null">
+      AND g.name = #{name2,jdbcType=VARCHAR}
     </if>
     <if test="clazzId!=null">
       AND g.clazz_id = #{clazzId,jdbcType=INTEGER}

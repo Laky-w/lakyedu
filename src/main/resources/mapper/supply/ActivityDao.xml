@@ -47,6 +47,9 @@
     <if test="name != null">
       AND s.`name` LIKE CONCAT('%',#{name,jdbcType=VARCHAR},'%')
     </if>
+    <if test="name2 != null">
+      AND s.name = #{name2,jdbcType=VARCHAR}
+    </if>
     <if test="theType != null">
       AND s.the_type = #{theType,jdbcType=INTEGER}
     </if>

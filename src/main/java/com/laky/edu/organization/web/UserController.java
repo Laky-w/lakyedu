@@ -14,6 +14,7 @@ import com.laky.edu.organization.service.OrganizationService;
 import com.laky.edu.organization.service.RoleService;
 import com.laky.edu.organization.service.SchoolZoneService;
 import com.laky.edu.organization.service.UserService;
+import com.laky.edu.util.MD5;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -224,6 +225,33 @@ public class UserController extends BaseController{
             return  super.doWrappingErrorData(e);
         }
     }
+    @PutMapping("updateUserPassword")
+    public Map updateUserPassword(HttpServletRequest request,@RequestParam String newpwd){
+        try {
+            User user = new User();
+            user.setId(super.getCurrentUser(request).getId());
+            user.setPassword(MD5.getMd5(newpwd));
+            userService.updateUser(user,null);
+            return super.doWrappingData("修改密码成功!");
+        }catch (Exception e){
+            return super.doWrappingErrorData(e);
+        }
+    }
 
+    @PostMapping("/validateUserPassword")
+    public Map validateUserPassword(HttpServletRequest request,@RequestParam String password){
+        try {
+            LinkedHashMap parameterMap = new LinkedHashMap();
+            parameterMap.put("id",getCurrentUser(request).getId());
+            parameterMap.put("password",MD5.getMd5(password));
+            Map userMap = userService.findUserById(parameterMap);
+            if (userMap==null){
+                throw new Exception("密码错误!");
+            }
+            return super.doWrappingData("密码正确!");
+        }catch (Exception e){
+            return  super.doWrappingErrorData(e);
+        }
+    }
 
 }

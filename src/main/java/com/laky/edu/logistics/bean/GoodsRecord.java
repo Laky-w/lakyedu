@@ -31,6 +31,8 @@ public class GoodsRecord implements Serializable {
 
     private Integer returnStatus;
 
+    private Integer oldAmount;//原始库存
+
     private static final long serialVersionUID = 1L;
 
     public Integer getId() {
@@ -135,5 +137,13 @@ public class GoodsRecord implements Serializable {
 
     public void setSchoolZoneIdIn(Integer schoolZoneIdIn) {
         this.schoolZoneIdIn = schoolZoneIdIn;
+    }
+
+    public Integer getOldAmount() {
+        return oldAmount;
+    }
+
+    public void setOldAmount(Integer oldAmount) {
+        this.oldAmount = oldAmount;
     }
 }

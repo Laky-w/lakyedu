@@ -53,6 +53,7 @@
       ORDER BY t.${columnName} ${columnOrder}
     </if>
   </select>
+
   <insert id="insert"  useGeneratedKeys="true" keyProperty="id" keyColumn="id" parameterType="com.laky.edu.logistics.bean.GoodsRepository">
     insert into laky_logistics_goods_repository (id, goods_id, school_zone_id,
       last_amount, consume_amount)
@@ -89,6 +90,7 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
+
   <update id="batchUpdateByPrimaryKeySelective" parameterType="com.laky.edu.logistics.bean.GoodsRepository" >
     <foreach collection="list" item="item" index="index" open="" close="" separator=";">
       update laky_logistics_goods_repository
@@ -109,6 +111,7 @@
       where id = #{item.id,jdbcType=INTEGER}
     </foreach>
   </update>
+
   <update id="updateByPrimaryKey" parameterType="com.laky.edu.logistics.bean.GoodsRepository" >
     update laky_logistics_goods_repository
     set goods_id = #{goodsId,jdbcType=INTEGER},
@@ -117,4 +120,5 @@
       consume_amount = #{consumeAmount,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
+
 </mapper>

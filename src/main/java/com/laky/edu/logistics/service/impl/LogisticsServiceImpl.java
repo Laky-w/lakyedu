@@ -83,7 +83,7 @@ public class LogisticsServiceImpl implements LogisticsService{
         List<GoodsRepository> insertGoodsRepositoryList = new ArrayList<>(); //插入库存
         List<GoodsRepository> updateGoodsRepositoryList = new ArrayList<>(); //更新库存
         for (GoodsRecord goodsRecord:goodsRecords){
-            GoodsRepository repository =null;
+            GoodsRepository repository ;
             if(goodsRecord.getTheType() == 1 ){  //1 进货
                 repository = getGoodsRepository(goodsRecord.getGoodsId(),goodsRecord.getSchoolZoneId(),1,goodsRecord.getAmount());
             } else if (goodsRecord.getTheType() ==2 || goodsRecord.getTheType() ==3 || goodsRecord.getTheType() ==4 || goodsRecord.getTheType() ==5){ // 2 退货、3 销售、4 领用、5 图片借阅
@@ -139,7 +139,7 @@ public class LogisticsServiceImpl implements LogisticsService{
     }
 
     private GoodsRepository getGoodsRepository(Integer goodsId,Integer schoolZoneId,int theType,Integer amount){
-        GoodsRepository repository = goodsRepositoryDao.selectByPrimaryKey(goodsId,schoolZoneId);
+        GoodsRepository repository = goodsRepositoryDao.selectByPrimaryKey(goodsId,schoolZoneId);//查询物品库存通过物品id和学校id确定唯一性
         if(repository == null){
             repository = new GoodsRepository();
             repository.setSchoolZoneId(schoolZoneId);
@@ -147,7 +147,7 @@ public class LogisticsServiceImpl implements LogisticsService{
             repository.setConsumeAmount(0);
             repository.setLastAmount(0);
         }
-        switch (amount){
+        switch (theType){
             case 1: //增加库存
                 repository.setLastAmount(repository.getLastAmount()+amount);
                 break;

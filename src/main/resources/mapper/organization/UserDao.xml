@@ -97,6 +97,7 @@
       SELECT  u.*,sz.`name` as sz_name,b.branch_name  FROM laky_organization_user u LEFT JOIN  laky_organization_branch b on u.branch_id = b.id and b.the_status =1 LEFT JOIN  laky_organization_school_zone sz on sz.id =u.school_zone_id and sz.the_status =1
       WHERE (u.user_name = #{userName} or u.email = #{userName} or u.phone = #{userName}) and u.the_status != 0 and b.serial = #{serial} and b.the_status =1
     </select>
+
     <select id="queryUserBySchoolId"   resultType="java.util.Map" >
        SELECT s.id,s.birthday,s.create_datetime as createTime,s.email,s.sex,s.`name`,s.user_name as userName,s.email,s.phone, sz.`name`as schoolName,s.is_super as isSuper,
         s.quit_status quitStatus,
@@ -154,6 +155,9 @@
                      open="(" close=")" separator=",">
                 #{schoolId}
             </foreach>
+        </if>
+        <if test="password != null">
+            AND s.password = #{password,jdbcType=VARCHAR}
         </if>
     </select>
 

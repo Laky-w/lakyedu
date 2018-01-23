@@ -19,9 +19,8 @@
         SELECT  * FROM laky_logistics_goods_record WHERE id =#{id,jdbcType=INTEGER}
     </select>
     <select id="selectByParameterMap" resultType="java.util.Map">
-        SELECT *FROM (
-        select r.id,r.the_type AS theType,r.amount,r.create_time AS createTime,r.price,r.other_name AS otherName,r.return_status AS returnStatus,r.return_date as returnDate,
-        s.name AS schoolZoneName,s1.name AS schoolZoneNameIn,g.name AS goodsName,u.name AS userName,v.name as supplierName
+        SELECT * FROM (
+        select r.id,r.the_type AS theType,r.amount,r.create_time AS createTime,r.price,r.other_name AS otherName,r.return_status AS returnStatus,r.return_date as returnDate,s.name AS schoolZoneName,s1.name AS schoolZoneNameIn,g.name AS goodsName,u.name AS userName,v.name as supplierName,r.old_amount AS oldAmount, (r.old_amount-r.amount)AS lastAmount
         from laky_logistics_goods_record r
         RIGHT JOIN laky_organization_school_zone s ON r.school_zone_id = s.id AND s.the_status =1
         LEFT JOIN laky_organization_school_zone s1 on r.school_zone_id_in = s1.id AND s1.the_status =1
@@ -54,25 +53,28 @@
         <if test="theType!=null">
             AND r.the_type=#{theType,jdbcType=TINYINT}
         </if>
-        ORDER BY r.create_time DESC
+        ORDER BY r.id DESC
         ) t
         <if test="columnName!=null">
             ORDER BY t.${columnName} ${columnOrder}
         </if>
     </select>
+
     <insert id="batchInsert"  useGeneratedKeys="true" keyColumn="id"
             keyProperty="id">
-        INSERT INTO laky_logistics_goods_record (goods_id, school_zone_id,the_type, amount, user_id,create_time, price, other_name,supplier_id,school_zone_id_in,return_status
+        INSERT INTO laky_logistics_goods_record (goods_id, school_zone_id,the_type, amount, user_id,create_time, price, other_name,supplier_id,school_zone_id_in,return_status,old_amount
         )
         VALUES
             <foreach collection="list" index="index"  item="item" separator=",">
                 ( #{item.goodsId,jdbcType=INTEGER}, #{item.schoolZoneId,jdbcType=INTEGER}, #{item.theType,jdbcType=TINYINT},
                 #{item.amount,jdbcType=DECIMAL}, #{item.userId,jdbcType=INTEGER},#{item.createTime,jdbcType=TIMESTAMP},
                  #{item.price,jdbcType=DECIMAL}, #{item.otherName,jdbcType=VARCHAR},#{item.supplierId,jdbcType=INTEGER},
-                #{item.schoolZoneIdIn,jdbcType=INTEGER},#{item.returnStatus,jdbcType=TINYINT}
+                #{item.schoolZoneIdIn,jdbcType=INTEGER},#{item.returnStatus,jdbcType=TINYINT},
+                #{item.oldAmount,jdbcType=INTEGER}
                 )
             </foreach>
     </insert>
+
     <insert id="insert" parameterType="com.laky.edu.logistics.bean.GoodsRecord" useGeneratedKeys="true"
             keyColumn="id" keyProperty="id">
         INSERT INTO laky_logistics_goods_record (goods_id, school_zone_id,the_type, amount, user_id,create_time, price, other_name)
@@ -82,6 +84,7 @@
             #{createTime,jdbcType=TIMESTAMP}, #{price,jdbcType=DECIMAL}, #{otherName,jdbcType=VARCHAR}
             )
     </insert>
+
     <update id="updateByPrimaryKeySelective" parameterType="com.laky.edu.logistics.bean.GoodsRecord">
         update laky_logistics_goods_record
         <set>
@@ -118,6 +121,7 @@
         </set>
         where id = #{id,jdbcType=INTEGER}
     </update>
+
     <update id="updateByPrimaryKey" parameterType="com.laky.edu.logistics.bean.GoodsRecord">
         UPDATE laky_logistics_goods_record
         SET goods_id       = #{goodsId,jdbcType=INTEGER},

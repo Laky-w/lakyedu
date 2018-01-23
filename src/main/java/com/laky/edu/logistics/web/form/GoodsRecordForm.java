@@ -13,6 +13,7 @@ public class GoodsRecordForm {
    private Integer supplierId;
    private List<GoodsRecord> goodsList;
    private String otherName;
+   private Integer oldAmount;
    private Date returnDate;
    private Integer schoolZoneId;
    private Integer returnStatus;
