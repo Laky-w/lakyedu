@@ -38,6 +38,8 @@ public interface CourseDao {
 
     Map selectCourse(LinkedHashMap parameterMap);
 
+    List<Course> selectCourseAll(LinkedHashMap parameterMap);
+
     List<Course> selectByParameterMap(LinkedHashMap parameterMap);
 
     List<Course> selectBranchByParameterMap(LinkedHashMap parameterMap);

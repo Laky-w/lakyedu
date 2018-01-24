@@ -26,18 +26,18 @@
 
   <select id="selectByParameterMap" resultType="java.util.Map">
     SELECT * FROM (
-    SELECT s.id,s.start_time AS startTime,s.end_time AS endTime,s.attendance_status AS attendanceStatus,s.`hour`,r.`name` AS roomName,sc.`name` AS schoolClassName, u.`name` AS teachName,sz.name as schoolZoneName,(SELECT group_concat(u. NAME)FROM laky_teach_schedule_teacher st
+    SELECT s.id,s.start_time AS startTime,s.end_time AS endTime,s.attendance_status AS attendanceStatus,s.`hour`,r.`name` AS roomName,sc.`name` AS schoolClassName, u.`name` AS teachName,sz.name as schoolZoneName,(
+    SELECT group_concat(u.`name`) FROM laky_teach_schedule_teacher st
     LEFT JOIN laky_organization_user u ON st.user_id = u.id AND u.the_status != 0
     WHERE st.schedule_id = s.id
     ) AS headTeachName
     FROM laky_teach_schedule s
     RIGHT JOIN laky_organization_school_zone sz on s.school_zone_id = sz.id and sz.the_status =1
-    LEFT JOIN laky_teach_room r ON s.room_id = r.id
-    AND r.the_status != 0
-    RIGHT JOIN laky_teach_school_class sc ON s.class_id = sc.id
-    AND sc.the_status != 0
-    LEFT JOIN laky_organization_user u ON s.teach_id = u.id
-    AND u.the_status != 0
+    LEFT JOIN laky_teach_room r ON s.room_id = r.id AND r.the_status != 0
+    RIGHT JOIN laky_teach_school_class sc ON s.class_id = sc.id AND sc.the_status != 0
+    LEFT JOIN laky_organization_user u ON s.teach_id = u.id AND u.the_status != 0
+    LEFT JOIN laky_teach_schedule_teacher st ON st.schedule_id = s.id
+    LEFT JOIN laky_organization_user u1 ON st.user_id = u1.id AND u1.the_status != 0
     where s.the_status !=0
     <if test="schoolZoneId != null">
       AND s.school_zone_id IN
@@ -48,6 +48,15 @@
     </if>
     <if test="className !=null">
       AND sc.`name` LIKE CONCAT('%',#{className,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="roomName !=null">
+      AND r.`name` LIKE CONCAT('%',#{roomName,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="teachName !=null">
+      AND u.`name` LIKE CONCAT('%',#{teachName,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="headTeachName !=null">
+      AND u1.`name` LIKE CONCAT('%',#{headTeachName,jdbcType=VARCHAR},'%')
     </if>
     <if test="schoolZoneId2 != null">
       <if test="schoolZoneId2 instanceof String">

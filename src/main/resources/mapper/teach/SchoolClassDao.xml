@@ -39,7 +39,7 @@
   <select id="selectByParameterMap" resultType="java.util.Map">
     SELECT * FROM (
     SELECT s.id ,s.name,s.end_date AS endDate,s.start_date AS startDate,s.create_time AS
-    createTime,s.remarks,r.`name` AS roomName, c.`name` AS courseName,u1.name AS mainTeacherName,u.`name` AS teacherName,sz.name as
+    createTime,s.remarks,r.`name` AS roomName,r.id AS roomId, c.`name` AS courseName,u1.name AS mainTeacherName,u.`name` AS teacherName,u.id AS teacherId,sz.name as
     schoolZoneName
     from laky_teach_school_class s
     RIGHT JOIN laky_organization_school_zone sz on s.school_zone_id = sz.id and sz.the_status =1
@@ -50,6 +50,21 @@
     where s.the_status !=0
     <if test="name != null">
       AND s.`name` LIKE CONCAT('%',#{name,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="name2 != null">
+      AND s.`name` = #{name2,jdbcType=VARCHAR}
+    </if>
+    <if test="teacherName != null">
+      AND u.`name` LIKE CONCAT('%',#{teacherName,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="mainTeacherName != null">
+      AND u1.`name` LIKE CONCAT('%',#{mainTeacherName,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="courseName != null">
+      AND c.`name` LIKE CONCAT('%',#{courseName,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="roomName != null">
+      AND r.`name` LIKE CONCAT('%',#{roomName,jdbcType=VARCHAR},'%')
     </if>
     <if test="schoolZoneId != null">
       AND s.school_zone_id IN
@@ -98,7 +113,7 @@
     update laky_teach_school_class
     <set >
       <if test="name != null" >
-        name = #{name,jdbcType=VARCHAR},
+        `name` = #{name,jdbcType=VARCHAR},
       </if>
       <if test="courseId != null" >
         course_id = #{courseId,jdbcType=INTEGER},
@@ -119,7 +134,7 @@
         teacher_id = #{teacherId,jdbcType=INTEGER},
       </if>
       <if test="startDate != null" >
-        start_data = #{startDate,jdbcType=DATE},
+        start_date = #{startDate,jdbcType=DATE},
       </if>
       <if test="endDate != null" >
         end_date = #{endDate,jdbcType=DATE},

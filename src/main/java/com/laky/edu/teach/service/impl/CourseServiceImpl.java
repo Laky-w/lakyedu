@@ -128,7 +128,7 @@ public class CourseServiceImpl implements CourseService{
     public List<Map> findCourseTreeByBranch(LinkedHashMap parameterMap) {
 
         //第一步 获取数据
-        List<Course> dataList =courseDao.selectByParameterMap(parameterMap);
+        List<Course> dataList =courseDao.selectCourseAll(parameterMap);
         List<Map> returnList = new ArrayList<>();
         Map<Integer,Object> map = new HashMap<>();
         dataList.forEach(course -> { //获取科目

@@ -47,7 +47,7 @@ public class ScheduleServiceImpl implements ScheduleService {
             startDate.add(Calendar.DATE,1);
         }
         int rowCount=scheduleDao.batchInsert(scheduleList);
-        if(rowCount>0&&scheduleForm.getHelpTeacherId() !=null){ //循环添加助教
+        if(rowCount>0&&scheduleForm.getHelpTeacherId() !=null&&scheduleForm.getHelpTeacherId().length>0){ //循环添加助教
             List<Map> helpTeachMap = initHelpTeach(scheduleList,scheduleForm.getHelpTeacherId());
             scheduleDao.batchHelpTeachInsert(helpTeachMap);
         }
