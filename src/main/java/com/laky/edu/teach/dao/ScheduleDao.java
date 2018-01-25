@@ -14,15 +14,19 @@ public interface ScheduleDao {
 
     int batchInsert(List<Schedule> scheduleList);
 
+    int deleteHelpTeach(Integer scheduleId);
+
     int batchHelpTeachInsert(List<Map> helpTeachList);
 
     int insertSelective(Schedule record);
 
-    Schedule selectByPrimaryKey(Integer id);
+    Map selectByPrimaryKey(LinkedHashMap parameterMap);
 
     List selectByParameterMap(LinkedHashMap parameterMap);
 
     int updateByPrimaryKeySelective(Schedule record);
+
+    int batchUpdateByPrimaryKeySelective(List<Schedule> scheduleList);
 
     int updateByPrimaryKey(Schedule record);
 }

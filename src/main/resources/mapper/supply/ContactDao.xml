@@ -47,6 +47,10 @@
     <if test="content != null">
       AND s.content LIKE CONCAT('%',#{content,jdbcType=LONGVARCHAR},'%')
     </if>
+    <if test="contactTime != null">
+      AND s.contact_time &gt;= #{contactTime[0],jdbcType=TIMESTAMP}
+      AND s.contact_time &lt;= #{contactTime[1],jdbcType=TIMESTAMP}
+    </if>
     <if test="studentName!=null">
       AND (v.name LIKE CONCAT('%',#{studentName,jdbcType=VARCHAR},'%')
       OR v.pinyin LIKE CONCAT('%',#{studentName,jdbcType=VARCHAR},'%')
