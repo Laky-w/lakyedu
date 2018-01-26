@@ -30,11 +30,15 @@ public class StudentController extends BaseController{
     @PostMapping("/createStudent")
     public Map createStudent(HttpServletRequest request, Student student, Customer customer){
         try {
-            LinkedHashMap parameterMap = new LinkedHashMap();
             customer.setSchoolZoneId(super.getCurrentUser(request).getSchoolZoneId());
             student.setSchoolZoneId(customer.getSchoolZoneId());
-            studentService.createStudent(student,customer);
-            super.handleOperate("添加学员", OrganizationConst.OPERATE_ADD,"添加学员【"+customer.getName()+"】",request);
+            if (student.getId()==null){
+                studentService.createStudent(student,customer);
+                super.handleOperate("添加学员", OrganizationConst.OPERATE_ADD,"添加学员【"+customer.getName()+"】",request);
+            }else {
+                studentService.updateStudent(student,customer);
+                super.handleOperate("修改正式学员", OrganizationConst.OPERATE_UPDATE,"修改正式学员【"+student.getName()+"】",request);
+            }
             return super.doWrappingData(customer);
         } catch (Exception e) {
             return  super.doWrappingErrorData(e);
@@ -86,4 +90,21 @@ public class StudentController extends BaseController{
             return  super.doWrappingErrorData(e);
         }
     }
+
+    @DeleteMapping("/deleteStudent/{id}")
+    public Map deleteStudent(HttpServletRequest request,@PathVariable Integer id){
+        try {
+            LinkedHashMap parameterMap = new LinkedHashMap();
+            parameterMap.put("id",id);
+            Map map = studentService.queryStudent(parameterMap);
+            boolean flag = studentService.deleteStudent(map);
+            if (flag) {
+                super.handleOperate("删除正式学员",OrganizationConst.OPERATE_DELETE,"删除正式学员【"+map.get("name")+"】",request);
+            }
+            return super.doWrappingData("删除成功");
+        }catch (Exception e){
+            return super.doWrappingErrorData(e);
+        }
+    }
+
 }

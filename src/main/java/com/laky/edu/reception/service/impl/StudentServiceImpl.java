@@ -137,6 +137,29 @@ public class StudentServiceImpl implements StudentService{
         return studentDao.selectStudent(parameterMap);
     }
 
+    @Transactional
+    @Override
+    public boolean deleteStudent(Map studentMap) throws Exception {
+        Student student = new Student();
+        student.setId((Integer) studentMap.get("id"));
+        student.setTheStatus(0);
+        int rows = studentDao.updateStudent(student);
+        Customer customer = new Customer();
+        customer.setId((Integer) studentMap.get("customerId"));
+        customer.setTheStatus(0);
+        customerDao.updateByPrimaryKey(customer);
+        return !(rows==0);
+    }
+    @Transactional
+    @Override
+    public Student updateStudent(Student student,Customer customer) throws Exception {
+
+        customerDao.updateByPrimaryKey(customer);
+       int rows =  studentDao.updateStudent(student);
+       if (rows ==0) throw new RuntimeException("更新正式学员失败");
+        return student;
+    }
+
     /**
      * 克隆客户信息到正式学员
      * @param customer

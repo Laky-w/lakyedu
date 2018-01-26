@@ -9,19 +9,28 @@ import java.util.Map;
 
 @Component
 public interface StudentDao {
-    int deleteByPrimaryKey(Integer id);
 
     int insert(Student record);
 
     int insertSelective(Student record);
 
+    /**
+     * 学员详情页dao
+     * @param parameterMap
+     * @return
+     */
     Map selectStudent(LinkedHashMap parameterMap);
 
     Student selectByPrimaryKey(Integer id);
 
     List<Student> selectByParameterMap(LinkedHashMap parameterMap);
 
-    int updateByPrimaryKeySelective(Student record);
+    /**
+     *修改正式学员
+     * @param student
+     * @return
+     */
+    int updateStudent(Student student);
 
     int updateByPrimaryKey(Student record);
 }

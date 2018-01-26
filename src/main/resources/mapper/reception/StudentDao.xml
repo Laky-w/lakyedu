@@ -25,7 +25,7 @@
   </sql>
 
   <select id="selectStudent" resultType="java.util.Map">
-    SELECT s.id , s.name ,s.sex ,s.birthday AS birthday,s.phone,s.the_type AS theType, s.remarks ,s.create_time AS createTime,s.class_status AS classStatus,sz.name as schoolZoneName, v.name AS contactId, u.name AS ownerId, a.name AS sourceId
+    SELECT s.id , s.name ,s.sex ,s.birthday AS birthday,s.phone,s.the_type AS theType, s.remarks ,s.create_time AS createTime,s.class_status AS classStatus,s.customer_id AS customerId,sz.name as schoolZoneName,sz.id AS schoolZoneId, v.name AS contactName,v.id AS contactId, u.name AS ownerName,u.id AS ownerId , a.name AS sourceName ,a.id AS sourceId
     from laky_reception_student s
       RIGHT JOIN laky_organization_school_zone sz on s.school_zone_id = sz.id and s.the_status !=0
       LEFT JOIN laky_organization_parameter_value v ON s.contact_id = v.id AND v.the_status!=0
@@ -51,7 +51,7 @@
     SELECT * FROM (
     SELECT s.id , s.name ,s.sex ,s.birthday AS birthday,s.phone,
     s.the_type AS theType, s.remarks ,s.create_time AS createTime,s.class_status AS classStatus,
-    sz.name as schoolZoneName, v.name AS contactId, u.name AS ownerId, a.name AS sourceId
+    sz.name as schoolZoneName, v.name AS contactName, u.name AS ownerName, a.name AS sourceName
     from laky_reception_student s
     RIGHT JOIN laky_organization_school_zone sz on s.school_zone_id = sz.id and s.the_status =1
     LEFT JOIN laky_organization_parameter_value v ON s.contact_id = v.id AND v.the_status!=0
@@ -101,10 +101,6 @@
     </if>
   </select>
 
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
-    delete from laky_reception_student
-    where id = #{id,jdbcType=INTEGER}
-  </delete>
   <insert id="insert" parameterType="com.laky.edu.reception.bean.Student" useGeneratedKeys="true" keyProperty="id"
           keyColumn="id">
     insert into laky_reception_student ( name,pinyin, sex,
@@ -223,7 +219,8 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.laky.edu.reception.bean.Student" >
+
+  <update id="updateStudent" parameterType="com.laky.edu.reception.bean.Student" >
     update laky_reception_student
     <set >
       <if test="name != null" >
@@ -274,6 +271,7 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
+
   <update id="updateByPrimaryKey" parameterType="com.laky.edu.reception.bean.Student" >
     update laky_reception_student
     set name = #{name,jdbcType=VARCHAR},

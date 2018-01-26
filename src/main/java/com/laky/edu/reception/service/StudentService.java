@@ -50,4 +50,20 @@ public interface StudentService {
      * @throws Exception
      */
     Map queryStudent(LinkedHashMap parameterMap)throws Exception;
+
+    /**
+     * 删除正式学员
+     * @param studentMap
+     * @return
+     * @throws Exception
+     */
+    boolean deleteStudent(Map studentMap)throws Exception;
+
+    /**
+     * 更新正式学员
+     * @param student
+     * @return
+     * @throws Exception
+     */
+    Student updateStudent(Student student,Customer customer)throws Exception;
 }
