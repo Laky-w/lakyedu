@@ -2,6 +2,8 @@ package com.laky.edu.teach.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.laky.edu.core.PageBean;
+import com.laky.edu.reception.ReceptionConst;
+import com.laky.edu.reception.bean.StudentClass;
 import com.laky.edu.reception.dao.StudentClassDao;
 import com.laky.edu.teach.bean.SchoolClass;
 import com.laky.edu.teach.dao.SchoolClassDao;
@@ -10,9 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by 湖之教育工作室·laky on 2017/12/11.
@@ -66,5 +66,23 @@ public class SchoolClassServiceImpl implements SchoolClassService{
         return schoolClass;
     }
 
+    @Transactional
+    @Override
+    public int doUpdateStudentClass(LinkedHashMap parameterMap) throws Exception {
+//        LinkedHashMap parameterMap = new LinkedHashMap();
+//        parameterMap.put("ids",ids);
+//        parameterMap.put("sch")
+        List<Map>  studentClassList =studentClassDao.selectByParameterMap(parameterMap);
+        List<StudentClass> studentClasses = new ArrayList<>();
+        for (Map map :studentClassList){
+            StudentClass studentClass = new StudentClass();
+            studentClass.setId((Integer) map.get("id"));
+            studentClass.setClassId((Integer) parameterMap.get("classId"));
+            studentClass.setClassStatus(ReceptionConst.STUDENT_CLASS_STATUS_STUDYING);
+            studentClass.setCreateTime(new Date());
+            studentClasses.add(studentClass);
+        }
 
+        return studentClassDao.batchUpdateByPrimaryKeySelective(studentClasses);
+    }
 }

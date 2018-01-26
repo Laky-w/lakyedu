@@ -28,6 +28,8 @@ public class SchoolClass implements Serializable {
 
     private String remarks;
 
+    private Integer studentNumber;//学生人数
+
     private static final long serialVersionUID = 1L;
 
     public Date getCreateTime() {
@@ -126,4 +128,11 @@ public class SchoolClass implements Serializable {
         this.remarks = remarks == null ? null : remarks.trim();
     }
 
+    public Integer getStudentNumber() {
+        return studentNumber;
+    }
+
+    public void setStudentNumber(Integer studentNumber) {
+        this.studentNumber = studentNumber;
+    }
 }

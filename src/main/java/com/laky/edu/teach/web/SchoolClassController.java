@@ -95,4 +95,19 @@ public class SchoolClassController extends BaseController{
             return  super.doWrappingErrorData(e);
         }
     }
+
+    @PutMapping("updateStudentClass")
+    public Map updateStudentClass(HttpServletRequest request,String studentClassIds,Integer classId){
+        try {
+            LinkedHashMap parameterMap = new LinkedHashMap();
+            parameterMap.put("schoolZoneId",super.getSchoolIds(request));
+            parameterMap.put("ids",studentClassIds.split(","));
+            parameterMap.put("classId",classId);
+            schoolClassService.doUpdateStudentClass(parameterMap);
+            super.handleOperate("学员分班",OrganizationConst.OPERATE_UPDATE,"学员分班",request);
+            return super.doWrappingData("操作成功");
+        } catch (Exception e) {
+            return  super.doWrappingErrorData(e);
+        }
+    }
 }

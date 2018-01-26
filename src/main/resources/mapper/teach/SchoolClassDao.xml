@@ -20,7 +20,8 @@
     start_date, end_date, remarks, create_time
   </sql>
   <select id="selectSchoolClassById" resultType="java.util.Map">
-    SELECT s.id,s.name ,s.end_date AS endDate,s.start_date AS startDate,s.name AS name,s.create_time AS createTime,s.remarks AS remarks,r.`name` AS roomName,r.id as roomId,c.id AS courseId,c.clazz_id as clazzId,c.the_type as theType, c.`name` AS courseName,u1.name AS mainTeacherName,u1.id as mainTeacherId,u.`name` AS teacherName,u.id AS teacherId,sz.name as schoolZoneName,sz.id AS  schoolZoneId
+    SELECT s.id,s.name ,s.end_date AS endDate,s.start_date AS startDate,s.name AS name,s.create_time AS createTime,s.remarks AS remarks,s.student_number AS studentNumber,
+    r.`name` AS roomName,r.id as roomId,c.id AS courseId,c.clazz_id as clazzId,c.the_type as theType, c.`name` AS courseName,u1.name AS mainTeacherName,u1.id as mainTeacherId,u.`name` AS teacherName,u.id AS teacherId,sz.name as schoolZoneName,sz.id AS  schoolZoneId
     from laky_teach_school_class s
     RIGHT JOIN laky_organization_school_zone sz on s.school_zone_id = sz.id and sz.the_status =1
     LEFT JOIN laky_teach_room r ON s.room_id=r.id AND r.the_status !=0
@@ -39,8 +40,9 @@
   <select id="selectByParameterMap" resultType="java.util.Map">
     SELECT * FROM (
     SELECT s.id ,s.name,s.end_date AS endDate,s.start_date AS startDate,s.create_time AS
-    createTime,s.remarks,r.`name` AS roomName,r.id AS roomId, c.`name` AS courseName,u1.name AS mainTeacherName,u.`name` AS teacherName,u.id AS teacherId,sz.name as
-    schoolZoneName
+    createTime,s.remarks,s.student_number AS studentNumber,r.`name` AS roomName,r.id AS roomId,
+    c.`name` AS courseName,u1.name AS mainTeacherName,u.`name` AS teacherName,u.id AS teacherId,sz.name as schoolZoneName,
+    (SELECT count(1) from laky_reception_student_class where class_id = s.id and the_status !=0 and class_status=1) AS nowStudentNumber
     from laky_teach_school_class s
     RIGHT JOIN laky_organization_school_zone sz on s.school_zone_id = sz.id and sz.the_status =1
     LEFT JOIN laky_teach_room r ON s.room_id=r.id AND r.the_status !=0
@@ -48,6 +50,13 @@
     LEFT JOIN laky_organization_user u ON s.teacher_id =u.id AND u.the_status!=0
     LEFT JOIN laky_organization_user u1 ON s.main_teacher_id = u1.id and u1.the_status!=0
     where s.the_status !=0
+    <if test="ids != null">
+      AND s.id IN
+      <foreach collection="ids" item="id" index="index"
+               open="(" close=")" separator=",">
+        #{id}
+      </foreach>
+    </if>
     <if test="name != null">
       AND s.`name` LIKE CONCAT('%',#{name,jdbcType=VARCHAR},'%')
     </if>
@@ -103,11 +112,11 @@
     insert into laky_teach_school_class (name, course_id,
       school_zone_id, the_status, room_id,
       main_teacher_id, teacher_id, start_date,
-      end_date, remarks, create_time)
+      end_date, remarks, create_time,student_number)
     values ( #{name,jdbcType=VARCHAR}, #{courseId,jdbcType=INTEGER},
       #{schoolZoneId,jdbcType=INTEGER}, #{theStatus,jdbcType=TINYINT}, #{roomId,jdbcType=INTEGER},
       #{mainTeacherId,jdbcType=INTEGER}, #{teacherId,jdbcType=INTEGER}, #{startDate,jdbcType=DATE},
-      #{endDate,jdbcType=DATE}, #{remarks,jdbcType=VARCHAR},  #{createTime,jdbcType=TIMESTAMP})
+      #{endDate,jdbcType=DATE}, #{remarks,jdbcType=VARCHAR},  #{createTime,jdbcType=TIMESTAMP}, #{studentNumber,jdbcType=INTEGER})
   </insert>
   <update id="updateSchoolClass" parameterType="com.laky.edu.teach.bean.SchoolClass" >
     update laky_teach_school_class
@@ -135,6 +144,9 @@
       </if>
       <if test="startDate != null" >
         start_date = #{startDate,jdbcType=DATE},
+      </if>
+      <if test="studentNumber != null" >
+        student_number = #{studentNumber,jdbcType=INTEGER},
       </if>
       <if test="endDate != null" >
         end_date = #{endDate,jdbcType=DATE},

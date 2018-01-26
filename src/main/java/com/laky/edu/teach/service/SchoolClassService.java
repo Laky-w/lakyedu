@@ -1,6 +1,7 @@
 package com.laky.edu.teach.service;
 
 import com.laky.edu.core.PageBean;
+import com.laky.edu.organization.bean.SchoolZone;
 import com.laky.edu.teach.bean.Course;
 import com.laky.edu.teach.bean.SchoolClass;
 
@@ -54,4 +55,12 @@ public interface SchoolClassService {
      * @throws Exception
      */
     SchoolClass updateSchoolZOne(SchoolClass schoolClass)throws Exception;
+
+    /**
+     * 学员分班
+     * @param parameterMap
+     * @return
+     * @throws Exception
+     */
+    int doUpdateStudentClass(LinkedHashMap parameterMap)throws Exception;
 }

@@ -25,7 +25,7 @@
     s.subtract_money AS subtractMoney,sz.name AS schoolZoneName
     from laky_reception_student_order s
     RIGHT JOIN laky_organization_school_zone sz ON s.school_zone_id=sz.id AND sz.the_status=1
-    LEFT JOIN laky_reception_student st on s.student_id = st.id
+    RIGHT JOIN laky_reception_student st on s.student_id = st.id AND st.the_status!=0
     LEFT JOIN laky_organization_user u on s.user_id = u.id
     where s.the_status !=0 AND
     s.school_zone_id IN

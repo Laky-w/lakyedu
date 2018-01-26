@@ -59,6 +59,18 @@ public class FinanceController extends BaseController {
         }
     }
 
+    @PutMapping("/checkedMoneyRecord")
+    public Map checkedMoneyRecord(HttpServletRequest request,String ids,Integer checkedStatus){
+        try {
+            financeService.doUpdateMoneyRecord(ids,checkedStatus);
+            super.handleOperate("审核收支", OrganizationConst.OPERATE_UPDATE,"通过收支",request);
+            return super.doWrappingData("操作成功");
+        } catch (Exception e) {
+            return  super.doWrappingErrorData(e);
+        }
+    }
+
+
     @PostMapping("/createFinanceAccount")
     public Map createFinanceAccount(org.apache.catalina.servlet4preview.http.HttpServletRequest request, FinanceAccount account){
         try {

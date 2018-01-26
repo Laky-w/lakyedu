@@ -16,6 +16,8 @@ public interface StudentClassDao {
 
     List<Map> selectByParameterMap(LinkedHashMap parameterMap);
 
+    int batchUpdateByPrimaryKeySelective(List<StudentClass> record);
+
     int updateByPrimaryKeySelective(StudentClass record);
 
     int updateByPrimaryKey(StudentClass record);

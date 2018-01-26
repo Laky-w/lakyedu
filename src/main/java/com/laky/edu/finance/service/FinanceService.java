@@ -28,6 +28,15 @@ public interface FinanceService {
     PageBean<MoneyRecord> findMoneyRecordAllBySchool(LinkedHashMap parameterMap) throws Exception;
 
     /**
+     * 审核收支记录
+     * @param ids
+     * @param checkedStatus
+     * @return
+     * @throws Exception
+     */
+    int doUpdateMoneyRecord(String ids,Integer checkedStatus)throws Exception;
+
+    /**
      * 查询收支记录账户明细
      * @param recordId
      * @return

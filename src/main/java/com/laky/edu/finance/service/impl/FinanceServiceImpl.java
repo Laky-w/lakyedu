@@ -14,10 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.Date;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by 湖之教育工作室·laky on 2017/12/18.
@@ -44,6 +41,20 @@ public class FinanceServiceImpl implements FinanceService {
     public PageBean<MoneyRecord> findMoneyRecordAllBySchool(LinkedHashMap parameterMap) throws Exception {
         PageHelper.startPage((int)parameterMap.get("pageNum"),(int)parameterMap.get("pageSize"));
         return new PageBean<>(moneyRecordDao.selectByParameterMap(parameterMap));
+    }
+
+    @Transactional
+    @Override
+    public int doUpdateMoneyRecord(String ids, Integer checkedStatus) throws Exception {
+        String [] recordIds =ids.split(",");
+        List<MoneyRecord> moneyRecordList = new ArrayList<>();
+        for(String id:recordIds){
+            MoneyRecord moneyRecord = new MoneyRecord();
+            moneyRecord.setId(Integer.parseInt(id));
+            moneyRecord.setCheckStatus(checkedStatus);
+            moneyRecordList.add(moneyRecord);
+        }
+        return moneyRecordDao.batchUpdateByPrimaryKeySelective(moneyRecordList);
     }
 
     @Override

@@ -204,7 +204,7 @@ public class BaseController {
             operatelog.setTheType(type);
             operatelog.setTitle(title);
             operatelog.setSchoolZoneId(getCurrentUser(request).getSchoolZoneId());
-            operatelog.setBranchId(getCurrentUser(request).getBranchId());
+            operatelog.setBranchId(getCurrentUser(request).getBranchId());//比如微信，邮箱，站内信提醒。
             operateLogService.addOperateLog(operatelog);
         }  catch ( Exception e ){
             e.printStackTrace();

@@ -14,5 +14,7 @@ public interface MoneyRecordDao {
 
     int updateByPrimaryKeySelective(MoneyRecord record);
 
+    int batchUpdateByPrimaryKeySelective(List<MoneyRecord> record);
+
     int updateByPrimaryKey(MoneyRecord record);
 }
