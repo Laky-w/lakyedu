@@ -54,10 +54,40 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     }
 
+    @Transactional
+    @Override
+    public void doUpdateSchedule(Schedule schedule,Integer[] helpTeacherId) throws Exception {
+        scheduleDao.updateByPrimaryKeySelective(schedule);
+        if(helpTeacherId!=null && helpTeacherId.length>0){
+            scheduleDao.deleteHelpTeach(schedule.getId());
+            List<Schedule> scheduleList = new ArrayList<>();
+            scheduleList.add(schedule);
+            List<Map> helpTeachMap = initHelpTeach(scheduleList,helpTeacherId);
+            scheduleDao.batchHelpTeachInsert(helpTeachMap);
+        }
+    }
+
     @Override
     public PageBean findALLSchedule(LinkedHashMap parameterMap) throws Exception {
         PageHelper.startPage((int)parameterMap.get("pageNum"),(int)parameterMap.get("pageSize"));
         return new PageBean<>(scheduleDao.selectByParameterMap(parameterMap));
+    }
+
+    @Override
+    public Map findSchedule(LinkedHashMap parameterMap) throws Exception {
+        return scheduleDao.selectByPrimaryKey(parameterMap);
+    }
+
+    @Override
+    public int deleteSchedule(String[] ids) throws Exception {
+        List<Schedule> scheduleList = new ArrayList<>();
+        for(String id:ids){
+            Schedule schedule = new Schedule();
+            schedule.setTheStatus(0);
+            schedule.setId(new Integer(id));
+            scheduleList.add(schedule);
+        }
+        return scheduleDao.batchUpdateByPrimaryKeySelective(scheduleList);
     }
 
     /**
@@ -100,10 +130,12 @@ public class ScheduleServiceImpl implements ScheduleService {
         //上课开始时间
         nowDay.set(Calendar.HOUR,Integer.parseInt(classTimes.get(0).toString().split(":")[0]));
         nowDay.set(Calendar.MINUTE,Integer.parseInt(classTimes.get(0).toString().split(":")[1]));
+        nowDay.set(Calendar.SECOND,0);
         schedule.setStartTime(nowDay.getTime());
         //上课结束时间
         nowDay.set(Calendar.HOUR,Integer.parseInt(classTimes.get(1).toString().split(":")[0]));
         nowDay.set(Calendar.MINUTE,Integer.parseInt(classTimes.get(1).toString().split(":")[1]));
+        nowDay.set(Calendar.SECOND,0);
         schedule.setEndTime(nowDay.getTime());
         return  schedule;
     }
