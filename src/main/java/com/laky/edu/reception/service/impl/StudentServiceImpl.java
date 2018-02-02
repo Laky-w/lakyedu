@@ -153,10 +153,9 @@ public class StudentServiceImpl implements StudentService{
     @Transactional
     @Override
     public Student updateStudent(Student student,Customer customer) throws Exception {
-
-        customerDao.updateByPrimaryKey(customer);
+        int rows1 = customerDao.updateByPrimaryKey(customer);
        int rows =  studentDao.updateStudent(student);
-       if (rows ==0) throw new RuntimeException("更新正式学员失败");
+       if (rows ==0 && rows1 ==0) throw new RuntimeException("更新正式学员失败");
         return student;
     }
 

@@ -14,7 +14,9 @@ public class MoneyRecord implements Serializable {
 
     private BigDecimal money;
 
-    private Integer theType;
+    private Integer theType;//1缴费,2退费
+
+    private Integer clazzId;
 
     private Integer salesmanId;
 
@@ -25,6 +27,8 @@ public class MoneyRecord implements Serializable {
     private Integer checkStatus;// 1 未审核,2审核通过,3审核不通过
 
     private Integer orderId;
+
+    private String remarks;
 
     private static final long serialVersionUID = 1L;
 
@@ -107,5 +111,21 @@ public class MoneyRecord implements Serializable {
 
     public void setOrderId(Integer orderId) {
         this.orderId = orderId;
+    }
+
+    public String getRemarks() {
+        return remarks;
+    }
+
+    public void setRemarks(String remarks) {
+        this.remarks = remarks;
+    }
+
+    public Integer getClazzId() {
+        return clazzId;
+    }
+
+    public void setClazzId(Integer clazzId) {
+        this.clazzId = clazzId;
     }
 }

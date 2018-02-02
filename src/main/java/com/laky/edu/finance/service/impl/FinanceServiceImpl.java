@@ -37,6 +37,18 @@ public class FinanceServiceImpl implements FinanceService {
         return new PageBean<>(financeAccountDao.selectByParameterMap(parameterMap));
     }
 
+    @Transactional
+    @Override
+    public MoneyRecord createMoneyRecord(MoneyRecord moneyRecord) throws Exception {
+        moneyRecord.setCheckStatus(2);
+        moneyRecord.setCreateTime(new Date());
+        moneyRecord.setTheStatus(1);
+        moneyRecord.setTheType(1);
+        int rows  = moneyRecordDao.insert(moneyRecord);
+        if (rows==0) throw new RuntimeException("创建收支流水失败!");
+        return moneyRecord;
+    }
+
     @Override
     public PageBean<MoneyRecord> findMoneyRecordAllBySchool(LinkedHashMap parameterMap) throws Exception {
         PageHelper.startPage((int)parameterMap.get("pageNum"),(int)parameterMap.get("pageSize"));

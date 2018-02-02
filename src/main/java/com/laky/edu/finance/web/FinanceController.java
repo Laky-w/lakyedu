@@ -2,6 +2,7 @@ package com.laky.edu.finance.web;
 
 import com.laky.edu.core.BaseController;
 import com.laky.edu.finance.bean.FinanceAccount;
+import com.laky.edu.finance.bean.MoneyRecord;
 import com.laky.edu.finance.service.FinanceService;
 import com.laky.edu.organization.OrganizationConst;
 import com.laky.edu.teach.bean.Course;
@@ -20,6 +21,19 @@ import java.util.Map;
 public class FinanceController extends BaseController {
     @Autowired
     private FinanceService financeService;
+
+    @PostMapping("createMoneyRecord")
+    public Map createMoneyRecord(HttpServletRequest request, MoneyRecord moneyRecord){
+        try {
+            moneyRecord.setSchoolZoneId(getCurrentUser(request).getSchoolZoneId());
+            moneyRecord.setSalesmanId(getCurrentUser(request).getId());
+            financeService.createMoneyRecord(moneyRecord);
+            super.handleOperate("添加收支记录", OrganizationConst.OPERATE_ADD,"添加收支记录...",request);
+            return  super.doWrappingData(moneyRecord);
+        }catch (Exception e){
+            return super.doWrappingErrorData(e);
+        }
+    }
 
     @PostMapping("/getFinanceAccountList/{pageNum}/{pageSize}")
     public Map getFinanceAccountList(HttpServletRequest request, @PathVariable int pageNum, @PathVariable int pageSize){

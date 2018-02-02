@@ -7,22 +7,25 @@
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="money" property="money" jdbcType="TINYINT" />
     <result column="the_type" property="theType" jdbcType="TINYINT" />
-    <result column="saler_id" property="salerId" jdbcType="INTEGER" />
+    <result column="salesman_id" property="salesmanId" jdbcType="INTEGER" />
     <result column="user_id" property="userId" jdbcType="INTEGER" />
     <result column="the_status" property="theStatus" jdbcType="TINYINT" />
     <result column="check_status" property="checkStatus" jdbcType="TINYINT" />
+    <result column="remarks" property="remarks" jdbcType="VARCHAR"/>
+    <result column="clazz_id" property="clazzId" jdbcType="INTEGER"/>
   </resultMap>
   <sql id="Base_Column_List" >
-    id, school_zone_id, create_time, money, the_type, saler_id, user_id, the_status, 
-    check_status
+    id, school_zone_id, create_time, money, the_type, salesman_id, user_id, the_status,
+    check_status,remarks,clazz_id
   </sql>
   <select id="selectByParameterMap" resultType="java.util.Map" >
     SELECT * FROM (
     select
-    s.id,s.check_status AS checkStatus,s.create_time as createTime,s.money,
-    s.salesman_id AS salesmanId,u.name as salesmanName,s.the_type as theType,s.order_id AS orderId,sz.name as schoolZoneName
+    s.id,s.check_status AS checkStatus,s.create_time as createTime,s.money,s.remarks,
+    s.salesman_id AS salesmanId,u.name as salesmanName,s.the_type as theType,s.order_id AS orderId,sz.name as schoolZoneName,v.name AS clazzName
     from laky_finance_money_record s
     RIGHT JOIN laky_organization_school_zone sz ON s.school_zone_id=sz.id AND sz.the_status=1
+    LEFT JOIN  laky_organization_parameter_value v ON s.clazz_id = v.id AND v.the_status!=0
     LEFT JOIN laky_organization_user u ON s.salesman_id = u.id AND u.the_status!=0
     where s.the_status !=0 and
     s.school_zone_id IN
@@ -62,12 +65,12 @@
   <insert id="insert" parameterType="com.laky.edu.finance.bean.MoneyRecord" useGeneratedKeys="true" keyProperty="id"
           keyColumn="id">
     insert into laky_finance_money_record (id, school_zone_id, create_time, 
-      money, the_type, saler_id, 
-      user_id, the_status, check_status
+      money, the_type, salesman_id,
+      user_id, the_status, check_status,remarks,clazz_id
       )
     values (#{id,jdbcType=INTEGER}, #{schoolZoneId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{money,jdbcType=TINYINT}, #{theType,jdbcType=TINYINT}, #{salerId,jdbcType=INTEGER}, 
-      #{userId,jdbcType=INTEGER}, #{theStatus,jdbcType=TINYINT}, #{checkStatus,jdbcType=TINYINT}
+      #{money,jdbcType=TINYINT}, #{theType,jdbcType=TINYINT}, #{salesmanId,jdbcType=INTEGER},
+      #{userId,jdbcType=INTEGER}, #{theStatus,jdbcType=TINYINT}, #{checkStatus,jdbcType=TINYINT},#{remarks,jdbcType=VARCHAR},#{clazzId,jdbcType=INTEGER}
       )
   </insert>
 
@@ -86,8 +89,8 @@
       <if test="theType != null" >
         the_type = #{theType,jdbcType=TINYINT},
       </if>
-      <if test="salerId != null" >
-        saler_id = #{salerId,jdbcType=INTEGER},
+      <if test="salesmanId != null" >
+        salesman_id = #{salesmanId,jdbcType=INTEGER},
       </if>
       <if test="userId != null" >
         user_id = #{userId,jdbcType=INTEGER},
@@ -97,6 +100,12 @@
       </if>
       <if test="checkStatus != null" >
         check_status = #{checkStatus,jdbcType=TINYINT},
+      </if>
+      <if test="remarks != null" >
+         remarks = #{remarks,jdbcType=VARCHAR},
+      </if>
+      <if test="clazzId != null" >
+        clazz_id = #{clazzId,jdbcType=VARCHAR}
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
@@ -130,6 +139,12 @@
       <if test="item.checkStatus != null" >
         check_status = #{item.checkStatus,jdbcType=TINYINT},
       </if>
+        <if test="item.remarks != null" >
+            remarks = #{item.remarks,jdbcType=VARCHAR},
+        </if>
+      <if test="item.clazzId != null" >
+        clazz_id = #{item.clazzId,jdbcType=VARCHAR}
+      </if>
     </set>
     where id = #{item.id,jdbcType=INTEGER}
     </foreach>
@@ -141,10 +156,12 @@
       create_time = #{createTime,jdbcType=TIMESTAMP},
       money = #{money,jdbcType=TINYINT},
       the_type = #{theType,jdbcType=TINYINT},
-      saler_id = #{salerId,jdbcType=INTEGER},
+      salesman_id = #{salesmanId,jdbcType=INTEGER},
       user_id = #{userId,jdbcType=INTEGER},
       the_status = #{theStatus,jdbcType=TINYINT},
-      check_status = #{checkStatus,jdbcType=TINYINT}
+      check_status = #{checkStatus,jdbcType=TINYINT},
+      remarks = #{remarks,jdbcType=VARCHAR},
+      clazz_id  = #{clazzId,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
 
