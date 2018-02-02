@@ -10,6 +10,8 @@ public interface StudentOrderDao {
 
     int insert(StudentOrder studentOrder);
 
+    StudentOrder selectById(Integer id);
+
     List<StudentOrder> selectByParameterMap(LinkedHashMap parameterMap);
 
     int updateByPrimaryKeySelective(StudentOrder record);

@@ -1,7 +1,9 @@
 package com.laky.edu.reception.web;
 
 import com.laky.edu.core.BaseController;
+import com.laky.edu.organization.OrganizationConst;
 import com.laky.edu.reception.service.OrderService;
+import com.laky.edu.reception.web.form.OrderMoneyRecordForm;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -27,6 +29,27 @@ public class OrderController extends BaseController {
             parameterMap.put("pageSize",pageSize);
             parameterMap = super.doWrappingFormParameter(request,parameterMap);
             return super.doWrappingData(orderService.findStudentOrderAll(parameterMap));
+        } catch (Exception e) {
+            return  super.doWrappingErrorData(e);
+        }
+    }
+
+    @PostMapping("/createOrderMoneyRecord")
+    public Map createOrderMoneyRecord(HttpServletRequest request,OrderMoneyRecordForm recordForm){
+        try {
+            recordForm.setSalesmanId(super.getCurrentUser(request).getId());
+            orderService.createOrderMoneyRecord(recordForm);
+            super.handleOperate("收款", OrganizationConst.OPERATE_ADD,"收款：【"+recordForm.getMoney()+"】",request);
+            return super.doWrappingData("操作成功");
+        } catch (Exception e) {
+            return  super.doWrappingErrorData(e);
+        }
+    }
+
+    @GetMapping("/getOrderDetail/{orderId}")
+    public Map getOrderDetail(HttpServletRequest request, @PathVariable int orderId){
+        try {
+            return super.doWrappingData(orderService.findStudentOrderById(orderId));
         } catch (Exception e) {
             return  super.doWrappingErrorData(e);
         }

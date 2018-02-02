@@ -194,7 +194,7 @@ public class StudentServiceImpl implements StudentService{
             order.setSubtractMoney(BigDecimal.ZERO);
         if(order.getReceivable() == null)
             order.setReceivable(BigDecimal.ZERO);
-        if(order.getTotal().subtract(order.getReceivable()).subtract(order.getSubtractMoney()) == BigDecimal.ZERO){
+        if(order.getTotal().subtract(order.getReceivable()).subtract(order.getSubtractMoney()).compareTo(BigDecimal.ZERO)==0){
             order.setCostStatus(ReceptionConst.ORDER_COST_STATUS_COMPLETE); //已收齐
         } else {
             order.setCostStatus(ReceptionConst.ORDER_COST_STATUS_ARREARS); //未收齐

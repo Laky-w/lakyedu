@@ -44,6 +44,14 @@ public interface FinanceService {
     int doUpdateMoneyRecord(String ids,Integer checkedStatus)throws Exception;
 
     /**
+     * 查询收支记录详情
+     * @param recordId
+     * @return
+     * @throws Exception
+     */
+    MoneyRecord findMoneyRecord(Integer recordId)throws Exception;
+
+    /**
      * 查询收支记录账户明细
      * @param recordId
      * @return

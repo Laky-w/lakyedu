@@ -50,6 +50,15 @@ public class FinanceController extends BaseController {
         }
     }
 
+    @GetMapping("/getMoneyRecord/{recordId}")
+    public Map getMoneyRecord(HttpServletRequest request, @PathVariable int recordId){
+        try {
+            return super.doWrappingData(financeService.findMoneyRecord(recordId));
+        } catch (Exception e) {
+            return  super.doWrappingErrorData(e);
+        }
+    }
+
     @GetMapping("/getMoneyRecordAccountList/{recordId}")
     public Map getMoneyRecordAccountList(HttpServletRequest request, @PathVariable int recordId){
         try {
@@ -58,6 +67,7 @@ public class FinanceController extends BaseController {
             return  super.doWrappingErrorData(e);
         }
     }
+
 
     @PostMapping("/getMoneyRecordList/{pageNum}/{pageSize}")
     public Map getMoneyRecordList(HttpServletRequest request, @PathVariable int pageNum, @PathVariable int pageSize){

@@ -18,6 +18,11 @@
     id, student_id, the_status, user_id, create_time, school_zone_id, total, receivable, 
     subtract_money, the_type, cost_status
   </sql>
+
+  <select id="selectById"  resultType="com.laky.edu.reception.bean.StudentOrder" parameterType="java.lang.Integer">
+   SELECT  * FROM laky_reception_student_order WHERE id = #{id,jdbcType=INTEGER}
+  </select>
+
   <select id="selectByParameterMap"  resultType="java.util.Map" >
     SELECT * FROM (
     SELECT s.id,u.name as userName,st.name as studentName,s.create_time as createTime,s.total,s.receivable,s.cost_status

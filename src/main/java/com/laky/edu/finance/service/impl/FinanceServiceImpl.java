@@ -70,6 +70,11 @@ public class FinanceServiceImpl implements FinanceService {
     }
 
     @Override
+    public MoneyRecord findMoneyRecord(Integer recordId) throws Exception {
+        return moneyRecordDao.selectById(recordId);
+    }
+
+    @Override
     public List<MoneyRecordAccount> findMoneyRecordAccountList(Integer recordId) throws Exception {
         return moneyRecordAccountDao.selectByParameter(recordId);
     }
