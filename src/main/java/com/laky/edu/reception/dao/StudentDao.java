@@ -33,4 +33,6 @@ public interface StudentDao {
     int updateStudent(Student student);
 
     int updateByPrimaryKey(Student record);
+
+    int batchUpdateByPrimaryKey(List<Student> studentList);
 }

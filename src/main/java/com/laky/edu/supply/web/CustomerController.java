@@ -86,7 +86,7 @@ public class CustomerController extends BaseController{
     @PutMapping(value = "/updateUserOwner/{ownerId}")
     public Map updateUserOwner(javax.servlet.http.HttpServletRequest request, @PathVariable Integer ownerId, Integer [] students){
         try {
-            String logTitle = "恢复入职";
+            String logTitle = "分配生源";
             String logContent = "分配生源";
             customerService.updateUserOwner(ownerId,students);
             super.handleOperate(logTitle,OrganizationConst.OPERATE_UPDATE,logContent,request);

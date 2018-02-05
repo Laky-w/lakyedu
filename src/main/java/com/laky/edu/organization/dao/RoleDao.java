@@ -12,7 +12,7 @@ public interface RoleDao {
 
     int insertRole(Role role);
 
-    Authority queryRoleById(Integer id);
+    Role queryRoleById(Integer id);
 
     /**
      * 查询权限
@@ -22,4 +22,6 @@ public interface RoleDao {
     List<RoleAuthority> queryRoleByParameter(LinkedHashMap parameterMap);
 
     int updateRole(Role role);
+
+    int updateByPrimaryKeySelective(Role role);
 }

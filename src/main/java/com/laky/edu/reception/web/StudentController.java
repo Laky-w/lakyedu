@@ -79,6 +79,26 @@ public class StudentController extends BaseController{
         }
     }
 
+    /**
+     * 分配学管师
+     * @param request
+     * @param ownerId
+     * @param students
+     * @return
+     */
+    @PutMapping(value = "/updateStudentOwner/{ownerId}")
+    public Map updateStudentOwner(javax.servlet.http.HttpServletRequest request, @PathVariable Integer ownerId, Integer [] students){
+        try {
+            String logTitle = "分配学管师";
+            String logContent = "分配学管师";
+            studentService.updateStudentManage(ownerId,students);
+            super.handleOperate(logTitle,OrganizationConst.OPERATE_UPDATE,logContent,request);
+            return super.doWrappingData("操作成功");
+        } catch (Exception e) {
+            return  super.doWrappingErrorData(e);
+        }
+    }
+
     @GetMapping("/getStudentView/{id}")
     public Map getStudentView(HttpServletRequest request, @PathVariable Integer id){
         try {

@@ -9,6 +9,9 @@ public class RoleAuthority implements Serializable {
     private Integer roleId;
 
     private Integer authorityId;
+
+    private Integer menuId;//菜单id，非数据库字段
+
     private Role role;
 
     private static final long serialVersionUID = 1L;
@@ -44,6 +47,14 @@ public class RoleAuthority implements Serializable {
 
     public void setRole(Role role) {
         this.role = role;
+    }
+
+    public Integer getMenuId() {
+        return menuId;
+    }
+
+    public void setMenuId(Integer menuId) {
+        this.menuId = menuId;
     }
 
     @Override

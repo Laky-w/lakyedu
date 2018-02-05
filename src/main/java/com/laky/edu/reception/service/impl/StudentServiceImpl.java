@@ -30,6 +30,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -124,7 +125,7 @@ public class StudentServiceImpl implements StudentService{
         if(studentClassList.size()>0){
             studentClassDao.batchInsert(studentClassList);
         }
-        doMoneyRecord(order,userId,financeAccount);
+        doMoneyRecord(order,userId,financeAccount);//收支记录
         customer.setTheType(SupplyConst.CUSTOMER_TYPE_STUDENT);//更新生源类型为正式学员
         List<Customer> customerList = new ArrayList<>();
         customerList.add(customer);
@@ -153,10 +154,32 @@ public class StudentServiceImpl implements StudentService{
     @Transactional
     @Override
     public Student updateStudent(Student student,Customer customer) throws Exception {
-        int rows1 = customerDao.updateByPrimaryKey(customer);
+        //拼音处理
+        if(!StringUtils.isEmpty(student.getName())){
+            customer.setPinyin(PinYinUtil.parsePinYin(customer.getName()));
+            student.setPinyin(customer.getPinyin());
+            customer.setId(student.getCustomerId());
+        }
+        customer.setTheType(SupplyConst.CUSTOMER_TYPE_STUDENT);//生源类型处理 正式学员
+        List<Customer> customerList = new ArrayList<>();
+        customerList.add(customer);
+        int rows1 = customerDao.updateByPrimaryKeySelective(customerList);
        int rows =  studentDao.updateStudent(student);
-       if (rows ==0 && rows1 ==0) throw new RuntimeException("更新正式学员失败");
+       if (rows ==0 || rows1 ==0) throw new RuntimeException("更新正式学员失败");
         return student;
+    }
+
+    @Override
+    public int updateStudentManage(Integer ownerId, Integer[] students) throws Exception {
+        List<Student> studentList = new ArrayList<>();
+        for (Integer id:students){
+            Student student = new Student();
+            student.setId(id);
+            student.setOwnerId(ownerId);
+            studentList.add(student);
+        }
+
+        return  studentDao.batchUpdateByPrimaryKey(studentList);
     }
 
     /**
@@ -253,6 +276,7 @@ public class StudentServiceImpl implements StudentService{
         record.setTheType(1);//收支类型
         record.setSchoolZoneId(order.getSchoolZoneId());
         record.setOrderId(order.getId());
+        record.setSubtractMoney(order.getSubtractMoney());
         moneyRecordDao.insert(record);
         //生成收支账户金额信息
         if(financeAccount !=null){

@@ -14,6 +14,8 @@ public interface RoleAuthorityDao {
 
     int insertRoleAuthorityBatch(List<RoleAuthority> roleAuthorities);
 
+    int deleteRoleAuthorityByRoleId(Integer roleId);
+
     Authority queryRoleAuthorityById(Integer id);
 
 
@@ -25,4 +27,11 @@ public interface RoleAuthorityDao {
      * @return
      */
     List<Map> queryRoleAuthorityByUserId(Integer userId);
+
+    /**
+     * 查询用户所拥有的权限
+     * @param roleId
+     * @return
+     */
+    List<RoleAuthority> queryRoleAuthorityByRoleId(Integer roleId);
 }

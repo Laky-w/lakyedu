@@ -25,6 +25,8 @@ public class Role implements Serializable {
 
     private Integer theType;
 
+    private String remarks;
+
     private List<RoleAuthority> roleAuthorities;
 
     private static final long serialVersionUID = 1L;
@@ -117,22 +119,12 @@ public class Role implements Serializable {
         this.roleAuthorities = roleAuthorities;
     }
 
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(getClass().getSimpleName());
-        sb.append(" [");
-        sb.append("Hash = ").append(hashCode());
-        sb.append(", id=").append(id);
-        sb.append(", name=").append(name);
-        sb.append(", theStatus=").append(theStatus);
-        sb.append(", createTime=").append(createTime);
-        sb.append(", createUserId=").append(createUserId);
-        sb.append(", schoolId=").append(schoolId);
-        sb.append(", branchId=").append(branchId);
-        sb.append(", theType=").append(theType);
-        sb.append(", serialVersionUID=").append(serialVersionUID);
-        sb.append("]");
-        return sb.toString();
+    public String getRemarks() {
+        return remarks;
     }
+
+    public void setRemarks(String remarks) {
+        this.remarks = remarks;
+    }
+
 }

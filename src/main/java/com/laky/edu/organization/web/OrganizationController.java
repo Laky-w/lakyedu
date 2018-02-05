@@ -138,20 +138,58 @@ public class OrganizationController extends BaseController {
     }
 
     @PostMapping(value = "createNewRole")
-    public Map createNewRole(HttpServletRequest request,@RequestParam(required = true) String name,@RequestParam(required = true)Integer [] authorities){
+    public Map createNewRole(HttpServletRequest request,@RequestParam(required = true) String name,@RequestParam String remarks,Integer id,@RequestParam(required = true)Integer [] authorities){
+        try {
+            if(id !=null){
+                Role role = new Role();
+                role.setId(id);
+                role.setName(name);
+                role.setRemarks(remarks);
+                role=roleService.updateRole(role,authorities);
+                return super.doWrappingData(role);
+            } else {
+                //初始化权限数据
+                Role role = new Role();
+                User user = getCurrentUser(request);
+                role.setBranchId(user.getBranchId());
+                role.setSchoolId(user.getSchoolZoneId());
+                role.setCreateUserId(user.getId());
+                role.setName(name);
+                role.setRemarks(remarks);
+                role=roleService.createRole(role,authorities);
+                super.handleOperate("增加职能",OrganizationConst.OPERATE_ADD,"增加职能【"+role.getName()+"】",request);
+                return super.doWrappingData(role);
+            }
+
+        } catch (Exception e) {
+            return  super.doWrappingErrorData(e);
+        }
+    }
+
+    @DeleteMapping(value = "deleteRole/{id}")
+    public Map deleteRole(HttpServletRequest request,@PathVariable Integer id){
         try {
             //初始化权限数据
-            Role role = new Role();
-            User user = getCurrentUser(request);
-            role.setBranchId(user.getBranchId());
-            role.setSchoolId(user.getSchoolZoneId());
-            role.setCreateUserId(user.getId());
-            role.setName(name);
-            role=roleService.createRole(role,authorities);
-            super.handleOperate("增加角色",OrganizationConst.OPERATE_ADD,"增加角色【"+role.getName()+"】",request);
+            Role role  = roleService.findRoleById(id);
+            boolean flag = roleService.deleteRole(id);
+            if(flag){
+                super.handleOperate("删除职能",OrganizationConst.OPERATE_DELETE,"删除职能【"+role.getName()+"】",request);
+            } else {
+                throw new Exception("删除职能失败！");
+            }
             return super.doWrappingData(role);
-        } catch (Exception e)
-        {
+        } catch (Exception e) {
+            return  super.doWrappingErrorData(e);
+        }
+    }
+
+    @GetMapping(value = "getRoleDetail/{roleId}")
+    public Map getRoleDetail(HttpServletRequest request,@PathVariable  Integer roleId){
+        try {
+            //初始化权限数据
+            Role role = roleService.findRoleById(roleId);
+            return super.doWrappingData(role);
+        } catch (Exception e) {
             return  super.doWrappingErrorData(e);
         }
     }
