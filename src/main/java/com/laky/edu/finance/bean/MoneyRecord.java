@@ -11,6 +11,7 @@ public class MoneyRecord implements Serializable {
 
     private Date createTime;
 
+    private BigDecimal subtractMoney;//抹零
 
     private BigDecimal money;
 
@@ -127,5 +128,13 @@ public class MoneyRecord implements Serializable {
 
     public void setClazzId(Integer clazzId) {
         this.clazzId = clazzId;
+    }
+
+    public BigDecimal getSubtractMoney() {
+        return subtractMoney;
+    }
+
+    public void setSubtractMoney(BigDecimal subtractMoney) {
+        this.subtractMoney = subtractMoney;
     }
 }

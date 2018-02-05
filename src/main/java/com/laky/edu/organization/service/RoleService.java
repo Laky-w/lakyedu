@@ -20,7 +20,17 @@ public interface RoleService {
      */
     Role createRole(Role role ,Integer [] authorities) throws Exception;
 
-    Authority findRoleById(Integer id);
+    /**
+     * 修改角色
+     * @param role
+     * @param authorities
+     * @return
+     */
+    Role updateRole(Role role ,Integer [] authorities) throws Exception;
+
+
+
+    Role findRoleById(Integer id);
 
     List<RoleAuthority> findRoleByParameter(LinkedHashMap parameterMap);
 
@@ -33,4 +43,12 @@ public interface RoleService {
      * @throws Exception
      */
     Object findRoleBySchool(LinkedHashMap parameterMap) throws  Exception;
+
+    /**
+     * 删除角色
+     * @param id
+     * @return
+     * @throws Exception
+     */
+    boolean deleteRole(Integer id) throws Exception;
 }

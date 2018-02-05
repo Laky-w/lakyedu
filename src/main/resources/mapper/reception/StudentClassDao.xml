@@ -41,6 +41,13 @@
         </foreach>
       </if>
     </if>
+    <if test="ids !=null">
+      AND s.id in
+      <foreach collection="ids" item="id" index="index"
+               open="(" close=")" separator=",">
+        #{id}
+      </foreach>
+    </if>
     <if test="name !=null">
       AND (
       st.`name` LIKE CONCAT('%',#{name,jdbcType=VARCHAR},'%')

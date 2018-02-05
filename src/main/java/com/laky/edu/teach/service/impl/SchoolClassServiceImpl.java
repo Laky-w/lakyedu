@@ -72,12 +72,17 @@ public class SchoolClassServiceImpl implements SchoolClassService{
 //        LinkedHashMap parameterMap = new LinkedHashMap();
 //        parameterMap.put("ids",ids);
 //        parameterMap.put("sch")
+        Integer classId =(Integer)parameterMap.get("classId");
+        parameterMap.remove("classId");
         List<Map>  studentClassList =studentClassDao.selectByParameterMap(parameterMap);
+        if(studentClassList.size()==0) {
+            throw  new RuntimeException("分班异常");
+        }
         List<StudentClass> studentClasses = new ArrayList<>();
         for (Map map :studentClassList){
             StudentClass studentClass = new StudentClass();
             studentClass.setId((Integer) map.get("id"));
-            studentClass.setClassId((Integer) parameterMap.get("classId"));
+            studentClass.setClassId(classId);
             studentClass.setClassStatus(ReceptionConst.STUDENT_CLASS_STATUS_STUDYING);
             studentClass.setCreateTime(new Date());
             studentClasses.add(studentClass);

@@ -4,6 +4,7 @@
   <resultMap id="BaseResultMap" type="com.laky.edu.organization.bean.Role" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="remarks" property="remarks" jdbcType="VARCHAR" />
     <result column="the_status" property="theStatus" jdbcType="TINYINT" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
@@ -22,7 +23,7 @@
     <result property="name" column="u_name" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, name, the_status, create_time, create_user_id, school_id, branch_id, the_type
+    id, name, the_status, create_time, create_user_id, school_id, branch_id, the_type,remarks
   </sql>
   <select id="queryRoleById" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -66,10 +67,10 @@
           keyColumn="id">
     insert into laky_organization_role (name, the_status,
       create_time, create_user_id, school_id, 
-      branch_id, the_type)
+      branch_id, the_type,remarks)
     values ( #{name,jdbcType=VARCHAR}, #{theStatus,jdbcType=TINYINT},
       #{createTime,jdbcType=TIMESTAMP}, #{createUserId,jdbcType=INTEGER}, #{schoolId,jdbcType=INTEGER}, 
-      #{branchId,jdbcType=INTEGER}, #{theType,jdbcType=TINYINT})
+      #{branchId,jdbcType=INTEGER}, #{theType,jdbcType=TINYINT},#{remarks,jdbcType=VARCHAR})
   </insert>
   <update id="updateRole" parameterType="com.laky.edu.organization.bean.Role" >
     update laky_organization_role
@@ -79,7 +80,23 @@
       create_user_id = #{createUserId,jdbcType=INTEGER},
       school_id = #{schoolId,jdbcType=INTEGER},
       branch_id = #{branchId,jdbcType=INTEGER},
-      the_type = #{theType,jdbcType=TINYINT}
+      the_type = #{theType,jdbcType=TINYINT},
+      remarks = #{remarks,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.laky.edu.organization.bean.Role" >
+    UPDATE laky_organization_role
+    <set >
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="theStatus != null" >
+        the_status = #{theStatus,jdbcType=INTEGER},
+      </if>
+      <if test="remarks != null" >
+        remarks = #{remarks,jdbcType=VARCHAR},
+      </if>
+    </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

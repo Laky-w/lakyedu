@@ -25,7 +25,7 @@
   <select id="selectByParameterMap" resultType="java.util.Map" >
     SELECT * FROM (
     select
-    s.id,s.check_status AS checkStatus,s.create_time as createTime,s.money,s.remarks,
+    s.id,s.check_status AS checkStatus,s.create_time as createTime,s.money,s.subtract_money AS subtractMoney,s.remarks,
     s.salesman_id AS salesmanId,u.name as salesmanName,s.the_type as theType,s.order_id AS orderId,sz.name as schoolZoneName,v.name AS clazzName
     from laky_finance_money_record s
     RIGHT JOIN laky_organization_school_zone sz ON s.school_zone_id=sz.id AND sz.the_status=1
@@ -55,6 +55,9 @@
     <if test="checkStatus !=null">
       AND s.check_status = #{checkStatus,jdbcType=INTEGER}
     </if>
+    <if test="orderId !=null">
+      AND s.order_id = #{orderId,jdbcType=INTEGER}
+    </if>
     <if test="createTime != null">
       AND s.create_time &gt;= #{createTime[0],jdbcType=TIMESTAMP}
       AND s.create_time &lt;= #{createTime[1],jdbcType=TIMESTAMP}
@@ -70,11 +73,11 @@
           keyColumn="id">
     insert into laky_finance_money_record (id, school_zone_id, create_time, 
       money, the_type, salesman_id,order_id,
-      user_id, the_status, check_status,remarks,clazz_id
+      user_id, the_status, check_status,remarks,clazz_id,subtract_money
       )
     values (#{id,jdbcType=INTEGER}, #{schoolZoneId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
       #{money,jdbcType=TINYINT}, #{theType,jdbcType=TINYINT}, #{salesmanId,jdbcType=INTEGER},#{orderId,jdbcType=INTEGER},
-      #{userId,jdbcType=INTEGER}, #{theStatus,jdbcType=TINYINT}, #{checkStatus,jdbcType=TINYINT},#{remarks,jdbcType=VARCHAR},#{clazzId,jdbcType=INTEGER}
+      #{userId,jdbcType=INTEGER}, #{theStatus,jdbcType=TINYINT}, #{checkStatus,jdbcType=TINYINT},#{remarks,jdbcType=VARCHAR},#{clazzId,jdbcType=INTEGER},#{subtractMoney,jdbcType=TINYINT}
       )
   </insert>
 

@@ -33,7 +33,25 @@ public class RoleServiceImp implements RoleService{
         role.setTheStatus(1);
         role.setCreateTime(new Date());
         int rows=roleDao.insertRole(role);
-        if(rows==0) throw new Exception("权限创建失败");
+        if(rows==0) throw new RuntimeException("职能创建失败");
+        List<RoleAuthority> dataList=getRoleAuthority(role,authorities);
+        roleAuthorityDao.insertRoleAuthorityBatch(dataList);
+        role.setRoleAuthorities(dataList);
+        return role;
+    }
+
+    @Override
+    public Role updateRole(Role role, Integer[] authorities) throws Exception {
+        int rows=roleDao.updateByPrimaryKeySelective(role);
+        if(rows==0) throw new RuntimeException("职能修改失败");
+        roleAuthorityDao.deleteRoleAuthorityByRoleId(role.getId());
+        List<RoleAuthority> dataList=getRoleAuthority(role,authorities);
+        roleAuthorityDao.insertRoleAuthorityBatch(dataList);
+        role.setRoleAuthorities(dataList);
+        return role;
+    }
+
+    private List<RoleAuthority> getRoleAuthority(Role role, Integer[] authorities) throws Exception {
         List<RoleAuthority> dataList = new ArrayList<>();
         for(Integer authority:authorities){
             RoleAuthority roleAuthority = new RoleAuthority();
@@ -41,14 +59,15 @@ public class RoleServiceImp implements RoleService{
             roleAuthority.setRole(role);
             dataList.add(roleAuthority);
         }
-        roleAuthorityDao.insertRoleAuthorityBatch(dataList);
-        role.setRoleAuthorities(dataList);
-        return role;
+        return  dataList;
     }
 
     @Override
-    public Authority findRoleById(Integer id) {
-        return null;
+    public Role findRoleById(Integer id) {
+        Role role = roleDao.queryRoleById(id);
+        List<RoleAuthority> roleAuthorityList = roleAuthorityDao.queryRoleAuthorityByRoleId(id);
+        role.setRoleAuthorities(roleAuthorityList);
+        return role;
     }
 
     @Override
@@ -71,5 +90,15 @@ public class RoleServiceImp implements RoleService{
         } else {
             return roleDao.queryRoleByParameter(parameterMap);
         }
+    }
+
+    @Transactional
+    @Override
+    public boolean deleteRole(Integer id) throws Exception {
+        Role role = new Role();
+        role.setId(id);
+        role.setTheStatus(0);
+        int rowCount = roleDao.updateRole(role);
+        return rowCount!=0;
     }
 }

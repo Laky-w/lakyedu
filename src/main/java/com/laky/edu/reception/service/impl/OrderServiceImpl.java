@@ -59,6 +59,7 @@ public class OrderServiceImpl implements OrderService{
         record.setCheckStatus(1); //审核状态
         record.setTheType(1);//收支类型
         record.setSchoolZoneId(order.getSchoolZoneId());
+        record.setSubtractMoney(moneyRecordForm.getSubtractMoney());
         record.setOrderId(order.getId());
         moneyRecordDao.insert(record);
         List<MoneyRecordAccount> newFinanceAccount = new ArrayList<>();

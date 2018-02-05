@@ -30,6 +30,9 @@
       (#{item.role.id,jdbcType=INTEGER}, #{item.authorityId,jdbcType=INTEGER})
     </foreach>
   </insert>
+  <delete id="deleteRoleAuthorityByRoleId" parameterType="java.lang.Integer">
+    DELETE FROM laky_organization_role_authority where role_id = #{roleId,jdbcType=INTEGER}
+  </delete>
   <update id="updateRoleAuthority" parameterType="com.laky.edu.organization.bean.RoleAuthority" >
     update laky_organization_role_authority
     set role_id = #{roleId,jdbcType=INTEGER},
@@ -41,6 +44,12 @@
       LEFT JOIN laky_organization_menu m on s.menu_id=m.id where s.id in (
 	SELECT DISTINCT(o.authority_id) from laky_organization_user_role s
 		RIGHT  JOIN laky_organization_role_authority o on s.role_id = o.role_id
+		 RIGHT JOIN laky_organization_role r on r.id = s.role_id
 		where s.user_id = #{userId,jdbcType=INTEGER})
+  </select>
+  <select id="queryRoleAuthorityByRoleId" resultType="com.laky.edu.organization.bean.RoleAuthority" parameterType="java.lang.Integer" >
+    SELECT s.*,a.menu_id as menuId from laky_organization_role_authority s
+     LEFT JOIN laky_organization_authority a on a.id = s.authority_id
+     where s.role_id = #{roleId,jdbcType=INTEGER}
   </select>
 </mapper>

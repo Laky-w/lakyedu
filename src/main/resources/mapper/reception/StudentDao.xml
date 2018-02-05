@@ -268,6 +268,9 @@
       <if test="classStatus != null" >
         class_status = #{classStatus,jdbcType=TINYINT},
       </if>
+      <if test="pinyin != null" >
+        pinyin = #{pinyin,jdbcType=TINYINT},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -290,5 +293,59 @@
       customer_id = #{customerId,jdbcType=INTEGER},
       class_status = #{classStatus,jdbcType=TINYINT}
     where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <update id="batchUpdateByPrimaryKey" parameterType="com.laky.edu.reception.bean.Student" >
+    <foreach collection="list" item="item" index="index" open="" close="" separator=";">
+    update laky_reception_student
+    <set >
+      <if test="item.name != null" >
+        name = #{item.name,jdbcType=VARCHAR},
+      </if>
+      <if test="item.sex != null" >
+        sex = #{item.sex,jdbcType=TINYINT},
+      </if>
+      <if test="item.birthday != null" >
+        birthday = #{item.birthday,jdbcType=DATE},
+      </if>
+      <if test="item.phone != null" >
+        phone = #{item.phone,jdbcType=CHAR},
+      </if>
+      <if test="item.sourceId != null" >
+        source_id = #{item.sourceId,jdbcType=INTEGER},
+      </if>
+      <if test="item.schoolZoneId != null" >
+        school_zone_id = #{item.schoolZoneId,jdbcType=INTEGER},
+      </if>
+      <if test="item.introducerId != null" >
+        introducer_id = #{item.introducerId,jdbcType=INTEGER},
+      </if>
+      <if test="item.ownerId != null" >
+        owner_id = #{item.ownerId,jdbcType=INTEGER},
+      </if>
+      <if test="item.theStatus != null" >
+        the_status = #{item.theStatus,jdbcType=TINYINT},
+      </if>
+      <if test="item.theType != null" >
+        the_type = #{item.theType,jdbcType=TINYINT},
+      </if>
+      <if test="item.remarks != null" >
+        remarks = #{item.remarks,jdbcType=VARCHAR},
+      </if>
+      <if test="item.createTime != null" >
+        create_time = #{item.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="item.contactId != null" >
+        contact_id = #{item.contactId,jdbcType=INTEGER},
+      </if>
+      <if test="item.customerId != null" >
+        customer_id = #{item.customerId,jdbcType=INTEGER},
+      </if>
+      <if test="item.classStatus != null" >
+        class_status = #{item.classStatus,jdbcType=TINYINT},
+      </if>
+    </set>
+    where id = #{item.id,jdbcType=INTEGER}
+    </foreach>
   </update>
 </mapper>

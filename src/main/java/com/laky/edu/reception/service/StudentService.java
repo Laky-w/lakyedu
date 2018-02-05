@@ -66,4 +66,13 @@ public interface StudentService {
      * @throws Exception
      */
     Student updateStudent(Student student,Customer customer)throws Exception;
+
+    /**
+     * 分配学管师
+     * @param ownerId
+     * @param students
+     * @return
+     * @throws Exception
+     */
+    int updateStudentManage(Integer ownerId,Integer [] students) throws Exception;
 }
