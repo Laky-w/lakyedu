@@ -5,12 +5,16 @@ import org.springframework.stereotype.Component;
 
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+
 @Component
 public interface MoneyRecordDao {
 
     int insert(MoneyRecord record);
 
     MoneyRecord selectById(Integer id);
+
+    Map selectMoneyRecordById(LinkedHashMap parameterMap);
 
     List<MoneyRecord> selectByParameterMap(LinkedHashMap parameterMap);
 

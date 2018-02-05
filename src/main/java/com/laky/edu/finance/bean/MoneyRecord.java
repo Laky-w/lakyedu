@@ -16,6 +16,8 @@ public class MoneyRecord implements Serializable {
 
     private Integer theType;//1缴费,2退费
 
+    private Integer billType;//账单类型1：系统账单 2：新建记录账单
+
     private Integer clazzId;
 
     private Integer salesmanId;
@@ -127,5 +129,13 @@ public class MoneyRecord implements Serializable {
 
     public void setClazzId(Integer clazzId) {
         this.clazzId = clazzId;
+    }
+
+    public Integer getBillType() {
+        return billType;
+    }
+
+    public void setBillType(Integer billType) {
+        this.billType = billType;
     }
 }

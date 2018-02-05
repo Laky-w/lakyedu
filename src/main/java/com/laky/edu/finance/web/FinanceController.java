@@ -23,15 +23,43 @@ public class FinanceController extends BaseController {
     private FinanceService financeService;
 
     @PostMapping("createMoneyRecord")
-    public Map createMoneyRecord(HttpServletRequest request, MoneyRecord moneyRecord){
+    public Map createMoneyRecord(HttpServletRequest request, MoneyRecord moneyRecord,Integer accountId){
         try {
-            moneyRecord.setSchoolZoneId(getCurrentUser(request).getSchoolZoneId());
-            moneyRecord.setSalesmanId(getCurrentUser(request).getId());
-            financeService.createMoneyRecord(moneyRecord);
-            super.handleOperate("添加收支记录", OrganizationConst.OPERATE_ADD,"添加收支记录...",request);
+            if (moneyRecord.getId()==null){
+                moneyRecord.setSchoolZoneId(getCurrentUser(request).getSchoolZoneId());
+                moneyRecord.setSalesmanId(getCurrentUser(request).getId());
+                financeService.createMoneyRecord(moneyRecord,accountId);
+                super.handleOperate("添加收支记录", OrganizationConst.OPERATE_ADD,"添加收支记录...",request);
+            }else {
+                financeService.updateMoneyRecord(moneyRecord);
+                super.handleOperate("修改收支流水",OrganizationConst.OPERATE_UPDATE,"修改收支流水...",request);
+            }
             return  super.doWrappingData(moneyRecord);
         }catch (Exception e){
             return super.doWrappingErrorData(e);
+        }
+    }
+    @DeleteMapping("/deleteMoneyRecord/{id}")
+    public Map deleteMoneyRecord(HttpServletRequest request,@PathVariable Integer id){
+        try{
+            MoneyRecord  moneyRecord = new MoneyRecord();
+            financeService.deleteMoneyRecord(id);
+            super.handleOperate("删除收支流水", OrganizationConst.OPERATE_DELETE,"删除收支流水【"+moneyRecord.getSalesmanId()+"】",request);
+            return super.doWrappingData("操作成功");
+        }catch (Exception e){
+            return  super.doWrappingErrorData(e);
+        }
+    }
+
+    @GetMapping("/getMoneyRecordView/{id}")
+    public Map getMoneyRecordView(HttpServletRequest request, @PathVariable Integer id){
+        try {
+            LinkedHashMap parameterMap = new LinkedHashMap();
+            parameterMap.put("id",id);
+            parameterMap.put("schoolZoneId",getSchoolIds(request,2));
+            return super.doWrappingData(financeService.findMoneyRecordById(parameterMap));
+        } catch (Exception e) {
+            return  super.doWrappingErrorData(e);
         }
     }
 
@@ -123,7 +151,7 @@ public class FinanceController extends BaseController {
         try{
             FinanceAccount financeAccount = new FinanceAccount();
             financeService.deleteFinanceAccount(id);
-            super.handleOperate("删除财务账户", OrganizationConst.OPERATE_ADD,"删除财务账户【"+financeAccount.getName()+"】",request);
+            super.handleOperate("删除财务账户", OrganizationConst.OPERATE_DELETE,"删除财务账户【"+financeAccount.getName()+"】",request);
             return super.doWrappingData("操作成功");
         }catch (Exception e){
             return  super.doWrappingErrorData(e);

@@ -33,7 +33,32 @@ public interface FinanceService {
      * @return
      * @throws Exception
      */
-    MoneyRecord createMoneyRecord(MoneyRecord moneyRecord)throws Exception;
+    MoneyRecord createMoneyRecord(MoneyRecord moneyRecord,Integer accountId)throws Exception;
+
+
+    /**
+     * 删除收支流水
+     * @param id
+     * @return
+     * @throws Exception
+     */
+    int deleteMoneyRecord(Integer id)throws Exception;
+
+    /**
+     * 修改收支流水
+     * @param moneyRecord
+     * @return
+     * @throws Exception
+     */
+    MoneyRecord updateMoneyRecord(MoneyRecord moneyRecord)throws Exception;
+
+    /**
+     * 修改收支流水
+     * @param parameterMap
+     * @return
+     * @throws Exception
+     */
+    Map findMoneyRecordById(LinkedHashMap parameterMap)throws Exception;
     /**
      * 审核收支记录
      * @param ids
