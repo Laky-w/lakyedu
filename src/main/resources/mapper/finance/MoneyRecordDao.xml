@@ -5,7 +5,7 @@
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="school_zone_id" property="schoolZoneId" jdbcType="INTEGER" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
-    <result column="money" property="money" jdbcType="TINYINT" />
+    <result column="money" property="money" jdbcType="DECIMAL" />
     <result column="the_type" property="theType" jdbcType="TINYINT" />
     <result column="salesman_id" property="salesmanId" jdbcType="INTEGER" />
     <result column="user_id" property="userId" jdbcType="INTEGER" />
@@ -21,7 +21,24 @@
   <select id="selectById" resultType="com.laky.edu.finance.bean.MoneyRecord" parameterType="java.lang.Integer">
     SELECT * FROM edu_laky.laky_finance_money_record where id = #{id,jdbcType=INTEGER}
   </select>
+  <select id="selectMoneyRecordById" resultType="java.util.Map" >
+    select
+    s.id,s.check_status AS checkStatus,s.create_time as createTime,s.money,s.remarks,
+    u.name as salesmanName,u.id AS salesmanId,s.the_type as theType,s.order_id AS orderId,sz.name as schoolZoneName,sz.id AS schoolZoneId,v.name AS clazzName,v.id AS clazzId,s.bill_type AS billType
+    from laky_finance_money_record s
+    RIGHT JOIN laky_organization_school_zone sz ON s.school_zone_id=sz.id AND sz.the_status=1
+    LEFT JOIN  laky_organization_parameter_value v ON s.clazz_id = v.id AND v.the_status!=0
+    LEFT JOIN laky_organization_user u ON s.salesman_id = u.id AND u.the_status!=0
 
+    where s.id = #{id,jdbcType=INTEGER} AND s.the_status !=0
+    <if test="schoolZoneId != null">
+      and s.school_zone_id IN
+      <foreach collection="schoolZoneId" item="schoolId" index="index"
+               open="(" close=")" separator=",">
+        #{schoolId}
+      </foreach>
+    </if>
+  </select>
   <select id="selectByParameterMap" resultType="java.util.Map" >
     SELECT * FROM (
     select
@@ -73,8 +90,8 @@
       user_id, the_status, check_status,remarks,clazz_id,bill_type,subtract_money
       )
     values (#{id,jdbcType=INTEGER}, #{schoolZoneId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{money,jdbcType=TINYINT}, #{theType,jdbcType=TINYINT}, #{salesmanId,jdbcType=INTEGER},#{orderId,jdbcType=INTEGER},
-      #{userId,jdbcType=INTEGER}, #{theStatus,jdbcType=TINYINT}, #{checkStatus,jdbcType=TINYINT},#{remarks,jdbcType=VARCHAR},#{clazzId,jdbcType=INTEGER},#{billType,jdbcType=TINYINT},#{subtractMoney,jdbcType=TINYINT}
+      #{money,jdbcType=DECIMAL}, #{theType,jdbcType=TINYINT}, #{salesmanId,jdbcType=INTEGER},#{orderId,jdbcType=INTEGER},
+      #{userId,jdbcType=INTEGER}, #{theStatus,jdbcType=TINYINT}, #{checkStatus,jdbcType=TINYINT},#{remarks,jdbcType=VARCHAR},#{clazzId,jdbcType=INTEGER},#{billType,jdbcType=TINYINT},#{subtractMoney,jdbcType=DECIMAL}
       )
   </insert>
 
