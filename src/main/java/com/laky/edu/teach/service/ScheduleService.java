@@ -31,10 +31,12 @@ public interface ScheduleService {
 
     /**
      * 检查课表是否重复
+     * @param scheduleForm
+     * @param schoolIds
      * @return
      * @throws Exception
      */
-    Map doCheckedScheduleRepeat(ScheduleForm scheduleForm)throws Exception;
+    Map doCheckedScheduleRepeat(ScheduleForm scheduleForm,Integer[] schoolIds)throws Exception;
 
     /**
      * 查询排课

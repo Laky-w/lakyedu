@@ -79,7 +79,7 @@ public class ScheduleController extends BaseController{
         try {
             ScheduleForm scheduleForm = JSON.parseObject(scheduleFormStr,ScheduleForm.class);
             scheduleForm.setSchoolZoneId(getCurrentUser(request).getSchoolZoneId());
-            Map checkedMap = scheduleService.doCheckedScheduleRepeat( scheduleForm );
+            Map checkedMap = scheduleService.doCheckedScheduleRepeat( scheduleForm ,super.getSchoolIds( request,2 ));
             return super.doWrappingData(checkedMap);
         } catch (Exception e) {
             return  super.doWrappingErrorData(e);

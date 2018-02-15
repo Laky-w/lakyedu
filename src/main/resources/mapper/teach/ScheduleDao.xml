@@ -19,7 +19,7 @@
   </sql>
   <select id="selectByPrimaryKey" resultType="java.util.Map" >
   select
-  s.id,s.start_time AS startTime,s.end_time AS endTime,s.attendance_status AS attendanceStatus,s.`hour`,r.id AS roomId,r.`name` AS roomName,sc.`name` AS schoolClassName,
+  s.id,s.start_time AS startTime,s.end_time AS endTime,s.attendance_status AS attendanceStatus,s.`hour`,r.id AS roomId,r.`name` AS roomName,sc.id AS schoolClassId,sc.`name` AS schoolClassName,
     u.`name` AS teachName,u.id AS teachId,sz.name as schoolZoneName,sz.id AS schoolZoneId,st.helpTeacherName,st.helpTeacherId
   from laky_teach_schedule s
   RIGHT JOIN laky_organization_school_zone sz on s.school_zone_id = sz.id and sz.the_status =1
@@ -52,6 +52,9 @@
     GROUP BY st.schedule_id
     ) st ON st.schedule_id = s.id
     where s.the_status !=0
+    <if test="id2 !=null">
+      AND s.id != #{id,jdbcType=INTEGER}
+    </if>
     <if test="schoolZoneId != null">
       AND s.school_zone_id IN
       <foreach collection="schoolZoneId" item="schoolId" index="index"

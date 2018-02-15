@@ -59,7 +59,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Override
-    public Map doCheckedScheduleRepeat(ScheduleForm scheduleForm) throws Exception {
+    public Map doCheckedScheduleRepeat(ScheduleForm scheduleForm,Integer[] schoolIds) throws Exception {
         Map resultMap = new HashMap(  );
         resultMap.put( "code",200 );
         resultMap.put( "message","检查排课记录成功！" );
@@ -101,6 +101,8 @@ public class ScheduleServiceImpl implements ScheduleService {
         LinkedHashMap parameterMap = new LinkedHashMap();
         parameterMap.put( "scheduleDateList",scheduleDateList);
         parameterMap.put( "roomId",scheduleForm.getRoomId() );
+        parameterMap.put( "schoolZoneId",schoolIds );
+        parameterMap.put( "id2", scheduleForm.getScheduleId());
         //检查教室课表
         List<Map>  schedules =scheduleDao.selectByParameterMap( parameterMap );
         if(schedules.size()>0){
@@ -110,7 +112,7 @@ public class ScheduleServiceImpl implements ScheduleService {
                 String dateStr = DateUtil.formatDate("yyyy-MM-dd",(Date) map.get( "startTime" ))+
                         "("+DateUtil.formatDate("HH:mm",(Date) map.get( "startTime" ))+"至"
                         +DateUtil.formatDate("HH:mm",(Date) map.get( "endTime" ))+")";
-                message+="教室【"+map.get("roomName")+"】在【"+dateStr+map.get("schoolClassName")+"】有课；<br/>";
+                message+="教室【"+map.get("roomName")+"】在"+dateStr+"【"+map.get("schoolClassName")+"】有课；<br/>";
             }
             resultMap.put( "message",message );
         }
@@ -118,6 +120,8 @@ public class ScheduleServiceImpl implements ScheduleService {
         parameterMap = new LinkedHashMap();
         parameterMap.put( "scheduleDateList",scheduleDateList);
         parameterMap.put( "schoolClassId",scheduleForm.getClassId() );
+        parameterMap.put( "schoolZoneId",schoolIds );
+        parameterMap.put( "id2", scheduleForm.getScheduleId());
         schedules =scheduleDao.selectByParameterMap( parameterMap );
         if(schedules.size()>0){
             String message = "";
@@ -138,6 +142,8 @@ public class ScheduleServiceImpl implements ScheduleService {
         parameterMap = new LinkedHashMap();
         parameterMap.put( "scheduleDateList",scheduleDateList);
         parameterMap.put( "teachId",scheduleForm.getTeacherId() );
+        parameterMap.put( "schoolZoneId",schoolIds );
+        parameterMap.put( "id2", scheduleForm.getScheduleId());
         schedules =scheduleDao.selectByParameterMap( parameterMap );
         if(schedules.size()>0){
             String message = "";
@@ -161,6 +167,8 @@ public class ScheduleServiceImpl implements ScheduleService {
                 parameterMap = new LinkedHashMap();
                 parameterMap.put( "scheduleDateList",scheduleDateList);
                 parameterMap.put( "helpTeacherId",helpTeacherId );
+                parameterMap.put( "schoolZoneId",schoolIds );
+                parameterMap.put( "id2", scheduleForm.getScheduleId());
                 schedules =scheduleDao.selectByParameterMap( parameterMap );
                 if(schedules.size()>0){
                     String message = "";

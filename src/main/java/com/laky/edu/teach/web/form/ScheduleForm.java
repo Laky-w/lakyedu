@@ -10,6 +10,7 @@ import java.util.Map;
  * Created by 湖之教育工作室·laky on 2018/1/2.
  */
 public class ScheduleForm {
+    private Integer scheduleId;//排课记录id
     private Integer classId;
     private String className;
     private Integer teacherId;
@@ -117,5 +118,13 @@ public class ScheduleForm {
 
     public void setChecked(Boolean checked) {
         isChecked = checked;
+    }
+
+    public Integer getScheduleId() {
+        return scheduleId;
+    }
+
+    public void setScheduleId(Integer scheduleId) {
+        this.scheduleId = scheduleId;
     }
 }
