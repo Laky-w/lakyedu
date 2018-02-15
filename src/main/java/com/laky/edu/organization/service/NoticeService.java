@@ -6,6 +6,7 @@ import com.laky.edu.organization.bean.Notice;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 
 public interface NoticeService {
@@ -17,6 +18,13 @@ public interface NoticeService {
      */
     int createNotice(Notice notice )throws Exception;
 
+    /**
+     * 删除公告
+     * @param id
+     * @return
+     * @throws Exception
+     */
+    int deleteNoticeById(Integer id)throws Exception;
     /**
      * 查找通知通过系统,学校,机构
      * @param parameterMap
@@ -38,11 +46,12 @@ public interface NoticeService {
      */
     List<Notice> findNoticeAll(LinkedHashMap parameterMap)throws Exception;
     /**
-     * 查询通过id
-     * @param id
+     * 修改公告
+     * @param parameterMap
      * @return
      */
-    Notice findNoticeById(Integer id)throws Exception;
+    Map findNoticeById(LinkedHashMap parameterMap)throws Exception;
+
     /**
      * 更新通过主键细选
      * @param notice

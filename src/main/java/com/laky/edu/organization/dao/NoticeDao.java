@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 @Component
 public interface NoticeDao {
@@ -23,7 +24,14 @@ public interface NoticeDao {
      */
     List<Notice> queryNoticeByBranchOrSchool(LinkedHashMap parameterMap);
 
-    Notice queryNoticeById(Integer id);
+    /**
+     * 查询公告
+     * @param parameterMap
+     * @return
+     */
+    Map queryNoticeById(LinkedHashMap parameterMap);
+
+
     /**
      * 查询全部公告
      * @param parameter

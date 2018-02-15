@@ -27,6 +27,24 @@
     id, user_id, create_datetime, the_type, last_datetime, branch_id, school_zone_id,content,the_status
   </sql>
   <!--批量增加查看-->
+  <select id="queryNoticeById"  resultType="java.util.Map">
+    SELECT s.id,s.the_type AS theType,s.content,s.create_datetime AS createDatetime,s.last_datetime AS
+    lastDatetime,u.`name` as userName,u.id AS userId,sz.`name` as schoolZoneName,sz.id AS schoolZoneId
+    from laky_organization_notice s RIGHT JOIN
+    laky_organization_user u on s.user_id = u.id and u.the_status !=0
+    LEFT JOIN laky_organization_school_zone sz on s.school_zone_id = sz.id and sz.the_status =1
+    where
+      s.id =#{id,jdbcType=INTEGER} AND s.the_type!= 3
+      <if test="schoolZoneId != null">
+        AND s.school_zone_id IN
+        <foreach collection="schoolZoneId" item="schoolId" index="index"
+                 open="(" close=")" separator=",">
+          #{schoolId}
+        </foreach>
+      </if>
+      AND s.branch_id = #{branchId,jdbcType=INTEGER}
+  </select>
+
   <select id="queryNoticeByBranchOrSchool"  resultType="java.util.Map">
     SELECT * FROM (
     SELECT s.id,s.the_type AS theType,s.content,s.create_datetime AS createDatetime,s.last_datetime AS
@@ -137,13 +155,13 @@
       <if test="branchId != null" >
         branch_id = #{branchId,jdbcType=INTEGER},
       </if>
-      <if test="schoolId != null" >
+      <if test="schoolZoneId != null" >
         school_zone_id = #{schoolZoneId,jdbcType=INTEGER},
       </if>
-      <if test="schoolId != null" >
+      <if test="theStatus != null" >
         the_status = #{theStatus,jdbcType=INTEGER},
       </if>
-      <if test="schoolId != null" >
+      <if test="content != null" >
         content = #{content},
       </if>
     </set>

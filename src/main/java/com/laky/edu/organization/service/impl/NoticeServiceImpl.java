@@ -8,10 +8,12 @@ import com.laky.edu.organization.dao.NoticeDao;
 import com.laky.edu.organization.service.NoticeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class NoticeServiceImpl implements NoticeService{
@@ -23,7 +25,20 @@ public class NoticeServiceImpl implements NoticeService{
     public int createNotice(Notice notice) throws Exception {
         notice.setTheStatus(1);
         notice.setCreateDatetime(new Date());
-        return noticeDao.insertNotice(notice);
+        int rows = noticeDao.insertNotice(notice);
+        if (rows == 0) throw new RuntimeException("创建公告失败！");
+        return rows;
+    }
+    @Transactional
+    @Override
+    public int deleteNoticeById(Integer id) throws Exception {
+        Notice notice  = new Notice();
+        notice.setId(id);
+//        notice.setTheStatus(0);
+        notice.setTheType(3);
+        int rows = noticeDao.updateNoticeByPrimaryKeySelective(notice);
+        if (rows == 0 )throw new RuntimeException("删除公告失败！");
+        return rows;
     }
 
     @Override
@@ -45,8 +60,8 @@ public class NoticeServiceImpl implements NoticeService{
     }
 
     @Override
-    public Notice findNoticeById(Integer id) throws Exception {
-        return noticeDao.queryNoticeById(id);
+    public Map findNoticeById(LinkedHashMap parameterMap) throws Exception {
+        return noticeDao.queryNoticeById(parameterMap);
     }
 
     @Override

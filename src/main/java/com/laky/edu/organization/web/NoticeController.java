@@ -2,6 +2,7 @@ package com.laky.edu.organization.web;
 
 import com.laky.edu.core.BaseController;
 import com.laky.edu.core.PageBean;
+import com.laky.edu.logistics.bean.Goods;
 import com.laky.edu.organization.OrganizationConst;
 import com.laky.edu.organization.bean.Notice;
 import com.laky.edu.organization.bean.User;
@@ -24,17 +25,19 @@ public class NoticeController extends BaseController {
     @PostMapping(value = "createNotice")
     public  Map createNotice(HttpServletRequest request,Notice notice){
         try {
-            notice.setBranchId(getCurrentUser(request).getBranchId());
-            notice.setSchoolZoneId(getCurrentUser(request).getSchoolZoneId());
-            notice.setUserId(getCurrentUser(request).getId());
+            if (notice.getId() == null){
+                notice.setBranchId(getCurrentUser(request).getBranchId());
+                notice.setSchoolZoneId(getCurrentUser(request).getSchoolZoneId());
+                notice.setUserId(getCurrentUser(request).getId());
 
-            int rowCount= noticeService.createNotice(notice);
-            if(rowCount>0){
+                noticeService.createNotice(notice);
                 super.handleOperate("添加公告", OrganizationConst.OPERATE_ADD,"公告内容【"+notice.getContent()+"】",request);
-                return  super.doWrappingData(notice);
-            } else {
-                throw new Exception("创建公告失败！");
+            }else {
+                noticeService.updateNoticeByPrimaryKeySelective(notice);
+                super.handleOperate("修改公告",OrganizationConst.OPERATE_UPDATE,"修改公告",request);
             }
+                return  super.doWrappingData(notice);
+
         } catch (Exception e){
             return  super.doWrappingErrorData(e);
         }
@@ -54,6 +57,19 @@ public class NoticeController extends BaseController {
             return  super.doWrappingErrorData(e);
         }
 
+    }
+
+    @GetMapping("getNoticeView/{id}")
+    public Map getNoticeView(HttpServletRequest request,@PathVariable Integer id){
+        try {
+            LinkedHashMap parameterMap = new LinkedHashMap();
+            parameterMap.put("id",id);
+            parameterMap.put("branchId",getCurrentUser(request).getBranchId());
+            parameterMap.put("schoolZoneId",new Integer[]{getCurrentUser(request).getSchoolZoneId()});
+            return super.doWrappingData(noticeService.findNoticeById(parameterMap));
+        } catch (Exception e) {
+            return  super.doWrappingErrorData(e);
+        }
     }
 
     @GetMapping(value = "/findNoticeAll")
@@ -87,5 +103,17 @@ public class NoticeController extends BaseController {
             return  super.doWrappingErrorData(e);
         }
 
+    }
+
+    @DeleteMapping("deleteNotice/{id}")
+    public Map deleteNotice(HttpServletRequest request,@PathVariable Integer id){
+        try{
+            Notice notice = new Notice();
+            noticeService.deleteNoticeById(id);
+            super.handleOperate("删除公告", OrganizationConst.OPERATE_ADD,"删除公告【"+notice.getUser()+"】",request);
+            return super.doWrappingData("操作成功");
+        }catch (Exception e){
+            return  super.doWrappingErrorData(e);
+        }
     }
 }
