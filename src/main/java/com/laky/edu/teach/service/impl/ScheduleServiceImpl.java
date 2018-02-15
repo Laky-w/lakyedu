@@ -7,6 +7,7 @@ import com.laky.edu.teach.bean.Schedule;
 import com.laky.edu.teach.dao.ScheduleDao;
 import com.laky.edu.teach.service.ScheduleService;
 import com.laky.edu.teach.web.form.ScheduleForm;
+import com.laky.edu.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,7 +32,7 @@ public class ScheduleServiceImpl implements ScheduleService {
         startDate.setTime(scheduleDate[0]);
         Calendar endDate =Calendar.getInstance();
         endDate.setTime(scheduleDate[1]);
-        long times=endDate.getTimeInMillis()-startDate.getTimeInMillis();
+        long times = endDate.getTimeInMillis()-startDate.getTimeInMillis();
         int day = (int)(times/ (1000 * 60 * 60 * 24));
         List<Map> classTimeList=scheduleForm.getClassTimes();
         List<Schedule> scheduleList = new ArrayList<>();
@@ -46,12 +47,139 @@ public class ScheduleServiceImpl implements ScheduleService {
             }
             startDate.add(Calendar.DATE,1);
         }
+        if(scheduleList.size()==0){
+            throw new RuntimeException( "上课时间短填写错误，不包含所选的星期！" );
+        }
         int rowCount=scheduleDao.batchInsert(scheduleList);
         if(rowCount>0&&scheduleForm.getHelpTeacherId() !=null&&scheduleForm.getHelpTeacherId().length>0){ //循环添加助教
             List<Map> helpTeachMap = initHelpTeach(scheduleList,scheduleForm.getHelpTeacherId());
             scheduleDao.batchHelpTeachInsert(helpTeachMap);
         }
 
+    }
+
+    @Override
+    public Map doCheckedScheduleRepeat(ScheduleForm scheduleForm) throws Exception {
+        Map resultMap = new HashMap(  );
+        resultMap.put( "code",200 );
+        resultMap.put( "message","检查排课记录成功！" );
+        Date[] scheduleDate = scheduleForm.getScheduleDate();
+        Calendar startDate =Calendar.getInstance();
+        startDate.setTime(scheduleDate[0]);
+        Calendar endDate =Calendar.getInstance();
+        endDate.setTime(scheduleDate[1]);
+        //获取排课时间
+        long times = endDate.getTimeInMillis()-startDate.getTimeInMillis();
+        int day = (int)(times/ (1000 * 60 * 60 * 24));
+        List<Map> classTimeList=scheduleForm.getClassTimes();
+        List<Map> scheduleDateList = new ArrayList<>();
+        for (int i=0;i<day;i++){ //365*5
+            int currentWeek = startDate.get(Calendar.DAY_OF_WEEK);//周几
+            for(Map map :classTimeList){
+                int weekDay=(int)map.get("weekDay");
+                if(currentWeek==weekDay){
+                    JSONArray classTimes = (JSONArray)map.get("classTime");
+                    Map scheduleMap = new HashMap(  );
+                    //上课开始时间
+                    startDate.set(Calendar.HOUR_OF_DAY,Integer.parseInt(classTimes.get(0).toString().split(":")[0]));
+                    startDate.set(Calendar.MINUTE,Integer.parseInt(classTimes.get(0).toString().split(":")[1]));
+                    startDate.set(Calendar.SECOND,0);
+                    scheduleMap.put("startTime",startDate.getTime());
+                    //上课结束时间
+                    startDate.set(Calendar.HOUR_OF_DAY,Integer.parseInt(classTimes.get(1).toString().split(":")[0]));
+                    startDate.set(Calendar.MINUTE,Integer.parseInt(classTimes.get(1).toString().split(":")[1]));
+                    startDate.set(Calendar.SECOND,0);
+                    scheduleMap.put("endTime",startDate.getTime());
+                    scheduleDateList.add(scheduleMap);
+                }
+            }
+            startDate.add(Calendar.DATE,1);
+        }
+        if(scheduleDateList.size()==0){
+            return  resultMap;
+        }
+        LinkedHashMap parameterMap = new LinkedHashMap();
+        parameterMap.put( "scheduleDateList",scheduleDateList);
+        parameterMap.put( "roomId",scheduleForm.getRoomId() );
+        //检查教室课表
+        List<Map>  schedules =scheduleDao.selectByParameterMap( parameterMap );
+        if(schedules.size()>0){
+            resultMap.put( "code",500 );
+            String message = "";
+            for(Map map : schedules){
+                String dateStr = DateUtil.formatDate("yyyy-MM-dd",(Date) map.get( "startTime" ))+
+                        "("+DateUtil.formatDate("HH:mm",(Date) map.get( "startTime" ))+"至"
+                        +DateUtil.formatDate("HH:mm",(Date) map.get( "endTime" ))+")";
+                message+="教室【"+map.get("roomName")+"】在【"+dateStr+map.get("schoolClassName")+"】有课；<br/>";
+            }
+            resultMap.put( "message",message );
+        }
+        //检查班级课表
+        parameterMap = new LinkedHashMap();
+        parameterMap.put( "scheduleDateList",scheduleDateList);
+        parameterMap.put( "schoolClassId",scheduleForm.getClassId() );
+        schedules =scheduleDao.selectByParameterMap( parameterMap );
+        if(schedules.size()>0){
+            String message = "";
+            for(Map map : schedules){
+                String dateStr = DateUtil.formatDate("yyyy-MM-dd",(Date) map.get( "startTime" ))+
+                        "("+DateUtil.formatDate("HH:mm",(Date) map.get( "startTime" ))+"至"
+                        +DateUtil.formatDate("HH:mm",(Date) map.get( "endTime" ))+")";
+                message+="班级【"+map.get("schoolClassName")+"】在"+dateStr+"有排课；<br/>";
+            }
+            if((int)resultMap.get( "code" )==500){
+                resultMap.put( "message",resultMap.get("message")+message );
+            } else {
+                resultMap.put( "code",500 );
+                resultMap.put( "message",message );
+            }
+        }
+        //检查主教课表
+        parameterMap = new LinkedHashMap();
+        parameterMap.put( "scheduleDateList",scheduleDateList);
+        parameterMap.put( "teachId",scheduleForm.getTeacherId() );
+        schedules =scheduleDao.selectByParameterMap( parameterMap );
+        if(schedules.size()>0){
+            String message = "";
+            for(Map map : schedules){
+                String dateStr = DateUtil.formatDate("yyyy-MM-dd",(Date) map.get( "startTime" ))+
+                        "("+DateUtil.formatDate("HH:mm",(Date) map.get( "startTime" ))+"至"
+                        +DateUtil.formatDate("HH:mm",(Date) map.get( "endTime" ))+")";
+                message+="主教【"+map.get("teachName")+"】在"+dateStr+"有排课；<br/>";
+            }
+            if((int)resultMap.get( "code" )==500){
+                resultMap.put( "message",resultMap.get("message")+message );
+            } else {
+                resultMap.put( "code",500 );
+                resultMap.put( "message",message );
+            }
+        }
+        //检查助教课表
+        if(scheduleForm.getHelpTeacherId()!=null && scheduleForm.getHelpTeacherId().length>0){
+            Integer [] helpTeacherIds = scheduleForm.getHelpTeacherId();
+            for(Integer  helpTeacherId : helpTeacherIds) {
+                parameterMap = new LinkedHashMap();
+                parameterMap.put( "scheduleDateList",scheduleDateList);
+                parameterMap.put( "helpTeacherId",helpTeacherId );
+                schedules =scheduleDao.selectByParameterMap( parameterMap );
+                if(schedules.size()>0){
+                    String message = "";
+                    for(Map map : schedules){
+                        String dateStr = DateUtil.formatDate("yyyy-MM-dd",(Date) map.get( "startTime" ))+
+                                "("+DateUtil.formatDate("HH:mm",(Date) map.get( "startTime" ))+"至"
+                                +DateUtil.formatDate("HH:mm",(Date) map.get( "endTime" ))+")";
+                        message+="助教【"+map.get("helpTeacherName")+"】在"+dateStr+"有排课；<br/>";
+                    }
+                    if((int)resultMap.get( "code" )==500){
+                        resultMap.put( "message",resultMap.get("message")+message );
+                    } else {
+                        resultMap.put( "code",500 );
+                        resultMap.put( "message",message );
+                    }
+                }
+            }
+        }
+        return resultMap;
     }
 
     @Transactional
@@ -128,12 +256,12 @@ public class ScheduleServiceImpl implements ScheduleService {
         JSONArray classTimes = (JSONArray)timeMap.get("classTime");
 //        String[] classTimes=(String[]) timeMap.get("classTime");
         //上课开始时间
-        nowDay.set(Calendar.HOUR,Integer.parseInt(classTimes.get(0).toString().split(":")[0]));
+        nowDay.set(Calendar.HOUR_OF_DAY,Integer.parseInt(classTimes.get(0).toString().split(":")[0]));
         nowDay.set(Calendar.MINUTE,Integer.parseInt(classTimes.get(0).toString().split(":")[1]));
         nowDay.set(Calendar.SECOND,0);
         schedule.setStartTime(nowDay.getTime());
         //上课结束时间
-        nowDay.set(Calendar.HOUR,Integer.parseInt(classTimes.get(1).toString().split(":")[0]));
+        nowDay.set(Calendar.HOUR_OF_DAY,Integer.parseInt(classTimes.get(1).toString().split(":")[0]));
         nowDay.set(Calendar.MINUTE,Integer.parseInt(classTimes.get(1).toString().split(":")[1]));
         nowDay.set(Calendar.SECOND,0);
         schedule.setEndTime(nowDay.getTime());

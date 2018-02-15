@@ -21,6 +21,7 @@ public class ScheduleForm {
     private Integer maxCount;
     private Integer schoolZoneId;
     private List<Map> classTimes;
+    private Boolean isChecked;
 
     public List<Map> getClassTimes() {
         return classTimes;
@@ -108,5 +109,13 @@ public class ScheduleForm {
 
     public void setSchoolZoneId(Integer schoolZoneId) {
         this.schoolZoneId = schoolZoneId;
+    }
+
+    public Boolean getChecked() {
+        return isChecked;
+    }
+
+    public void setChecked(Boolean checked) {
+        isChecked = checked;
     }
 }

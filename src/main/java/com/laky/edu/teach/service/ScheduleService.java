@@ -30,6 +30,13 @@ public interface ScheduleService {
     PageBean findALLSchedule(LinkedHashMap parameterMap)throws Exception;
 
     /**
+     * 检查课表是否重复
+     * @return
+     * @throws Exception
+     */
+    Map doCheckedScheduleRepeat(ScheduleForm scheduleForm)throws Exception;
+
+    /**
      * 查询排课
      * @param parameterMap
      * @return
