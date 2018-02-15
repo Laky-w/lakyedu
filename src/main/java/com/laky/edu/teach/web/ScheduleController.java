@@ -31,6 +31,13 @@ public class ScheduleController extends BaseController{
         try {
             ScheduleForm scheduleForm = JSON.parseObject(scheduleFormStr,ScheduleForm.class);
             scheduleForm.setSchoolZoneId(getCurrentUser(request).getSchoolZoneId());
+//            if(scheduleForm.getChecked() !=null && scheduleForm.getChecked() == true){ //检查课表排课信息是否重复
+//                Map checkedMap = scheduleService.doCheckedScheduleRepeat( scheduleForm );
+//                if((int)checkedMap.get( "code" )==500) {
+//                    throw new Exception( checkedMap.get( "message" )+"");
+//                }
+//            }
+//            if(1==1) return null;
             scheduleService.doSchedule(scheduleForm);
             super.handleOperate("添加课表", OrganizationConst.OPERATE_ADD,"排课班级【"+scheduleForm.getClassName()+"】",request);
             return  super.doWrappingData("添加成功");
@@ -44,12 +51,13 @@ public class ScheduleController extends BaseController{
             Calendar newScheduleTime =Calendar.getInstance();
             newScheduleTime.setTime(scheduleDate);
             //上课开始时间
-            newScheduleTime.set(Calendar.HOUR,Integer.parseInt(scheduleTime[0].toString().split(":")[0]));
+            newScheduleTime.set(Calendar.HOUR_OF_DAY,Integer.parseInt(scheduleTime[0].toString().split(":")[0]));//HOUR 12 小时，HOUR_OF_DAY 24小时
             newScheduleTime.set(Calendar.MINUTE,Integer.parseInt(scheduleTime[0].toString().split(":")[1]));
             newScheduleTime.set(Calendar.SECOND,0);
             schedule.setStartTime(newScheduleTime.getTime());
             //上课结束时间
-            newScheduleTime.set(Calendar.HOUR,Integer.parseInt(scheduleTime[1].toString().split(":")[0]));
+            System.out.println( Integer.parseInt(scheduleTime[1].toString().split(":")[0]) );
+            newScheduleTime.set(Calendar.HOUR_OF_DAY,Integer.parseInt(scheduleTime[1].toString().split(":")[0]));
             newScheduleTime.set(Calendar.MINUTE,Integer.parseInt(scheduleTime[1].toString().split(":")[1]));
             newScheduleTime.set(Calendar.SECOND,0);
             schedule.setEndTime(newScheduleTime.getTime());
@@ -60,6 +68,24 @@ public class ScheduleController extends BaseController{
             return  super.doWrappingErrorData(e);
         }
     }
+
+    /**
+     * 检查课表信息
+     * @param request
+     * @return
+     */
+    @PostMapping("/doCheckedScheduleRepeat")
+    public Map doCheckedScheduleRepeat(HttpServletRequest request,String scheduleFormStr){
+        try {
+            ScheduleForm scheduleForm = JSON.parseObject(scheduleFormStr,ScheduleForm.class);
+            scheduleForm.setSchoolZoneId(getCurrentUser(request).getSchoolZoneId());
+            Map checkedMap = scheduleService.doCheckedScheduleRepeat( scheduleForm ,super.getSchoolIds( request,2 ));
+            return super.doWrappingData(checkedMap);
+        } catch (Exception e) {
+            return  super.doWrappingErrorData(e);
+        }
+    }
+
     @PostMapping("/getClassScheduleAll/{pageNum}/{pageSize}")
     public Map getClassScheduleAll(HttpServletRequest request, @PathVariable int pageNum, @PathVariable int pageSize){
         try {

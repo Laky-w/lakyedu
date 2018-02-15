@@ -19,7 +19,7 @@
   </sql>
   <select id="selectByPrimaryKey" resultType="java.util.Map" >
   select
-  s.id,s.start_time AS startTime,s.end_time AS endTime,s.attendance_status AS attendanceStatus,s.`hour`,r.id AS roomId,r.`name` AS roomName,sc.`name` AS schoolClassName,
+  s.id,s.start_time AS startTime,s.end_time AS endTime,s.attendance_status AS attendanceStatus,s.`hour`,r.id AS roomId,r.`name` AS roomName,sc.id AS schoolClassId,sc.`name` AS schoolClassName,
     u.`name` AS teachName,u.id AS teachId,sz.name as schoolZoneName,sz.id AS schoolZoneId,st.helpTeacherName,st.helpTeacherId
   from laky_teach_schedule s
   RIGHT JOIN laky_organization_school_zone sz on s.school_zone_id = sz.id and sz.the_status =1
@@ -35,7 +35,8 @@
 
   <select id="selectByParameterMap" resultType="java.util.Map">
     SELECT * FROM (
-    SELECT s.id,s.start_time AS startTime,s.end_time AS endTime,s.attendance_status AS attendanceStatus,s.`hour`,r.`name` AS roomName,sc.`name` AS schoolClassName,
+    SELECT s.id,s.start_time AS startTime,s.end_time AS endTime,s.attendance_status AS
+    attendanceStatus,s.`hour`,r.`name` AS roomName,sc.`name` AS schoolClassName,
     u.`name` AS teachName,sz.name as schoolZoneName,st.helpTeacherName
     FROM laky_teach_schedule s
     RIGHT JOIN laky_organization_school_zone sz on s.school_zone_id = sz.id and sz.the_status =1
@@ -43,15 +44,30 @@
     RIGHT JOIN laky_teach_school_class sc ON s.class_id = sc.id AND sc.the_status != 0
     LEFT JOIN laky_organization_user u ON s.teach_id = u.id AND u.the_status != 0
     LEFT JOIN (
-      SELECT group_concat(u.`name`) AS helpTeacherName,st.schedule_id FROM laky_teach_schedule_teacher st
-      LEFT JOIN laky_organization_user u ON st.user_id = u.id AND u.the_status != 0 GROUP BY st.schedule_id
+      SELECT group_concat(u.`name`) AS helpTeacherName,st.schedule_id,group_concat(u.`id`) AS helpTeacherId FROM laky_teach_schedule_teacher st
+      LEFT JOIN laky_organization_user u ON st.user_id = u.id AND u.the_status != 0
+    <if test="helpTeacherId !=null">
+      AND st.user_id = #{helpTeacherId,jdbcType=INTEGER}
+    </if>
+    GROUP BY st.schedule_id
     ) st ON st.schedule_id = s.id
     where s.the_status !=0
+    <if test="id2 !=null">
+      AND s.id != #{id,jdbcType=INTEGER}
+    </if>
     <if test="schoolZoneId != null">
       AND s.school_zone_id IN
       <foreach collection="schoolZoneId" item="schoolId" index="index"
                open="(" close=")" separator=",">
         #{schoolId}
+      </foreach>
+    </if>
+    <if test="scheduleDateList !=null">
+      AND
+      <foreach collection="scheduleDateList" item="scheduleDate" open="(" close=")" separator="OR" index="index" >
+        (start_time <![CDATA[ < ]]> #{scheduleDate.startTime} AND end_time <![CDATA[ >]]> #{scheduleDate.startTime})
+        OR (start_time <![CDATA[ < ]]> #{scheduleDate.endTime} AND end_time <![CDATA[ >]]> #{scheduleDate.endTime})
+        OR (start_time >= #{scheduleDate.startTime} AND end_time <![CDATA[ <= ]]>  #{scheduleDate.endTime})
       </foreach>
     </if>
     <if test="className !=null">
@@ -60,8 +76,17 @@
     <if test="roomName !=null">
       AND r.`name` LIKE CONCAT('%',#{roomName,jdbcType=VARCHAR},'%')
     </if>
+    <if test="roomId !=null">
+      AND s.room_id = #{roomId,jdbcType=INTEGER}
+    </if>
+    <if test="schoolClassId !=null">
+      AND s.class_id = #{schoolClassId,jdbcType=INTEGER}    
+    </if>
     <if test="teachName !=null">
       AND u.`name` LIKE CONCAT('%',#{teachName,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="teachId !=null">
+      AND u.id = #{teachId,jdbcType=INTEGER}
     </if>
     <if test="helpTeacherName !=null">
       AND st.helpTeacherName LIKE CONCAT('%',#{helpTeacherName,jdbcType=VARCHAR},'%')
