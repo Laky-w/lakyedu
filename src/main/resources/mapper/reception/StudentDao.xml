@@ -74,7 +74,12 @@
     <if test="birthday!=null">
       AND s.birthday =#{birthday,jdbcType=DATE}
     </if>
-
+    <if test="ownerName !=null">
+      AND u.`name` LIKE CONCAT('%',#{ownerName,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="ownerId !=null">
+      AND s.owner_id = #{ownerId,jdbcType=INTEGER}
+    </if>
     <if test="schoolZoneId != null">
       AND s.school_zone_id IN
       <foreach collection="schoolZoneId" item="schoolId" index="index"

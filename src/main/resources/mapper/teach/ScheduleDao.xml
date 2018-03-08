@@ -83,10 +83,10 @@
       AND s.class_id = #{schoolClassId,jdbcType=INTEGER}    
     </if>
     <if test="teachName !=null">
-      AND u.`name` LIKE CONCAT('%',#{teachName,jdbcType=VARCHAR},'%')
+      AND (u.`name` LIKE CONCAT('%',#{teachName,jdbcType=VARCHAR},'%') OR  st.helpTeacherName LIKE CONCAT('%',#{teachName,jdbcType=VARCHAR},'%'))
     </if>
     <if test="teachId !=null">
-      AND u.id = #{teachId,jdbcType=INTEGER}
+      AND (s.teach_id = #{teachId,jdbcType=INTEGER} OR st.helpTeacherId =#{teachId,jdbcType=INTEGER})
     </if>
     <if test="helpTeacherName !=null">
       AND st.helpTeacherName LIKE CONCAT('%',#{helpTeacherName,jdbcType=VARCHAR},'%')

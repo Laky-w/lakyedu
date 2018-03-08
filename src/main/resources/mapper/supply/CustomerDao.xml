@@ -118,6 +118,9 @@
     <if test="ownerId!=null">
       AND owner_id=#{ownerId,jdbcType=TINYINT}
     </if>
+    <if test="ownerName!=null">
+      AND u.name LIKE CONCAT('%',#{ownerName,jdbcType=VARCHAR},'%')
+    </if>
     <if test="createUserId">
       AND create_user_id=#{createUserId,jdbcType=TINYINT}
     </if>

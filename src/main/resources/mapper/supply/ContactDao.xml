@@ -59,6 +59,9 @@
     <if test="userName!=null">
       AND u.name LIKE CONCAT('%',#{userName,jdbcType=VARCHAR},'%')
     </if>
+    <if test="userId!=null">
+      AND u.id = #{userId,jdbcType=INTEGER}
+    </if>
     <if test="contactStyleId!=null">
       AND s.contact_style_id =#{contactStyleId,jdbcType=INTEGER}
     </if>

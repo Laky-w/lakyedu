@@ -64,9 +64,7 @@ public class UserServiceImpl implements UserService {
             if(item.getParentId() == 0){
                 List<Menu> subs=getSubs(item.getId(),menuList,authorities);
                 item.setSubs(subs);
-                if(null==subs){
-                    item.setAuthorities(this.getAuthorities(item.getId(),authorities));
-                }
+                item.setAuthorities(this.getAuthorities(item.getId(),authorities));
                 newMenuList.add(item);
             }
         });
@@ -103,7 +101,7 @@ public class UserServiceImpl implements UserService {
             List<Menu> childList = menuDao.findMenuAllByIds(parameterMap);
             List<Menu> parentList = new ArrayList<>();
             for(Menu menu:childList){
-                parentList.addAll(getParents(menu.getParentId(),menuList));
+                parentList.addAll(getParents(menu.getParentId(),menuList,parentList));
                 parentList.add(menu);
             }
             List<Menu> dataList = new ArrayList<>();
@@ -128,13 +126,19 @@ public class UserServiceImpl implements UserService {
      * @param menuList
      * @return
      */
-    private List<Menu> getParents(Integer parentId,List<Menu> menuList){
+    private List<Menu> getParents(Integer parentId,List<Menu> menuList,List<Menu> parentList){
         List<Menu> newMenu = new ArrayList<>();
+        ok:
         for (Menu menu:menuList){
             if(menu.getId() == parentId){
+                for (Menu pMenu:parentList){
+                    if(pMenu.getId()==menu.getId()){ //已存在的根节点
+                        continue ok;
+                    }
+                }
                 newMenu.add(menu);
                 if(menu.getParentId()!=0){//不是根节点
-                    newMenu.addAll(getParents(menu.getParentId(),menuList));
+                    newMenu.addAll(getParents(menu.getParentId(),menuList,parentList));
                 }
             }
         }
@@ -165,7 +169,7 @@ public class UserServiceImpl implements UserService {
             if(item.getParentId() == id){
                 List<Menu> subs=getSubs(item.getId(),menuList,authorities);
                 item.setSubs(subs);
-                if(null==subs && authorities !=null){
+                if(authorities !=null){
                     item.setAuthorities(this.getAuthorities(item.getId(),authorities));
                 }
                 newMenuList.add(item);

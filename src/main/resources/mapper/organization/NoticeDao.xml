@@ -110,9 +110,14 @@
   <select id="queryNewNoticeByBranchOrSchool" resultMap="NoticeResultMap">
     SELECT *
     FROM laky_organization_notice
-    WHERE (school_zone_id = #{schoolZoneId,jdbcType=INTEGER} and the_type = 2)
-    OR (branch_id=#{branchId,jdbcType=INTEGER} and the_type = 1)
-    or the_type = 3 and last_datetime > now()
+    WHERE
+    last_datetime > now()
+    AND
+    (
+      (school_zone_id = #{schoolZoneId,jdbcType=INTEGER} AND the_type = 2)
+      OR (branch_id=#{branchId,jdbcType=INTEGER} AND the_type = 1)
+      OR the_type = 3
+    )
   </select>
 
   <select id="queryNoticeAll" resultMap="NoticeResultMap">

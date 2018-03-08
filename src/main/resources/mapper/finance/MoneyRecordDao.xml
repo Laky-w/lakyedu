@@ -72,6 +72,9 @@
     <if test="checkStatus !=null">
       AND s.check_status = #{checkStatus,jdbcType=INTEGER}
     </if>
+    <if test="orderId !=null">
+      AND s.order_id = #{orderId,jdbcType=INTEGER}
+    </if>
     <if test="createTime != null">
       AND s.create_time &gt;= #{createTime[0],jdbcType=TIMESTAMP}
       AND s.create_time &lt;= #{createTime[1],jdbcType=TIMESTAMP}
