@@ -5,7 +5,11 @@ import com.laky.edu.core.PageBean;
 import com.laky.edu.reception.ReceptionConst;
 import com.laky.edu.reception.bean.StudentClass;
 import com.laky.edu.reception.dao.StudentClassDao;
+import com.laky.edu.teach.bean.Attendance;
+import com.laky.edu.teach.bean.Schedule;
 import com.laky.edu.teach.bean.SchoolClass;
+import com.laky.edu.teach.dao.AttendanceDao;
+import com.laky.edu.teach.dao.ScheduleDao;
 import com.laky.edu.teach.dao.SchoolClassDao;
 import com.laky.edu.teach.service.SchoolClassService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +25,16 @@ import java.util.*;
 public class SchoolClassServiceImpl implements SchoolClassService{
     @Autowired
     private SchoolClassDao schoolClassDao;
+
     @Autowired
     private StudentClassDao studentClassDao;
+
+    @Autowired
+    private ScheduleDao scheduleDao;
+
+    @Autowired
+    private AttendanceDao attendanceDao;
+
     @Override
     public PageBean<Map> findSchoolClassAllBySchool(LinkedHashMap parameterMap) {
         PageHelper.startPage((int)parameterMap.get("pageNum"),(int)parameterMap.get("pageSize"));
@@ -87,7 +99,38 @@ public class SchoolClassServiceImpl implements SchoolClassService{
             studentClass.setCreateTime(new Date());
             studentClasses.add(studentClass);
         }
+        int rowCount =studentClassDao.batchUpdateByPrimaryKeySelective(studentClasses);
+        if(rowCount>0){//循环添加考勤
+            List<Attendance> attendanceList = initScheduleAttendance(classId,studentClassList);
+            if(attendanceList.size()>0){
+                attendanceDao.batchInsert(attendanceList);
+            }
+        }
+        return rowCount;
+    }
 
-        return studentClassDao.batchUpdateByPrimaryKeySelective(studentClasses);
+    /**
+     * 初始化考勤
+     * @return
+     * @throws Exception
+     */
+    private List<Attendance> initScheduleAttendance(Integer schoolClassId, List<Map>  studentClassList) throws Exception{
+        LinkedHashMap parameterMap = new LinkedHashMap();
+        parameterMap.put("schoolClassId",schoolClassId);
+        parameterMap.put("attendanceStatus",1);//未考勤的课次都添加该学员
+        List<Map> scheduleList= scheduleDao.selectByParameterMap(parameterMap);
+        List<Attendance> attendanceList = new ArrayList<>();
+        for (Map studentClass : studentClassList) {
+            for (Map scheduleMap : scheduleList) {
+                Attendance attendance = new Attendance();
+                attendance.setStudentId((Integer) studentClass.get("studentId"));
+                attendance.setTheStatus(1);//未删除记录
+                attendance.setAttendanceStatus(1);//考勤状态
+                attendance.setScheduleId((Integer) scheduleMap.get("id"));
+                attendanceList.add(attendance);
+            }
+        }
+
+        return attendanceList;
     }
 }

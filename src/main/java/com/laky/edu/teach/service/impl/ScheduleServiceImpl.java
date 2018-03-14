@@ -3,7 +3,10 @@ package com.laky.edu.teach.service.impl;
 import com.alibaba.fastjson.JSONArray;
 import com.github.pagehelper.PageHelper;
 import com.laky.edu.core.PageBean;
+import com.laky.edu.teach.bean.Attendance;
+import com.laky.edu.reception.dao.StudentClassDao;
 import com.laky.edu.teach.bean.Schedule;
+import com.laky.edu.teach.dao.AttendanceDao;
 import com.laky.edu.teach.dao.ScheduleDao;
 import com.laky.edu.teach.service.ScheduleService;
 import com.laky.edu.teach.web.form.ScheduleForm;
@@ -22,6 +25,12 @@ import java.util.*;
 public class ScheduleServiceImpl implements ScheduleService {
     @Autowired
     private ScheduleDao scheduleDao;
+
+    @Autowired
+    private StudentClassDao studentClassDao;
+
+    @Autowired
+    private AttendanceDao attendanceDao;
 
     @Transactional
     @Override
@@ -55,7 +64,12 @@ public class ScheduleServiceImpl implements ScheduleService {
             List<Map> helpTeachMap = initHelpTeach(scheduleList,scheduleForm.getHelpTeacherId());
             scheduleDao.batchHelpTeachInsert(helpTeachMap);
         }
-
+        if(rowCount>0) { //循环添加学生考勤记录
+            List<Attendance> attendanceList = initScheduleAttendance(scheduleForm.getClassId(),scheduleList,new Integer[]{scheduleForm.getSchoolZoneId()});
+            if(attendanceList.size()>0){
+                attendanceDao.batchInsert(attendanceList);
+            }
+        }
     }
 
     @Override
@@ -276,4 +290,30 @@ public class ScheduleServiceImpl implements ScheduleService {
         return  schedule;
     }
 
+    /**
+     * 初始化考勤
+     * @return
+     * @throws Exception
+     */
+    private List<Attendance> initScheduleAttendance(Integer schoolClassId, List<Schedule> scheduleList,Integer[] schoolIds) throws Exception{
+        LinkedHashMap parameterMap = new LinkedHashMap();
+        parameterMap.put("schoolZoneId",schoolIds);
+        parameterMap.put("classId",schoolClassId);
+        parameterMap.put("classStatus",1);//在读状态
+        List<Map> studentList= studentClassDao.selectByParameterMap(parameterMap);
+        List<Attendance> attendanceList = new ArrayList<>();
+        if(studentList!=null && studentList.size()>0) {
+            for (Map map : studentList) {
+                for (Schedule schedule : scheduleList) {
+                    Attendance attendance = new Attendance();
+                    attendance.setStudentId((Integer) map.get("studentId"));
+                    attendance.setTheStatus(1);//未删除记录
+                    attendance.setAttendanceStatus(1);//考勤状态
+                    attendance.setScheduleId(schedule.getId());
+                    attendanceList.add(attendance);
+                }
+            }
+        }
+        return attendanceList;
+    }
 }

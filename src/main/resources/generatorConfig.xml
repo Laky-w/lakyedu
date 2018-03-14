@@ -23,8 +23,8 @@
 
         <!-- 数据库配置文件的url是不能直接拷贝过来用的，需要把&换成'&amp;' -->
         <jdbcConnection driverClass="com.mysql.jdbc.Driver"
-                        connectionURL="jdbc:mysql://192.168.0.100:3306/edu_laky?useUnicode=true&amp;charaterEncoding=utf-8&amp;allowMultiQueries=true"
-                        userId="root" password="123456">
+                        connectionURL="jdbc:mysql://39.104.88.65:3306/edu_laky?useUnicode=true&amp;charaterEncoding=utf-8&amp;allowMultiQueries=true"
+                        userId="root" password="Laky@123456">
         </jdbcConnection>
 
         <javaTypeResolver>
@@ -76,7 +76,7 @@
           delimitAllColumns CDATA #IMPLIED
          -->
 
-        <table schema="edu_laky" tableName="laky_finance_money_record_account" domainObjectName="MoneyRecordAccount" modelType="flat"
+        <table schema="edu_laky" tableName="laky_teach_attendance" domainObjectName="Attendance" modelType="flat"
                enableCountByExample="false" enableUpdateByExample="false" enableUpdateByPrimaryKey="true"
                enableDeleteByExample="false" enableSelectByExample="false"
                selectByExampleQueryId="false">

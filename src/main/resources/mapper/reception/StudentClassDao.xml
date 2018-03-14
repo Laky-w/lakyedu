@@ -22,7 +22,7 @@
     RIGHT JOIN laky_organization_school_zone sz ON s.school_zone_id=sz.id AND sz.the_status=1
     RIGHT JOIN laky_reception_student st on s.student_id = st.id and st.the_status !=0
     LEFT JOIN laky_teach_course c on s.course_id = c.id
-    LEFT JOIN laky_teach_school_class sc on s.class_id = sc.id
+    LEFT JOIN laky_teach_school_class sc on s.class_id = sc.id AND sc.the_status !=0
     where s.the_status !=0 AND
     s.school_zone_id IN
     <foreach collection="schoolZoneId" item="schoolId" index="index"

@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.laky.edu.teach.dao.AttendanceDao" >
+  <resultMap id="BaseResultMap" type="com.laky.edu.teach.bean.Attendance" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="schedule_id" property="scheduleId" jdbcType="INTEGER" />
+    <result column="student_id" property="studentId" jdbcType="INTEGER" />
+    <result column="the_time" property="theTime" jdbcType="TIMESTAMP" />
+    <result column="way" property="way" jdbcType="TINYINT" />
+    <result column="operator_id" property="operatorId" jdbcType="INTEGER" />
+    <result column="attendance_status" property="attendanceStatus" jdbcType="TINYINT" />
+    <result column="the_status" property="theStatus" jdbcType="TINYINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, schedule_id, student_id, the_time, way, operator_id, attendance_status, the_status
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from laky_teach_attendance
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectByParameterMap" resultType="java.util.Map">
+    select * from (
+    SELECT s.id,st.id AS studentId,st.name AS studentName,sl.name AS className,st.phone,s.schedule_id AS scheduleId,s.the_time AS theTime,s.way,
+    s.attendance_status AS attendanceStatus,s.remarks,sz.name as schoolZoneName
+    FROM laky_teach_attendance s
+    RIGHT  JOIN laky_teach_schedule sc ON s.schedule_id=sc.id and sc.the_status !=0
+    LEFT JOIN laky_teach_school_class sl ON sl.id = sc.class_id AND sc.the_status !=0
+    RIGHT JOIN laky_organization_school_zone sz on sc.school_zone_id = sz.id and sz.the_status =1
+    RIGHT  JOIN laky_reception_student st on s.student_id = st.id and st.the_status !=0
+    where s.the_status!=0
+    AND sc.school_zone_id IN
+    <foreach collection="schoolZoneId" item="schoolId" index="index"
+             open="(" close=")" separator=",">
+      #{schoolId}
+    </foreach>
+    <if test="schoolZoneId2 != null">
+      <if test="schoolZoneId2 instanceof String">
+        AND sc.school_zone_id = #{schoolZoneId2,jdbcType=INTEGER}
+      </if>
+      <if test="!(schoolZoneId2 instanceof String)">
+        AND sc.school_zone_id IN
+        <foreach collection="schoolZoneId2" item="schoolId" index="index"
+                 open="(" close=")" separator=",">
+          #{schoolId}
+        </foreach>
+      </if>
+    </if>
+    <if test="scheduleId!=null">
+      AND s.schedule_id=#{scheduleId,jdbcType=INTEGER}
+    </if>
+    <if test="attendanceTime != null">
+      AND s.the_time &gt;= #{attendanceTime[0],jdbcType=TIMESTAMP}
+      AND s.the_time &lt;= #{attendanceTime[1],jdbcType=TIMESTAMP}
+    </if>
+    <if test="studentName !=null">
+      AND st.name LIKE CONCAT('%',#{studentName,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="className !=null">
+      AND sl.name LIKE CONCAT('%',#{className,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="attendanceStatus !=null">
+      AND s.attendance_status = #{attendanceStatus,jdbcType=INTEGER}
+    </if>
+    ) t
+    <if test="columnName!=null">
+      ORDER BY t.${columnName} ${columnOrder}
+    </if>
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from laky_teach_attendance
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.laky.edu.teach.bean.Attendance" >
+    insert into laky_teach_attendance (id, schedule_id, student_id, 
+      the_time, way, operator_id, 
+      attendance_status, the_status)
+    values (#{id,jdbcType=INTEGER}, #{scheduleId,jdbcType=INTEGER}, #{studentId,jdbcType=INTEGER}, 
+      #{theTime,jdbcType=TIMESTAMP}, #{way,jdbcType=TINYINT}, #{operatorId,jdbcType=INTEGER}, 
+      #{attendanceStatus,jdbcType=TINYINT}, #{theStatus,jdbcType=TINYINT})
+  </insert>
+
+  <insert id="batchInsert" useGeneratedKeys="true" keyProperty="id"
+          keyColumn="id">
+    insert into laky_teach_attendance ( schedule_id, student_id,
+    the_time, way, operator_id,
+    attendance_status, the_status)
+    values
+    <foreach collection="list" item="item" index="index" separator=",">
+      ( #{item.scheduleId,jdbcType=INTEGER}, #{item.studentId,jdbcType=INTEGER},
+      #{item.theTime,jdbcType=TIMESTAMP}, #{item.way,jdbcType=TINYINT}, #{item.operatorId,jdbcType=INTEGER},
+      #{item.attendanceStatus,jdbcType=TINYINT}, #{item.theStatus,jdbcType=TINYINT})
+    </foreach>
+  </insert>
+  <insert id="insertSelective" parameterType="com.laky.edu.teach.bean.Attendance" >
+    insert into laky_teach_attendance
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="scheduleId != null" >
+        schedule_id,
+      </if>
+      <if test="studentId != null" >
+        student_id,
+      </if>
+      <if test="theTime != null" >
+        the_time,
+      </if>
+      <if test="way != null" >
+        way,
+      </if>
+      <if test="operatorId != null" >
+        operator_id,
+      </if>
+      <if test="attendanceStatus != null" >
+        attendance_status,
+      </if>
+      <if test="theStatus != null" >
+        the_status,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="scheduleId != null" >
+        #{scheduleId,jdbcType=INTEGER},
+      </if>
+      <if test="studentId != null" >
+        #{studentId,jdbcType=INTEGER},
+      </if>
+      <if test="theTime != null" >
+        #{theTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="way != null" >
+        #{way,jdbcType=TINYINT},
+      </if>
+      <if test="operatorId != null" >
+        #{operatorId,jdbcType=INTEGER},
+      </if>
+      <if test="attendanceStatus != null" >
+        #{attendanceStatus,jdbcType=TINYINT},
+      </if>
+      <if test="theStatus != null" >
+        #{theStatus,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.laky.edu.teach.bean.Attendance" >
+    update laky_teach_attendance
+    <set >
+      <if test="scheduleId != null" >
+        schedule_id = #{scheduleId,jdbcType=INTEGER},
+      </if>
+      <if test="studentId != null" >
+        student_id = #{studentId,jdbcType=INTEGER},
+      </if>
+      <if test="theTime != null" >
+        the_time = #{theTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="way != null" >
+        way = #{way,jdbcType=TINYINT},
+      </if>
+      <if test="operatorId != null" >
+        operator_id = #{operatorId,jdbcType=INTEGER},
+      </if>
+      <if test="attendanceStatus != null" >
+        attendance_status = #{attendanceStatus,jdbcType=TINYINT},
+      </if>
+      <if test="theStatus != null" >
+        the_status = #{theStatus,jdbcType=TINYINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="batchUpdateByPrimaryKeySelective" parameterType="com.laky.edu.teach.bean.Attendance" >
+    <foreach collection="list" item="item" index="index" open="" close="" separator=";">
+      update laky_teach_attendance
+      <set >
+        <if test="item.scheduleId != null" >
+          schedule_id = #{item.scheduleId,jdbcType=INTEGER},
+        </if>
+        <if test="item.studentId != null" >
+          student_id = #{item.studentId,jdbcType=INTEGER},
+        </if>
+        <if test="item.theTime != null" >
+          the_time = #{item.theTime,jdbcType=TIMESTAMP},
+        </if>
+        <if test="item.way != null" >
+          way = #{item.way,jdbcType=TINYINT},
+        </if>
+        <if test="item.operatorId != null" >
+          operator_id = #{item.operatorId,jdbcType=INTEGER},
+        </if>
+        <if test="item.attendanceStatus != null" >
+          attendance_status = #{item.attendanceStatus,jdbcType=TINYINT},
+        </if>
+        <if test="item.theStatus != null" >
+          the_status = #{item.theStatus,jdbcType=TINYINT}
+        </if>
+      <if test="item.remarks != null" >
+        remarks = #{item.remarks,jdbcType=VARCHAR}
+      </if>
+      </set>
+      where id = #{item.id,jdbcType=INTEGER}
+    </foreach>
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.laky.edu.teach.bean.Attendance" >
+    update laky_teach_attendance
+    set
+    schedule_id = #{scheduleId,jdbcType=INTEGER},
+    student_id = #{studentId,jdbcType=INTEGER},
+    the_time = #{theTime,jdbcType=TIMESTAMP},
+    way = #{way,jdbcType=TINYINT},
+    operator_id = #{operatorId,jdbcType=INTEGER},
+    attendance_status = #{attendanceStatus,jdbcType=TINYINT},
+    the_status = #{theStatus,jdbcType=TINYINT}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

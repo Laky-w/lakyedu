@@ -37,7 +37,9 @@
     SELECT * FROM (
     SELECT s.id,s.start_time AS startTime,s.end_time AS endTime,s.attendance_status AS
     attendanceStatus,s.`hour`,r.`name` AS roomName,sc.`name` AS schoolClassName,
-    u.`name` AS teachName,sz.name as schoolZoneName,st.helpTeacherName
+    u.`name` AS teachName,sz.name as schoolZoneName,st.helpTeacherName,
+    (SELECT count(1)  from laky_teach_attendance where schedule_id =s.id and the_status=1) AS studentNumber,
+    ( SELECT count(1) from laky_teach_attendance where schedule_id =s.id and the_status=1 and attendance_status>1) AS attendanceNumber
     FROM laky_teach_schedule s
     RIGHT JOIN laky_organization_school_zone sz on s.school_zone_id = sz.id and sz.the_status =1
     LEFT JOIN laky_teach_room r ON s.room_id = r.id AND r.the_status != 0
@@ -69,6 +71,9 @@
         OR (start_time <![CDATA[ < ]]> #{scheduleDate.endTime} AND end_time <![CDATA[ >]]> #{scheduleDate.endTime})
         OR (start_time >= #{scheduleDate.startTime} AND end_time <![CDATA[ <= ]]>  #{scheduleDate.endTime})
       </foreach>
+    </if>
+    <if test="attendanceStatus !=null">
+      AND s.attendance_status = #{attendanceStatus,jdbcType=INTEGER}
     </if>
     <if test="className !=null">
       AND sc.`name` LIKE CONCAT('%',#{className,jdbcType=VARCHAR},'%')
