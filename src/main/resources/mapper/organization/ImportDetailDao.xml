@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.laky.edu.organization.dao.ImportDetailDao" >
+  <resultMap id="BaseResultMap" type="com.laky.edu.organization.bean.ImportDetail" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="import_id" property="importId" jdbcType="INTEGER" />
+    <result column="the_type" property="theType" jdbcType="TINYINT" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.laky.edu.organization.bean.ImportDetail" extends="BaseResultMap" >
+    <result column="content" property="content" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, import_id, the_type
+  </sql>
+  <sql id="Blob_Column_List" >
+    content
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from laky_core_import_detail
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from laky_core_import_detail
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.laky.edu.organization.bean.ImportDetail" >
+    insert into laky_core_import_detail (id, import_id, the_type, 
+      content)
+    values (#{id,jdbcType=INTEGER}, #{importId,jdbcType=INTEGER}, #{theType,jdbcType=TINYINT}, 
+      #{content,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="batchInsert" parameterType="com.laky.edu.organization.bean.ImportDetail"  useGeneratedKeys="true" keyProperty="id"
+          keyColumn="id" >
+    insert into laky_core_import_detail ( import_id, the_type,
+    content)
+    values
+    <foreach collection="list" item="item" index="index" separator=",">
+    (#{item.importId,jdbcType=INTEGER}, #{item.theType,jdbcType=TINYINT},#{item.content,jdbcType=LONGVARCHAR})
+    </foreach>
+  </insert>
+  <insert id="insertSelective" parameterType="com.laky.edu.organization.bean.ImportDetail" >
+    insert into laky_core_import_detail
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="importId != null" >
+        import_id,
+      </if>
+      <if test="theType != null" >
+        the_type,
+      </if>
+      <if test="content != null" >
+        content,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="importId != null" >
+        #{importId,jdbcType=INTEGER},
+      </if>
+      <if test="theType != null" >
+        #{theType,jdbcType=TINYINT},
+      </if>
+      <if test="content != null" >
+        #{content,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.laky.edu.organization.bean.ImportDetail" >
+    update laky_core_import_detail
+    <set >
+      <if test="importId != null" >
+        import_id = #{importId,jdbcType=INTEGER},
+      </if>
+      <if test="theType != null" >
+        the_type = #{theType,jdbcType=TINYINT},
+      </if>
+      <if test="content != null" >
+        content = #{content,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.laky.edu.organization.bean.ImportDetail" >
+    update laky_core_import_detail
+    set import_id = #{importId,jdbcType=INTEGER},
+      the_type = #{theType,jdbcType=TINYINT},
+      content = #{content,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.laky.edu.organization.bean.ImportDetail" >
+    update laky_core_import_detail
+    set import_id = #{importId,jdbcType=INTEGER},
+      the_type = #{theType,jdbcType=TINYINT}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

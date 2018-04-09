@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.laky.edu.organization.dao.ImportRecordDao" >
+  <resultMap id="BaseResultMap" type="com.laky.edu.organization.bean.ImportRecord" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="file_name" property="fileName" jdbcType="VARCHAR" />
+    <result column="success_number" property="successNumber" jdbcType="INTEGER" />
+    <result column="error_number" property="errorNumber" jdbcType="INTEGER" />
+    <result column="the_type" property="theType" jdbcType="TINYINT" />
+    <result column="operation_id" property="operationId" jdbcType="INTEGER" />
+    <result column="the_time" property="theTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, file_name, success_number, error_number, the_type, operation_id, the_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from laky_core_import_record
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  
+  <select id="selectByParameterMap" resultType="java.util.Map">
+    SELECT * FROM (
+    SELECT s.id,s.file_name AS fileName,s.success_number AS successNumber,sz.name as schoolZoneName,
+    s.error_number AS errorNumber,s.the_type AS theType,s.the_time AS theTime,u.name AS operationName
+    FROM laky_core_import_record s
+    RIGHT JOIN laky_organization_school_zone sz ON s.school_zone_id=sz.id AND sz.the_status=1
+    LEFT JOIN laky_organization_user u ON s.operation_id = u.id
+    WHERE s.school_zone_id IN
+    <foreach collection="schoolZoneId" item="schoolId" index="index"
+             open="(" close=")" separator=",">#{schoolId}
+    </foreach>
+    <if test="theType !=null">
+      s.the_type = #{theType,jdbcType=INTEGER}
+    </if>
+    ) t
+    <if test="columnName!=null">
+      ORDER BY t.${columnName} ${columnOrder}
+    </if>
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from laky_core_import_record
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.laky.edu.organization.bean.ImportRecord"  useGeneratedKeys="true" keyProperty="id"
+          keyColumn="id">
+    insert into laky_core_import_record ( file_name, success_number,
+      error_number, the_type, operation_id, the_time,school_zone_id)
+    values ( #{fileName,jdbcType=VARCHAR}, #{successNumber,jdbcType=INTEGER},
+      #{errorNumber,jdbcType=INTEGER}, #{theType,jdbcType=TINYINT}, #{operationId,jdbcType=INTEGER}, 
+      #{theTime,jdbcType=TIMESTAMP},#{schoolZoneId,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.laky.edu.organization.bean.ImportRecord" useGeneratedKeys="true" keyProperty="id"
+          keyColumn="id">
+    insert into laky_core_import_record
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="fileName != null" >
+        file_name,
+      </if>
+      <if test="successNumber != null" >
+        success_number,
+      </if>
+      <if test="errorNumber != null" >
+        error_number,
+      </if>
+      <if test="theType != null" >
+        the_type,
+      </if>
+      <if test="operationId != null" >
+        operation_id,
+      </if>
+      <if test="theTime != null" >
+        the_time,
+      </if>
+      <if test="schoolZoneId != null" >
+        school_zone_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="fileName != null" >
+        #{fileName,jdbcType=VARCHAR},
+      </if>
+      <if test="successNumber != null" >
+        #{successNumber,jdbcType=INTEGER},
+      </if>
+      <if test="errorNumber != null" >
+        #{errorNumber,jdbcType=INTEGER},
+      </if>
+      <if test="theType != null" >
+        #{theType,jdbcType=TINYINT},
+      </if>
+      <if test="operationId != null" >
+        #{operationId,jdbcType=INTEGER},
+      </if>
+      <if test="theTime != null" >
+        #{theTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="schoolZoneId != null" >
+        #{schoolZoneId,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.laky.edu.organization.bean.ImportRecord" >
+    update laky_core_import_record
+    <set >
+      <if test="fileName != null" >
+        file_name = #{fileName,jdbcType=VARCHAR},
+      </if>
+      <if test="successNumber != null" >
+        success_number = #{successNumber,jdbcType=INTEGER},
+      </if>
+      <if test="errorNumber != null" >
+        error_number = #{errorNumber,jdbcType=INTEGER},
+      </if>
+      <if test="theType != null" >
+        the_type = #{theType,jdbcType=TINYINT},
+      </if>
+      <if test="operationId != null" >
+        operation_id = #{operationId,jdbcType=INTEGER},
+      </if>
+      <if test="theTime != null" >
+        the_time = #{theTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.laky.edu.organization.bean.ImportRecord" >
+    update laky_core_import_record
+    set file_name = #{fileName,jdbcType=VARCHAR},
+      success_number = #{successNumber,jdbcType=INTEGER},
+      error_number = #{errorNumber,jdbcType=INTEGER},
+      the_type = #{theType,jdbcType=TINYINT},
+      operation_id = #{operationId,jdbcType=INTEGER},
+      the_time = #{theTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

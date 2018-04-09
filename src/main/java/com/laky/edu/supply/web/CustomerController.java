@@ -2,17 +2,28 @@ package com.laky.edu.supply.web;
 
 import com.laky.edu.core.BaseController;
 import com.laky.edu.organization.OrganizationConst;
+import com.laky.edu.organization.bean.User;
 import com.laky.edu.supply.bean.Customer;
 import com.laky.edu.supply.service.CustomerService;
 import com.laky.edu.teach.bean.Course;
 import com.laky.edu.teach.bean.Room;
 import com.laky.edu.teach.service.TeachService;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.util.TempFile;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.util.*;
 
 /**
  * Created by 湖之教育工作室·laky on 2017/12/10.
@@ -91,6 +102,18 @@ public class CustomerController extends BaseController{
             customerService.updateUserOwner(ownerId,students);
             super.handleOperate(logTitle,OrganizationConst.OPERATE_UPDATE,logContent,request);
             return super.doWrappingData("操作成功");
+        } catch (Exception e) {
+            return  super.doWrappingErrorData(e);
+        }
+    }
+
+    @PostMapping("/importCustomer")
+    public Map importCustomer(HttpServletRequest request,@RequestParam(value="customerExcel") MultipartFile file){
+        try {
+            LinkedHashMap parameterMap = new LinkedHashMap();
+            User currentUser = super.getCurrentUser(request);
+            customerService.importCustomer(currentUser.getSchoolZoneId(),currentUser.getId(),file);
+            return super.doWrappingData("导入成功");
         } catch (Exception e) {
             return  super.doWrappingErrorData(e);
         }

@@ -2,13 +2,14 @@ package com.laky.edu.supply.service;
 
 import com.laky.edu.core.PageBean;
 import com.laky.edu.supply.bean.Customer;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 public interface CustomerService {
-    int deleteByPrimaryKey(Integer id)throws Exception;
+
 
     /**
      * 创建一个生源
@@ -60,4 +61,14 @@ public interface CustomerService {
      * @throws Exception
      */
     int updateUserOwner(Integer ownerId,Integer [] students) throws Exception;
+
+    /**
+     * 导入生源
+     * @param schoolId 校区id
+     * @param ownerId 负责人id
+     * @param file 导入文件
+     * @return
+     * @throws Exception
+     */
+    void importCustomer(Integer schoolId,Integer ownerId,MultipartFile file) throws Exception;
 }

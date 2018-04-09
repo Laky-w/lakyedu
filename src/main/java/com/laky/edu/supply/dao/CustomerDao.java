@@ -14,6 +14,13 @@ public interface CustomerDao {
     int insertCustomer(Customer customer);
 
     /**
+     * 批量保存生源
+     * @param customer
+     * @return
+     */
+    int batchInsertCustomer(List<Customer> customer);
+
+    /**
      * 创建意向课程
      * @param intentionCourseList
      * @return

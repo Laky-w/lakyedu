@@ -76,7 +76,7 @@
           delimitAllColumns CDATA #IMPLIED
          -->
 
-        <table schema="edu_laky" tableName="laky_teach_attendance" domainObjectName="Attendance" modelType="flat"
+        <table schema="edu_laky" tableName="laky_finance_student_account" domainObjectName="StudentAccount" modelType="flat"
                enableCountByExample="false" enableUpdateByExample="false" enableUpdateByPrimaryKey="true"
                enableDeleteByExample="false" enableSelectByExample="false"
                selectByExampleQueryId="false">

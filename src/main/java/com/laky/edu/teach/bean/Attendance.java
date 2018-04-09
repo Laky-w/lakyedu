@@ -10,6 +10,8 @@ public class Attendance implements Serializable {
 
     private Integer studentId;
 
+    private Integer studentClassId;
+
     private Date theTime;
 
     private Integer way;
@@ -44,6 +46,14 @@ public class Attendance implements Serializable {
 
     public void setStudentId(Integer studentId) {
         this.studentId = studentId;
+    }
+
+    public Integer getStudentClassId() {
+        return studentClassId;
+    }
+
+    public void setStudentClassId(Integer studentClassId) {
+        this.studentClassId = studentClassId;
     }
 
     public Date getTheTime() {
