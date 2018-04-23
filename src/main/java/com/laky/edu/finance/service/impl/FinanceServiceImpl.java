@@ -10,6 +10,7 @@ import com.laky.edu.finance.dao.MoneyRecordAccountDao;
 import com.laky.edu.finance.dao.MoneyRecordDao;
 import com.laky.edu.finance.service.FinanceService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,6 +33,7 @@ public class FinanceServiceImpl implements FinanceService {
     private MoneyRecordAccountDao moneyRecordAccountDao;
 
     @Override
+    @Cacheable(value="financeAccountList",key = "#parameterMap.get('branchId')")
     public PageBean<FinanceAccount> findFinanceAccountAllBySchool(LinkedHashMap parameterMap) throws Exception {
         PageHelper.startPage((int) parameterMap.get("pageNum"), (int) parameterMap.get("pageSize"));
         return new PageBean<>(financeAccountDao.selectByParameterMap(parameterMap));

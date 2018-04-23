@@ -11,24 +11,28 @@ import com.laky.edu.organization.service.SchoolZoneService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by 95 on 2017/11/14.
  */
+@Component
 public class BaseController {
     private static Logger logger = LoggerFactory.getLogger(BaseController.class);
     @Autowired
     private SchoolZoneService schoolZoneService;
     @Autowired
     private OperateLogService operateLogService;
+    @Autowired
+    private RedisUtil redisUtil;
 
-
-    public static Map<String,User> userSession = new HashMap<>();
+//    public static Map<String,User> userSession = new HashMap<>();
 
     /**
      * 正确返回数据
@@ -120,8 +124,24 @@ public class BaseController {
      * @param request
      * @return
      */
+    public User addCurrentUser(HttpServletRequest request,User user){
+        redisUtil.pullData(request.getHeader("token"),JSON.toJSONString(user),4L, TimeUnit.HOURS);//4小时
+        return getCurrentUser(request);
+    }
+
+    /**
+     * 获取当前登录用户
+     * @param request
+     * @return
+     */
     public User getCurrentUser(HttpServletRequest request){
-       return this.userSession.get(request.getHeader("token"));
+        String str = redisUtil.getData(request.getHeader("token"));
+        if(StringUtils.isEmpty(str)){return null;}
+        return JSON.parseObject(str,User.class);
+    }
+
+    public void removeCurrentUser(HttpServletRequest request){
+        redisUtil.delData(request.getHeader("token"));
     }
 
     /**

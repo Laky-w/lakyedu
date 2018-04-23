@@ -16,7 +16,7 @@ public class StudentOrderDetail implements Serializable {
 
     private Integer itemType;
 
-    private Integer number;
+    private BigDecimal number;
 
     private BigDecimal price;
 
@@ -24,13 +24,11 @@ public class StudentOrderDetail implements Serializable {
 
     private BigDecimal sellPrice;
 
-    private Integer total;
+    private BigDecimal total;
 
     private Integer schoolId;//校区id 前台表单字段（报名时）
 
     private BigDecimal subtractPrice;
-
-    private static final long serialVersionUID = 1L;
 
     public Integer getId() {
         return id;
@@ -80,11 +78,11 @@ public class StudentOrderDetail implements Serializable {
         this.itemType = itemType;
     }
 
-    public Integer getNumber() {
+    public BigDecimal getNumber() {
         return number;
     }
 
-    public void setNumber(Integer number) {
+    public void setNumber(BigDecimal number) {
         this.number = number;
     }
 
@@ -112,20 +110,12 @@ public class StudentOrderDetail implements Serializable {
         this.sellPrice = sellPrice;
     }
 
-    public Integer getTotal() {
+    public BigDecimal getTotal() {
         return total;
     }
 
-    public void setTotal(Integer total) {
+    public void setTotal(BigDecimal total) {
         this.total = total;
-    }
-
-    public BigDecimal getSubtractPrice() {
-        return subtractPrice;
-    }
-
-    public void setSubtractPrice(BigDecimal subtractPrice) {
-        this.subtractPrice = subtractPrice;
     }
 
     public Integer getSchoolId() {
@@ -136,26 +126,11 @@ public class StudentOrderDetail implements Serializable {
         this.schoolId = schoolId;
     }
 
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(getClass().getSimpleName());
-        sb.append(" [");
-        sb.append("Hash = ").append(hashCode());
-        sb.append(", id=").append(id);
-        sb.append(", orderId=").append(orderId);
-        sb.append(", courseId=").append(courseId);
-        sb.append(", classId=").append(classId);
-        sb.append(", theType=").append(theType);
-        sb.append(", itemType=").append(itemType);
-        sb.append(", number=").append(number);
-        sb.append(", price=").append(price);
-        sb.append(", discount=").append(discount);
-        sb.append(", sellPrice=").append(sellPrice);
-        sb.append(", total=").append(total);
-        sb.append(", subtractPrice=").append(subtractPrice);
-        sb.append(", serialVersionUID=").append(serialVersionUID);
-        sb.append("]");
-        return sb.toString();
+    public BigDecimal getSubtractPrice() {
+        return subtractPrice;
+    }
+
+    public void setSubtractPrice(BigDecimal subtractPrice) {
+        this.subtractPrice = subtractPrice;
     }
 }

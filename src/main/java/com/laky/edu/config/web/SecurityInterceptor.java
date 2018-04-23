@@ -1,6 +1,7 @@
 package com.laky.edu.config.web;
 
 import com.laky.edu.core.BaseController;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
@@ -15,6 +16,9 @@ import javax.servlet.http.HttpSession;
 @Component
 public class SecurityInterceptor extends HandlerInterceptorAdapter {
 
+    @Autowired
+    private BaseController baseController;
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
             throws Exception {
@@ -28,7 +32,7 @@ public class SecurityInterceptor extends HandlerInterceptorAdapter {
         }
         String token =  request.getHeader("token");
         String url = request.getRequestURI();
-        if (url.endsWith("/")||BaseController.userSession.get(token) != null) { //登录
+        if (url.endsWith("/")||baseController.getCurrentUser(request) != null) { //登录
             return true;
         }
         String res ="{\"code\":420,\"message\":\"登录过期\",\"data\":\"登录过期，请重新登录！\"}";

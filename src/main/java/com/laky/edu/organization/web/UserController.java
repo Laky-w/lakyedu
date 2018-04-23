@@ -52,7 +52,7 @@ public class UserController extends BaseController{
             map.put("token",token);
             map.put("userInfo",user);
             map.put("branch",organizationService.findBranchBySerialOrId(null,user.getBranchId()));
-            userSession.put(token,user);
+            super.addCurrentUser(request,user);
             loginLogService.insert(user,1,super.getRemortIP(request));
            // session.setAttribute(WebSecurityConfig.SESSION_KEY,map);
             //token里面
@@ -66,8 +66,9 @@ public class UserController extends BaseController{
     public Map loginOut(HttpServletRequest request) {
         try {
             String token=request.getHeader("token");
-            loginLogService.insert((User) userSession.get(token),2,super.getRemortIP(request));
-            BaseController.userSession.remove(token);
+            loginLogService.insert(getCurrentUser(request),2,super.getRemortIP(request));
+            super.removeCurrentUser(request);
+//            BaseController.userSession.remove(token);
             // 移除session
             return super.doWrappingData("success");
         } catch (Exception e) {

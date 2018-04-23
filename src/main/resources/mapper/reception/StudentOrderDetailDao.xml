@@ -8,11 +8,11 @@
     <result column="class_id" property="classId" jdbcType="INTEGER" />
     <result column="the_type" property="theType" jdbcType="TINYINT" />
     <result column="item_type" property="itemType" jdbcType="TINYINT" />
-    <result column="number" property="number" jdbcType="INTEGER" />
+    <result column="number" property="number" jdbcType="DECIMAL" />
     <result column="price" property="price" jdbcType="DECIMAL" />
     <result column="discount" property="discount" jdbcType="DECIMAL" />
     <result column="sell_price" property="sellPrice" jdbcType="DECIMAL" />
-    <result column="total" property="total" jdbcType="INTEGER" />
+    <result column="total" property="total" jdbcType="DECIMAL" />
     <result column="subtract_price" property="subtractPrice" jdbcType="DECIMAL" />
   </resultMap>
   <sql id="Base_Column_List" >
@@ -38,8 +38,8 @@
     )
     values ( #{orderId,jdbcType=INTEGER}, #{courseId,jdbcType=INTEGER},
     #{classId,jdbcType=INTEGER}, #{theType,jdbcType=TINYINT}, #{itemType,jdbcType=TINYINT},
-    #{number,jdbcType=INTEGER}, #{price,jdbcType=DECIMAL}, #{discount,jdbcType=DECIMAL},
-    #{sellPrice,jdbcType=DECIMAL}, #{total,jdbcType=INTEGER}, #{subtractPrice,jdbcType=DECIMAL}
+    #{number,jdbcType=DECIMAL}, #{price,jdbcType=DECIMAL}, #{discount,jdbcType=DECIMAL},
+    #{sellPrice,jdbcType=DECIMAL}, #{total,jdbcType=DECIMAL}, #{subtractPrice,jdbcType=DECIMAL}
     )
   </insert>
 
@@ -47,15 +47,15 @@
           keyColumn="id">
     insert into laky_reception_student_order_detail (order_id, course_id,
     class_id, the_type, item_type,
-    number, price, discount,
+    `number`, price, discount,
     sell_price, total, subtract_price
     )
     values
     <foreach collection="list" item="item" index="index" separator="," >
       (#{item.orderId,jdbcType=INTEGER}, #{item.courseId,jdbcType=INTEGER},
       #{item.classId,jdbcType=INTEGER}, #{item.theType,jdbcType=TINYINT}, #{item.itemType,jdbcType=TINYINT},
-      #{item.number,jdbcType=INTEGER}, #{item.price,jdbcType=DECIMAL}, #{item.discount,jdbcType=DECIMAL},
-      #{item.sellPrice,jdbcType=DECIMAL}, #{item.total,jdbcType=INTEGER}, #{item.subtractPrice,jdbcType=DECIMAL}
+      #{item.number,jdbcType=DECIMAL}, #{item.price,jdbcType=DECIMAL}, #{item.discount,jdbcType=DECIMAL},
+      #{item.sellPrice,jdbcType=DECIMAL}, #{item.total,jdbcType=DECIMAL}, #{item.subtractPrice,jdbcType=DECIMAL}
       )
     </foreach>
 
@@ -80,7 +80,7 @@
         item_type = #{itemType,jdbcType=TINYINT},
       </if>
       <if test="number != null" >
-        number = #{number,jdbcType=INTEGER},
+        number = #{number,jdbcType=DECIMAL},
       </if>
       <if test="price != null" >
         price = #{price,jdbcType=DECIMAL},
@@ -92,7 +92,7 @@
         sell_price = #{sellPrice,jdbcType=DECIMAL},
       </if>
       <if test="total != null" >
-        total = #{total,jdbcType=INTEGER},
+        total = #{total,jdbcType=DECIMAL},
       </if>
       <if test="subtractPrice != null" >
         subtract_price = #{subtractPrice,jdbcType=DECIMAL},
@@ -107,11 +107,11 @@
       class_id = #{classId,jdbcType=INTEGER},
       the_type = #{theType,jdbcType=TINYINT},
       item_type = #{itemType,jdbcType=TINYINT},
-      number = #{number,jdbcType=INTEGER},
+      `number` = #{number,jdbcType=DECIMAL},
       price = #{price,jdbcType=DECIMAL},
       discount = #{discount,jdbcType=DECIMAL},
       sell_price = #{sellPrice,jdbcType=DECIMAL},
-      total = #{total,jdbcType=INTEGER},
+      total = #{total,jdbcType=DECIMAL},
       subtract_price = #{subtractPrice,jdbcType=DECIMAL}
     where id = #{id,jdbcType=INTEGER}
   </update>

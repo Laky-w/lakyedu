@@ -51,6 +51,12 @@
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
 		</dependency>
+		<!--集成redis-->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-redis</artifactId>
+		</dependency>
+		<!--集成mybatis-->
 		<dependency>
 			<groupId>org.mybatis.spring.boot</groupId>
 			<artifactId>mybatis-spring-boot-starter</artifactId>
@@ -100,6 +106,7 @@
 			<version>1.2.29</version>
 		</dependency>
 		<!--fastjson数据配置 end-->
+		<!--单元测试-->
 		<dependency>
 			<groupId>org.springframework.restdocs</groupId>
 			<artifactId>spring-restdocs-mockmvc</artifactId>
@@ -117,6 +124,11 @@
 			<artifactId>poi-ooxml</artifactId>
 			<version>3.9</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/redis.clients/jedis -->
+		<!--<dependency>-->
+			<!--<groupId>redis.clients</groupId>-->
+			<!--<artifactId>jedis</artifactId>-->
+		<!--</dependency>-->
 	</dependencies>
 
 	<build>

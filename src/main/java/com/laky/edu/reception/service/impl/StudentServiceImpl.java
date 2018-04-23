@@ -5,9 +5,11 @@ import com.laky.edu.core.PageBean;
 import com.laky.edu.finance.bean.FinanceAccount;
 import com.laky.edu.finance.bean.MoneyRecord;
 import com.laky.edu.finance.bean.MoneyRecordAccount;
+import com.laky.edu.finance.bean.StudentAccount;
 import com.laky.edu.finance.dao.FinanceAccountDao;
 import com.laky.edu.finance.dao.MoneyRecordAccountDao;
 import com.laky.edu.finance.dao.MoneyRecordDao;
+import com.laky.edu.finance.dao.StudentAccountDao;
 import com.laky.edu.reception.ReceptionConst;
 import com.laky.edu.reception.bean.Student;
 import com.laky.edu.reception.bean.StudentClass;
@@ -49,11 +51,6 @@ public class StudentServiceImpl implements StudentService{
     @Autowired
     private StudentClassDao studentClassDao;
 
-    @Autowired
-    private SchoolClassDao schoolClassDao;
-
-    @Autowired
-    private CourseDao courseDao;
 
     @Autowired
     private StudentOrderDao studentOrderDao;
@@ -68,7 +65,7 @@ public class StudentServiceImpl implements StudentService{
     private MoneyRecordAccountDao moneyRecordAccountDao;
 
     @Autowired
-    private FinanceAccountDao financeAccountDao;
+    private StudentAccountDao studentAccountDao;
 
     @Transactional
     @Override
@@ -115,12 +112,12 @@ public class StudentServiceImpl implements StudentService{
         student.setClassStatus(ReceptionConst.STUDENT_CLASS_STATUS_YES);
         //生成正式学员信息
         int rowCount = studentDao.insert(student);
-        if(rowCount ==0) throw  new Exception("报名失败");
+        if(rowCount ==0) throw  new RuntimeException("报名失败");
         //生成报名订单记录
         order = doOrder(order,student.getId());
         order.setUserId(userId);
         rowCount=studentOrderDao.insert(order);
-        if(rowCount ==0) throw  new Exception("报名失败");
+        if(rowCount ==0) throw  new RuntimeException("报名失败");
         List<StudentClass> studentClassList=doOrderDetailAndClass(order,orderDetails);  //生成订单明细信息和报班记录
         if(studentClassList.size()>0){
             studentClassDao.batchInsert(studentClassList);
@@ -235,7 +232,8 @@ public class StudentServiceImpl implements StudentService{
      */
     private List<StudentClass> doOrderDetailAndClass(StudentOrder order, List<StudentOrderDetail> orderDetails){
         List<StudentClass> studentClassList = new ArrayList<>();
-        if(orderDetails!=null){
+        if(orderDetails!=null && orderDetails.size()>0){
+            List<StudentAccount> studentAccountList = new ArrayList<>();
             // 生成学员班级信息
             for(StudentOrderDetail orderDetail:orderDetails){
                 StudentClass studentClass = new StudentClass();
@@ -253,8 +251,22 @@ public class StudentServiceImpl implements StudentService{
                 }
                 studentClassList.add(studentClass);
                 orderDetail.setOrderId(order.getId());
+                //学员课程账户信息
+                StudentAccount studentAccount = new StudentAccount();
+                studentAccount.setCourseId(orderDetail.getCourseId());
+                studentAccount.setOrderId(order.getId());
+                studentAccount.setStudentId(order.getStudentId());
+                studentAccount.setTheTime(new Date());
+                studentAccount.setTheStatus(1);
+                studentAccount.setTotalHour(orderDetail.getNumber());
+                studentAccount.setTotalMoney(orderDetail.getTotal());
+                studentAccount.setLastHour(orderDetail.getNumber());
+                studentAccount.setLastMoney(orderDetail.getTotal());
+                studentAccount.setPrice(orderDetail.getSellPrice());//折后的单价
+                studentAccountList.add(studentAccount);
             }
             studentOrderDetailDao.batchInsert(orderDetails);
+            studentAccountDao.batchInsert(studentAccountList);
         }
         return studentClassList;
     }

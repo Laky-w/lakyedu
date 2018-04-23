@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.laky.edu.finance.dao.StudentAccountDao">
+  <resultMap id="BaseResultMap" type="com.laky.edu.finance.bean.StudentAccount">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="student_id" jdbcType="INTEGER" property="studentId" />
+    <result column="course_id" jdbcType="INTEGER" property="courseId" />
+    <result column="total_money" jdbcType="DECIMAL" property="totalMoney" />
+    <result column="total_hour" jdbcType="DECIMAL" property="totalHour" />
+    <result column="last_money" jdbcType="DECIMAL" property="lastMoney" />
+    <result column="last_hour" jdbcType="DECIMAL" property="lastHour" />
+    <result column="price" jdbcType="DECIMAL" property="price" />
+    <result column="the_time" jdbcType="TIMESTAMP" property="theTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, student_id, course_id,order_id, total_money, total_hour, last_money, last_hour, price,
+    the_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from laky_finance_student_account
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from laky_finance_student_account
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.laky.edu.finance.bean.StudentAccount"  useGeneratedKeys="true" keyProperty="id"
+          keyColumn="id">
+    insert into laky_finance_student_account (student_id, course_id, order_id,
+      total_money, total_hour, last_money, 
+      last_hour, price, the_time
+      )
+    values ( #{studentId,jdbcType=INTEGER}, #{courseId,jdbcType=INTEGER}, #{orderId,jdbcType=INTEGER},
+      #{totalMoney,jdbcType=DECIMAL}, #{totalHour,jdbcType=DECIMAL}, #{lastMoney,jdbcType=DECIMAL}, 
+      #{lastHour,jdbcType=DECIMAL}, #{price,jdbcType=DECIMAL}, #{theTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="batchInsert" parameterType="com.laky.edu.finance.bean.StudentAccount"  useGeneratedKeys="true" keyProperty="id"
+          keyColumn="id">
+    insert into laky_finance_student_account (student_id, course_id, order_id,
+    total_money, total_hour, last_money,
+    last_hour, price, the_time
+    )
+    values
+    <foreach collection="list" item="item" index="index" separator="," >
+    ( #{item.studentId,jdbcType=INTEGER}, #{item.courseId,jdbcType=INTEGER}, #{item.orderId,jdbcType=INTEGER},
+    #{item.totalMoney,jdbcType=DECIMAL}, #{item.totalHour,jdbcType=DECIMAL}, #{item.lastMoney,jdbcType=DECIMAL},
+    #{item.lastHour,jdbcType=DECIMAL}, #{item.price,jdbcType=DECIMAL}, #{item.theTime,jdbcType=TIMESTAMP}
+    )
+    </foreach>
+  </insert>
+  <insert id="insertSelective" parameterType="com.laky.edu.finance.bean.StudentAccount">
+    insert into laky_finance_student_account
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="studentId != null">
+        student_id,
+      </if>
+      <if test="courseId != null">
+        course_id,
+      </if>
+      <if test="totalMoney != null">
+        total_money,
+      </if>
+      <if test="totalHour != null">
+        total_hour,
+      </if>
+      <if test="lastMoney != null">
+        last_money,
+      </if>
+      <if test="lastHour != null">
+        last_hour,
+      </if>
+      <if test="price != null">
+        price,
+      </if>
+      <if test="theTime != null">
+        the_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="studentId != null">
+        #{studentId,jdbcType=INTEGER},
+      </if>
+      <if test="courseId != null">
+        #{courseId,jdbcType=INTEGER},
+      </if>
+      <if test="totalMoney != null">
+        #{totalMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="totalHour != null">
+        #{totalHour,jdbcType=DECIMAL},
+      </if>
+      <if test="lastMoney != null">
+        #{lastMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="lastHour != null">
+        #{lastHour,jdbcType=DECIMAL},
+      </if>
+      <if test="price != null">
+        #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="theTime != null">
+        #{theTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.laky.edu.finance.bean.StudentAccount">
+    update laky_finance_student_account
+    <set>
+      <if test="studentId != null">
+        student_id = #{studentId,jdbcType=INTEGER},
+      </if>
+      <if test="courseId != null">
+        course_id = #{courseId,jdbcType=INTEGER},
+      </if>
+      <if test="orderId != null">
+        order_id = #{orderId,jdbcType=INTEGER},
+      </if>
+      <if test="totalMoney != null">
+        total_money = #{totalMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="totalHour != null">
+        total_hour = #{totalHour,jdbcType=DECIMAL},
+      </if>
+      <if test="lastMoney != null">
+        last_money = #{lastMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="lastHour != null">
+        last_hour = #{lastHour,jdbcType=DECIMAL},
+      </if>
+      <if test="price != null">
+        price = #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="theTime != null">
+        the_time = #{theTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.laky.edu.finance.bean.StudentAccount">
+    update laky_finance_student_account
+    set student_id = #{studentId,jdbcType=INTEGER},
+      course_id = #{courseId,jdbcType=INTEGER},
+      total_money = #{totalMoney,jdbcType=DECIMAL},
+      total_hour = #{totalHour,jdbcType=DECIMAL},
+      last_money = #{lastMoney,jdbcType=DECIMAL},
+      last_hour = #{lastHour,jdbcType=DECIMAL},
+      price = #{price,jdbcType=DECIMAL},
+      the_time = #{theTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

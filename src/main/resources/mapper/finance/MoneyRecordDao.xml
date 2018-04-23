@@ -88,11 +88,11 @@
 
   <insert id="insert" parameterType="com.laky.edu.finance.bean.MoneyRecord" useGeneratedKeys="true" keyProperty="id"
           keyColumn="id">
-    insert into laky_finance_money_record (id, school_zone_id, create_time, 
+    insert into laky_finance_money_record ( school_zone_id, create_time,
       money, the_type, salesman_id,order_id,
       user_id, the_status, check_status,remarks,clazz_id,bill_type,subtract_money
       )
-    values (#{id,jdbcType=INTEGER}, #{schoolZoneId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
+    values (#{schoolZoneId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP},
       #{money,jdbcType=DECIMAL}, #{theType,jdbcType=TINYINT}, #{salesmanId,jdbcType=INTEGER},#{orderId,jdbcType=INTEGER},
       #{userId,jdbcType=INTEGER}, #{theStatus,jdbcType=TINYINT}, #{checkStatus,jdbcType=TINYINT},#{remarks,jdbcType=VARCHAR},#{clazzId,jdbcType=INTEGER},#{billType,jdbcType=TINYINT},#{subtractMoney,jdbcType=DECIMAL}
       )
