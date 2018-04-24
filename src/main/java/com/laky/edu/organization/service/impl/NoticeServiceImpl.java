@@ -7,6 +7,7 @@ import com.laky.edu.organization.bean.Notice;
 import com.laky.edu.organization.dao.NoticeDao;
 import com.laky.edu.organization.service.NoticeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -50,6 +51,7 @@ public class NoticeServiceImpl implements NoticeService{
     }
 
     @Override
+    @Cacheable(value = "notice",key = "#parameterMap.get('branchId')+''")
     public List<Notice> findNewNotice(LinkedHashMap parameterMap) throws Exception {
         return noticeDao.queryNewNoticeByBranchOrSchool(parameterMap);
     }

@@ -1,11 +1,12 @@
 package com.laky.edu.organization.bean;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by 湖之教育工作室·laky on 2017/11/24.
  */
-public class Menu {
+public class Menu  implements Serializable{
     private Integer id;
     private String title;
     private String icon;

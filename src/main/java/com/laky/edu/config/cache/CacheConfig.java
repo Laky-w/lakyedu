@@ -19,18 +19,18 @@ import java.util.Map;
 @EnableCaching
 public class CacheConfig {
 
-    @Bean
-    public CacheManager cacheManager(
-            @SuppressWarnings("rawtypes") RedisTemplate redisTemplate) {
-        Customeriz cacheManager= new CustomizedRedisCacheManager(redisTemplate);
-        cacheManager.setDefaultExpiration(60);
-        Map<String,Long> expiresMap=new HashMap<>();
-        expiresMap.put("Product",5L);
-        cacheManager.setExpires(expiresMap);
-        return cacheManager;
-    }
-
 //    @Bean
+//    public CacheManager cacheManager(
+//            @SuppressWarnings("rawtypes") RedisTemplate redisTemplate) {
+//        Customeriz cacheManager= new CustomizedRedisCacheManager(redisTemplate);
+//        cacheManager.setDefaultExpiration(60);
+//        Map<String,Long> expiresMap=new HashMap<>();
+//        expiresMap.put("Product",5L);
+//        cacheManager.setExpires(expiresMap);
+//        return cacheManager;
+//    }
+
+    @Bean
     public RedisTemplate<Object, Object> redisTemplate(RedisConnectionFactory connectionFactory) {
         RedisTemplate<Object, Object> template = new RedisTemplate<>();
         template.setConnectionFactory(connectionFactory);

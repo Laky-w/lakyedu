@@ -11,6 +11,9 @@ import com.laky.edu.organization.dao.*;
 import com.laky.edu.organization.service.UserService;
 import com.laky.edu.util.MD5;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -80,6 +83,7 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
+    @Cacheable(value = "userMenu",key = "#userId+''")
     public Map findUserMenuAll(Integer userId) throws Exception {
         //判断当前用户是不是超级用户，不是去查询所拥有的权限
         User user = userDao.selectById(userId);
