@@ -12,10 +12,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistration;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.config.annotation.*;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -25,11 +22,9 @@ import java.util.Date;
  * Created by 湖之教育工作室·laky on 2017/11/21.
  */
 @Configuration
+@EnableWebMvc
 public class WebSecurityConfig extends WebMvcConfigurerAdapter {
-    /**
-     * 登录session key
-     */
-    public final static String SESSION_KEY = "user";
+
 
     /**
      *  格式化日期
@@ -59,9 +54,13 @@ public class WebSecurityConfig extends WebMvcConfigurerAdapter {
         };
     }
 
+    @Bean
+    public SecurityInterceptor securityInterceptor() {
+        return new SecurityInterceptor();
+    }
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        InterceptorRegistration addInterceptor = registry.addInterceptor(new SecurityInterceptor());
+        InterceptorRegistration addInterceptor = registry.addInterceptor(securityInterceptor());
 
         // 排除配置
         addInterceptor.excludePathPatterns("/error");
@@ -79,6 +78,8 @@ public class WebSecurityConfig extends WebMvcConfigurerAdapter {
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**").allowedMethods("GET", "POST", "DELETE", "PUT", "OPTIONS");
     }
+
+
 
 //    @Bean
 //    public EmbeddedServletContainerFactory servletContainer() {

@@ -2,13 +2,14 @@ package com.laky.edu.organization.bean;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
 /**
  * Created by 95 on 2017/11/20.
  */
-public class SchoolZone {
+public class SchoolZone implements Serializable {
     private Integer id;
     private String name;
     private Integer theStatus;//状态 1 校区 0 删除 2 部门

@@ -24,12 +24,12 @@ public class RedisUtil {
     }
 
     public  void pullData(String key,String value,Long time,TimeUnit timeUnit){
-        redisTemplate.opsForValue().set(key,value,time, TimeUnit.SECONDS);//默认分钟
+        redisTemplate.opsForValue().set(key,value,time, timeUnit);//默认分钟
     }
 
     public String getData(String key){
         Object object = redisTemplate.opsForValue().get(key);
-        return object.toString();
+        return object==null?null:object.toString();
     }
 
     public void delData(String key){

@@ -52,7 +52,7 @@ public class UserController extends BaseController{
             map.put("token",token);
             map.put("userInfo",user);
             map.put("branch",organizationService.findBranchBySerialOrId(null,user.getBranchId()));
-            super.addCurrentUser(request,user);
+            super.addCurrentUser(token,user);
             loginLogService.insert(user,1,super.getRemortIP(request));
            // session.setAttribute(WebSecurityConfig.SESSION_KEY,map);
             //token里面

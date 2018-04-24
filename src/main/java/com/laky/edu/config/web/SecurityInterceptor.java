@@ -13,7 +13,7 @@ import javax.servlet.http.HttpSession;
  * 登录拦截监听
  * Created by 湖之教育工作室·laky on 2017/11/22.
  */
-@Component
+
 public class SecurityInterceptor extends HandlerInterceptorAdapter {
 
     @Autowired

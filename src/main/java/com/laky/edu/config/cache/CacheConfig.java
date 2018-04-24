@@ -3,6 +3,7 @@ package com.laky.edu.config.cache;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,10 +12,25 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Configuration
 @EnableCaching
 public class CacheConfig {
+
     @Bean
+    public CacheManager cacheManager(
+            @SuppressWarnings("rawtypes") RedisTemplate redisTemplate) {
+        Customeriz cacheManager= new CustomizedRedisCacheManager(redisTemplate);
+        cacheManager.setDefaultExpiration(60);
+        Map<String,Long> expiresMap=new HashMap<>();
+        expiresMap.put("Product",5L);
+        cacheManager.setExpires(expiresMap);
+        return cacheManager;
+    }
+
+//    @Bean
     public RedisTemplate<Object, Object> redisTemplate(RedisConnectionFactory connectionFactory) {
         RedisTemplate<Object, Object> template = new RedisTemplate<>();
         template.setConnectionFactory(connectionFactory);

@@ -5,6 +5,8 @@ import com.laky.edu.organization.bean.SchoolZone;
 import com.laky.edu.organization.dao.SchoolZoneDao;
 import com.laky.edu.organization.service.SchoolZoneService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -44,6 +46,7 @@ public class SchoolZoneServiceImpl implements SchoolZoneService{
     }
 
     @Override
+    @Cacheable(value = "schools",key = "#branchId+''")
     public SchoolZone querySchoolZoneAllBySchoolZoneId(Integer branchId, Integer schoolZoneId,Integer theType) throws Exception {
         List<SchoolZone> list = schoolZoneDao.querySchoolZoneAllByBranchId(branchId);
         List<SchoolZone> newSchoolZoneList = new ArrayList<>();

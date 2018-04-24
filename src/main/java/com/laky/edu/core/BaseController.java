@@ -121,12 +121,11 @@ public class BaseController {
 
     /**
      * 获取当前登录用户
-     * @param request
-     * @return
+     * @param token
+     * @param user
      */
-    public User addCurrentUser(HttpServletRequest request,User user){
-        redisUtil.pullData(request.getHeader("token"),JSON.toJSONString(user),4L, TimeUnit.HOURS);//4小时
-        return getCurrentUser(request);
+    public void addCurrentUser(String token,User user){
+        redisUtil.pullData(token,JSON.toJSONString(user),4L, TimeUnit.HOURS);//4小时
     }
 
     /**
