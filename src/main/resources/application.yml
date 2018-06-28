@@ -10,3 +10,8 @@ spring:
       min-idle: 1
       max-active: 100
       max-wait: -1
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+  mvc:
+    date-format: yyyy-MM-dd HH:mm:ss

@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -75,7 +74,8 @@ public class SchoolZoneController extends BaseController {
     public Map findSchoolZoneAllByBranchId(HttpServletRequest request,@PathVariable  Integer theType) {
         try {
             User user =super.getCurrentUser(request);
-            SchoolZone schoolZone = schoolZoneService.querySchoolZoneAllBySchoolZoneId(user.getBranchId(),user.getSchoolZoneId(),theType);//查询用户校区
+            //查询用户校区
+            SchoolZone schoolZone = schoolZoneService.querySchoolZoneAllBySchoolZoneId(user.getBranchId(),user.getSchoolZoneId(),theType);
             return  super.doWrappingData(schoolZone);
         } catch (Exception e){
             return  super.doWrappingErrorData(e);
@@ -88,7 +88,8 @@ public class SchoolZoneController extends BaseController {
             if(schoolId == 0) {
                 schoolId =user.getSchoolZoneId();
             }
-            SchoolZone schoolZone = schoolZoneService.querySchoolZoneAllBySchoolZoneId(user.getBranchId(),schoolId,theType);//查询用户校区
+            //查询用户校区
+            SchoolZone schoolZone = schoolZoneService.querySchoolZoneAllBySchoolZoneId(user.getBranchId(),schoolId,theType);
             return  super.doWrappingData(schoolZone);
         } catch (Exception e){
             return  super.doWrappingErrorData(e);

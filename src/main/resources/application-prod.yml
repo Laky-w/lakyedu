@@ -1,17 +1,9 @@
 server:
   port: 80
   context-path: /laky
-#  ssl:
-#    key-store:  classpath:keystore.p12
-#    key-store-password: 991786
-#    key-alias: tomcat
-#    key-store-type: PKCS12
   tomcat:
     uri-encoding: utf-8
-spring:
-  jackson:
-    date-format: yyyy-MM-dd HH:mm:ss
-    time-zone: GMT+8
+
 jdbc:
   datasource:
     url: jdbc:mysql://39.104.88.65:3306/edu_laky?useUnicode=true&characterEncoding=utf8&allowMultiQueries=true&autoReconnect=true

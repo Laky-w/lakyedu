@@ -12,8 +12,12 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.SimpleTimeZone;
+import java.util.TimeZone;
 
 @Configuration
 @EnableCaching
@@ -44,7 +48,7 @@ public class CacheConfig {
         serializer.setObjectMapper(mapper);
 
         template.setValueSerializer(serializer);
-        //使用StringRedisSerializer来序列化和反序列化redis的key值
+//        使用StringRedisSerializer来序列化和反序列化redis的key值
         template.setKeySerializer(new StringRedisSerializer());
         template.afterPropertiesSet();
         return template;

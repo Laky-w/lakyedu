@@ -20,7 +20,7 @@ public class SchoolZoneServiceImpl implements SchoolZoneService{
     @Autowired
     private SchoolZoneDao schoolZoneDao;
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public int insertSchoolZoneDao(SchoolZone schoolZone) throws Exception {
         //SchoolZone schoolZone = new SchoolZone();
@@ -51,7 +51,7 @@ public class SchoolZoneServiceImpl implements SchoolZoneService{
         List<SchoolZone> list = schoolZoneDao.querySchoolZoneAllByBranchId(branchId);
         List<SchoolZone> newSchoolZoneList = new ArrayList<>();
         list.forEach(schoolZone -> {
-            if(schoolZone.getId() == schoolZoneId ) {
+            if(schoolZone.getId().equals(schoolZoneId) ) {
                 schoolZone.setChildrenList(getSubs(schoolZone.getId(),list,theType));
                 newSchoolZoneList.add(schoolZone);
             }

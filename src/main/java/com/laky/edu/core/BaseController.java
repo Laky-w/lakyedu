@@ -4,18 +4,22 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.laky.edu.log.bean.OperateLog;
 import com.laky.edu.log.service.OperateLogService;
-import com.laky.edu.organization.OrganizationConst;
 import com.laky.edu.organization.bean.SchoolZone;
 import com.laky.edu.organization.bean.User;
 import com.laky.edu.organization.service.SchoolZoneService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.ServletRequestDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
@@ -23,6 +27,7 @@ import java.util.concurrent.TimeUnit;
  * Created by 95 on 2017/11/14.
  */
 @Component
+@Controller
 public class BaseController {
     private static Logger logger = LoggerFactory.getLogger(BaseController.class);
     @Autowired
@@ -32,7 +37,24 @@ public class BaseController {
     @Autowired
     private RedisUtil redisUtil;
 
+    protected HttpServletRequest request;
+
+    protected HttpServletResponse response;
+
+
+
 //    public static Map<String,User> userSession = new HashMap<>();
+
+    @InitBinder
+    protected void initBinder(HttpServletRequest request,HttpServletResponse response,
+                              ServletRequestDataBinder binder) throws Exception {
+        this.request = request;
+        this.response = response;
+        binder.registerCustomEditor(Date.class,
+                new CustomDateEditor(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"), true));
+//        binder.registerCustomEditor(Date.class,
+//                new CustomDateEditor(new SimpleDateFormat("yyyy-MM-dd"), true));
+    }
 
     /**
      * 正确返回数据
@@ -223,7 +245,8 @@ public class BaseController {
             operatelog.setTheType(type);
             operatelog.setTitle(title);
             operatelog.setSchoolZoneId(getCurrentUser(request).getSchoolZoneId());
-            operatelog.setBranchId(getCurrentUser(request).getBranchId());//比如微信，邮箱，站内信提醒。
+            //比如微信，邮箱，站内信提醒。
+            operatelog.setBranchId(getCurrentUser(request).getBranchId());
             operateLogService.addOperateLog(operatelog);
         }  catch ( Exception e ){
             e.printStackTrace();

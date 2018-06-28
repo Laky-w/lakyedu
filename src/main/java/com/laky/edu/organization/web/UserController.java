@@ -24,6 +24,7 @@ import java.util.*;
 
 /**
  * Created by 湖之教育工作室·laky on 2017/11/21.
+ * @author laky
  */
 @RestController
 @RequestMapping("/organization")
@@ -111,7 +112,8 @@ public class UserController extends BaseController{
         try {
             LinkedHashMap parameterMap = new LinkedHashMap();
             parameterMap = super.doWrappingFormParameter(request,parameterMap);
-            parameterMap.put("schoolZoneId",super.getSchoolIds(request,parameterMap.get("theType")==null?0:parameterMap.get("theType"),parameterMap.get("parentSchoolId")));//获取当前用户所在校区的id和下级校区的数组
+            //获取当前用户所在校区的id和下级校区的数组
+            parameterMap.put("schoolZoneId",super.getSchoolIds(request,parameterMap.get("theType")==null?0:parameterMap.get("theType"),parameterMap.get("parentSchoolId")));
             parameterMap.put("pageNum",pageNum);
             parameterMap.put("pageSize",pageSize);
             return super.doWrappingData(userService.findUserBySchoolId(parameterMap));
@@ -125,7 +127,8 @@ public class UserController extends BaseController{
         try {
             LinkedHashMap parameterMap = new LinkedHashMap();
             parameterMap = super.doWrappingFormParameter(request,parameterMap);
-            parameterMap.put("schoolZoneId",super.getSchoolIds(request,0));//获取当前用户所在校区的id和下级校区的数组
+            //获取当前用户所在校区的id和下级校区的数组
+            parameterMap.put("schoolZoneId",super.getSchoolIds(request,0));
             parameterMap.put("id",id);
             return super.doWrappingData(userService.findUserById(parameterMap));
         } catch (Exception e) {
@@ -137,7 +140,8 @@ public class UserController extends BaseController{
     public Map getRoleList(HttpServletRequest request,@PathVariable int pageNum, @PathVariable int pageSize){
         try {
             LinkedHashMap parameterMap = new LinkedHashMap();
-            parameterMap.put("schoolIds",super.getSchoolIds(request));//获取当前用户所在校区的id和下级校区的数组
+            //获取当前用户所在校区的id和下级校区的数组
+            parameterMap.put("schoolIds",super.getSchoolIds(request));
             parameterMap.put("pageNum",pageNum);
             parameterMap.put("pageSize",pageSize);
             parameterMap.put("branchId",getCurrentUser(request).getBranchId());

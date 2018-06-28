@@ -1,11 +1,6 @@
 server:
   port: 8081
   context-path: /laky
-#  ssl:
-#    key-store:  classpath:keystore.p12
-#    key-store-password: 991786
-#    key-alias: tomcat
-#    key-store-type: PKCS12
   tomcat:
     uri-encoding: utf-8
 spring:

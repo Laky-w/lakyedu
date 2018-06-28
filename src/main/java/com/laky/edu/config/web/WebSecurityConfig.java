@@ -1,28 +1,28 @@
 package com.laky.edu.config.web;
 
 
-import org.apache.catalina.Context;
-import org.apache.catalina.connector.Connector;
-import org.apache.tomcat.util.descriptor.web.SecurityCollection;
-import org.apache.tomcat.util.descriptor.web.SecurityConstraint;
-import org.springframework.boot.context.embedded.EmbeddedServletContainerFactory;
-import org.springframework.boot.context.embedded.tomcat.TomcatEmbeddedServletContainerFactory;
+import com.alibaba.fastjson.serializer.SerializerFeature;
+import com.alibaba.fastjson.support.config.FastJsonConfig;
+import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.http.MediaType;
+import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.servlet.config.annotation.*;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * web配置
  * Created by 湖之教育工作室·laky on 2017/11/21.
  */
 @Configuration
-@EnableWebMvc
+//@EnableWebMvc
 public class WebSecurityConfig extends WebMvcConfigurerAdapter {
 
 
@@ -79,36 +79,29 @@ public class WebSecurityConfig extends WebMvcConfigurerAdapter {
         registry.addMapping("/**").allowedMethods("GET", "POST", "DELETE", "PUT", "OPTIONS");
     }
 
-
-
-//    @Bean
-//    public EmbeddedServletContainerFactory servletContainer() {
-//
-//        TomcatEmbeddedServletContainerFactory tomcat = new TomcatEmbeddedServletContainerFactory() {
-//
-//            @Override
-//            protected void postProcessContext(Context context) {
-//
-//                SecurityConstraint securityConstraint = new SecurityConstraint();
-//                securityConstraint.setUserConstraint("CONFIDENTIAL");
-//                SecurityCollection collection = new SecurityCollection();
-//                collection.addPattern("/*");
-//                securityConstraint.addCollection(collection);
-//                context.addConstraint(securityConstraint);
-//            }
-//        };
-//        tomcat.addAdditionalTomcatConnectors(initiateHttpConnector());
-//        return tomcat;
-//    }
-//
-//    private Connector initiateHttpConnector() {
-//
-//        Connector connector = new Connector("org.apache.coyote.http11.Http11NioProtocol");
-//        connector.setScheme("http");
-//        connector.setPort(8088);
-//        connector.setSecure(false);
-//        connector.setRedirectPort(8443);
-//        return connector;
-//    }
-
+   /* @Override
+    public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
+        super.configureMessageConverters(converters);
+        // 1.需要先定义一个convert 转换消息的对象
+        FastJsonHttpMessageConverter fastConverter = new FastJsonHttpMessageConverter();
+        // 2.添加fastJson的配置信息,比如，是否需要格式化返回的json数据
+        FastJsonConfig fastJsonConfig = new FastJsonConfig();
+        // 空值特别处理
+        // WriteNullListAsEmpty 将Collection类型字段的字段空值输出为[]
+        // WriteNullStringAsEmpty 将字符串类型字段的空值输出为空字符串 ""
+        // WriteNullNumberAsZero 将数值类型字段的空值输出为0
+        // WriteNullBooleanAsFalse 将Boolean类型字段的空值输出为false
+        fastJsonConfig.setSerializerFeatures(SerializerFeature.PrettyFormat,
+                SerializerFeature.WriteNullStringAsEmpty);
+        fastJsonConfig.setDateFormat("yyyy-MM-dd HH:mm:ss");
+//        fastJsonConfig.set
+        // 处理中文乱码问题
+        List<MediaType> fastMediaTypes = new ArrayList<>();
+        fastMediaTypes.add(MediaType.APPLICATION_JSON_UTF8);
+        fastConverter.setSupportedMediaTypes(fastMediaTypes);
+        // 3.在convert中添加配置信息
+        fastConverter.setFastJsonConfig(fastJsonConfig);
+        // 4.将convert添加到converters当中
+        converters.add(fastConverter);
+    }*/
 }

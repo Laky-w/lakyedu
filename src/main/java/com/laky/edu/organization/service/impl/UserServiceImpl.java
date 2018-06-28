@@ -87,14 +87,16 @@ public class UserServiceImpl implements UserService {
     public Map findUserMenuAll(Integer userId) throws Exception {
         //判断当前用户是不是超级用户，不是去查询所拥有的权限
         User user = userDao.selectById(userId);
-        if(user!=null && user.getIsSuper()==1){ //超级管理员
+        //超级管理员
+        if(user!=null && user.getIsSuper()==1){
             Map map = new LinkedHashMap<>();
             map.put("menuList",this.findMenuAll());
             map.put("authorities","isAll");
             return map;
         } else {
             List<Map> authorityMaps= roleAuthorityDao.queryRoleAuthorityByUserId(userId);
-            Map menuMap = new HashMap<>();//所有子菜单id
+            //所有子菜单id
+            Map menuMap = new HashMap<>();
             authorityMaps.forEach(map -> {
                 menuMap.put(map.get("menuId"),map.get("parentId"));
             });
@@ -134,14 +136,16 @@ public class UserServiceImpl implements UserService {
         List<Menu> newMenu = new ArrayList<>();
         ok:
         for (Menu menu:menuList){
-            if(menu.getId() == parentId){
+            if(menu.getId() .equals( parentId )){
                 for (Menu pMenu:parentList){
-                    if(pMenu.getId()==menu.getId()){ //已存在的根节点
+                    //已存在的根节点
+                    if(pMenu.getId().equals(menu.getId())){
                         continue ok;
                     }
                 }
                 newMenu.add(menu);
-                if(menu.getParentId()!=0){//不是根节点
+                //不是根节点
+                if(menu.getParentId()!=0){
                     newMenu.addAll(getParents(menu.getParentId(),menuList,parentList));
                 }
             }
@@ -153,7 +157,7 @@ public class UserServiceImpl implements UserService {
     private List<Authority> getAuthorities(Integer menuId, List<Authority> authorities){
         List<Authority> temAuthorities = new ArrayList<Authority>();
         authorities.forEach(authority -> {
-            if(authority.getMenuId()==menuId) {
+            if(authority.getMenuId().equals(menuId)) {
                 temAuthorities.add(authority);
             }
         });
@@ -170,7 +174,7 @@ public class UserServiceImpl implements UserService {
     private List<Menu> getSubs(Integer id,List<Menu> menuList,List<Authority> authorities){
         List<Menu> newMenuList = new ArrayList<>();
         menuList.forEach(item->{
-            if(item.getParentId() == id){
+            if(item.getParentId().equals(id)){
                 List<Menu> subs=getSubs(item.getId(),menuList,authorities);
                 item.setSubs(subs);
                 if(authorities !=null){
@@ -204,7 +208,9 @@ public class UserServiceImpl implements UserService {
         //010
         user.setPassword(MD5.getMd5("123456"));
         int row= userDao.insertUser(user);
-        if(row==0) throw new Exception("用户创建失败");
+        if(row==0) {
+            throw new Exception("用户创建失败");
+        }
         List<UserRole> dataList = getUserRoleList(user.getId(),roles);
         userRoleDao.insertUserRoleBatch(dataList);
         user.setUserRoleList(dataList);
@@ -216,7 +222,8 @@ public class UserServiceImpl implements UserService {
     public User updateUser(User user, Integer[] roles) throws Exception {
         userDao.updateUser(user);
         if(roles!=null){
-            userRoleDao.deleteUserRole(user.getId());//删除用户权限
+            //删除用户权限
+            userRoleDao.deleteUserRole(user.getId());
             List<UserRole> dataList = getUserRoleList(user.getId(),roles);
             userRoleDao.insertUserRoleBatch(dataList);
             user.setUserRoleList(dataList);
