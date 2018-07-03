@@ -58,7 +58,7 @@ public class FinanceServiceImpl implements FinanceService {
         moneyRecordAccountDao.batchInsert(newFinanceAccount);
         return moneyRecord;
     }
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public int deleteMoneyRecord(Integer id) throws Exception {
         MoneyRecord moneyRecord = new MoneyRecord();
