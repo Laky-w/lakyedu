@@ -34,19 +34,23 @@ public class CacheConfig {
 //        return cacheManager;
 //    }
 
-    @Bean
+    /**
+     *
+     * 使用Jackson2JsonRedisSerializer的方式序列化value值
+     * 默认才有jdk(二进制)的方式序列化，被序列化需要实现Serializable接口。
+     * @param connectionFactory
+     * @return
+     */
+//    @Bean
     public RedisTemplate<Object, Object> redisTemplate(RedisConnectionFactory connectionFactory) {
         RedisTemplate<Object, Object> template = new RedisTemplate<>();
         template.setConnectionFactory(connectionFactory);
-
-        //使用Jackson2JsonRedisSerializer来序列化和反序列化redis的value值（默认使用JDK的序列化方式）
         Jackson2JsonRedisSerializer serializer = new Jackson2JsonRedisSerializer(Object.class);
-
         ObjectMapper mapper = new ObjectMapper();
         mapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
         mapper.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
+        mapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
         serializer.setObjectMapper(mapper);
-
         template.setValueSerializer(serializer);
 //        使用StringRedisSerializer来序列化和反序列化redis的key值
         template.setKeySerializer(new StringRedisSerializer());

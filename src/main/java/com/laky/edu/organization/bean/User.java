@@ -1,12 +1,13 @@
 package com.laky.edu.organization.bean;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
 /**
  * Created by 湖之教育工作室·laky on 2017/11/20.
  */
-public class User {
+public class User implements Serializable {
     private Integer id;
     private String userName; //用户名
     private String nickName; //昵称

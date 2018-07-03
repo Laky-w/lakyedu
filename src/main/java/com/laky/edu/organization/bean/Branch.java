@@ -1,12 +1,13 @@
 package com.laky.edu.organization.bean;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * Created by  on 2017/10/28.
  */
 
-public class Branch {
+public class Branch implements Serializable{
     private Integer id;
     private String branchName;
     private String serial;

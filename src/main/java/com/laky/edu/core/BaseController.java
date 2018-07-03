@@ -29,11 +29,14 @@ import java.util.concurrent.TimeUnit;
 @Component
 @Controller
 public class BaseController {
-    private static Logger logger = LoggerFactory.getLogger(BaseController.class);
+    protected static Logger logger = LoggerFactory.getLogger(BaseController.class);
+
     @Autowired
     private SchoolZoneService schoolZoneService;
+
     @Autowired
     private OperateLogService operateLogService;
+
     @Autowired
     private RedisUtil redisUtil;
 
@@ -127,7 +130,10 @@ public class BaseController {
             JSONObject sort= JSON.parseObject(parameter.get("sort").toString());
             if(sort!=null){
                 String columnName=sort.get("prop").toString();
-                String columnOrder = sort.get("order").toString();//ascending,descending
+                /**
+                 * ascending,descending
+                 */
+                String columnOrder = sort.get("order").toString();
                 if(columnOrder.equals("ascending")){
                     columnOrder="asc";
                 }
@@ -147,7 +153,10 @@ public class BaseController {
      * @param user
      */
     public void addCurrentUser(String token,User user){
-        redisUtil.pullData(token,JSON.toJSONString(user),4L, TimeUnit.HOURS);//4小时
+        /**
+         * 4小时
+         */
+        redisUtil.pullData(token,JSON.toJSONString(user),4L, TimeUnit.HOURS);
     }
 
     /**
@@ -156,9 +165,22 @@ public class BaseController {
      * @return
      */
     public User getCurrentUser(HttpServletRequest request){
-        String str = redisUtil.getData(request.getHeader("token"));
+        String token = request.getHeader("token");
+        if(StringUtils.isEmpty(token)){return null;}
+        String str = redisUtil.getData(token);
         if(StringUtils.isEmpty(str)){return null;}
-        return JSON.parseObject(str,User.class);
+        User user =JSON.parseObject(str,User.class);
+        return user;
+    }
+
+    /**
+     * 获取当前登录用户
+     * @param token
+     * @return
+     */
+    public User getCurrentUser(String token){
+        if(StringUtils.isEmpty(token)){return null;}
+        return JSON.parseObject(redisUtil.getData(token),User.class);
     }
 
     public void removeCurrentUser(HttpServletRequest request){
