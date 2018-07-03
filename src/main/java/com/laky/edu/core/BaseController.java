@@ -5,9 +5,13 @@ import com.alibaba.fastjson.JSONObject;
 import com.laky.edu.log.bean.OperateLog;
 import com.laky.edu.log.service.OperateLogService;
 import com.laky.edu.organization.OrganizationConst;
+import com.laky.edu.organization.bean.Notice;
 import com.laky.edu.organization.bean.SchoolZone;
 import com.laky.edu.organization.bean.User;
 import com.laky.edu.organization.service.SchoolZoneService;
+import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.beanutils.ConvertUtils;
+import org.apache.commons.beanutils.converters.DateConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +20,7 @@ import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
+import java.lang.reflect.Field;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
@@ -32,7 +37,7 @@ public class BaseController {
     @Autowired
     private RedisUtil redisUtil;
 
-//    public static Map<String,User> userSession = new HashMap<>();
+    public static Map<String,User> userSession = new HashMap<>();//uerid,session
 
     /**
      * 正确返回数据
@@ -46,6 +51,7 @@ public class BaseController {
         map.put("data",object);
         return map;
     }
+
     /**
      * 创建token
      * @return
@@ -117,6 +123,26 @@ public class BaseController {
             }
         }
         return parameter;
+    }
+
+
+    public <T> T getObjectParameter(HttpServletRequest request,Object object) throws Exception{
+        Class classInfo = object.getClass();
+        Field[] fields= classInfo.getFields();
+        //处理时间格式
+        DateConverter dateConverter = new DateConverter();
+        //设置日期格式
+        dateConverter.setPatterns(new String[]{"yyyy-MM-dd","yyyy-MM-dd HH:mm:ss"});
+        //注册格式
+        ConvertUtils.register(dateConverter, Date.class);
+        for(Field field:fields){
+            String name =field.getName();
+            String value= request.getParameter(name);
+            if(!org.apache.commons.lang3.StringUtils.isNotEmpty(value)){
+                BeanUtils.setProperty(object,name,value);//age:18
+            }
+        }
+        return (T) object;
     }
 
     /**
